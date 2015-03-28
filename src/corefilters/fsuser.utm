@@ -1,0 +1,23 @@
+include: <ubase.h> <gstring.h> <idset.h>
+define: FSUSER_XMLTAG_ROOT "User"
+define: USER_ACCESS_SPECIFIED_FILTERS 0
+define: USER_ACCESS_ALL_FILTERS 1
+define: USER_AUTHMODE_NATIVE 0
+define: USER_AUTHMODE_DOMAIN 1
+define: USER_ACCOUNT_ENABLED 0
+define: USER_ACCOUNT_DISABLED 1
+define: USER_ACCOUNT_WILLEXPIRE 2
+xmlroot: FSUSER_XMLTAG_ROOT
+virtual: std::string get_filter_ids_str() const { return fids.to_string(); }
+virtual: void parse_filter_ids(const char *p) { fids.from_string(p); }
+member: unsigned int (0) m_uid "uid"
+member: gstring (.clear()) m_szName "Name"
+member: gstring (.clear()) m_szDescr "Descr"
+member: std::string (.clear()) m_szPasswd "Passwd"
+member: int (0) m_nAuthMode "Auth"
+member: int (0) m_nStatus "Status"
+member: int (0) m_nExpireDt "Expire"
+member: int (0) m_nManageFilters "Mng"
+member: int (0) m_nType "Type"
+member: int (0) m_nDenyDoubleLogins "Double"
+member: idset (.clear()) fids "Fids" get_filter_ids_str() boost::bind(&$classname::parse_filter_ids,this,_1)

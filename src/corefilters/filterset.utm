@@ -1,0 +1,59 @@
+include: <string> <list> <addrtable_v4.h> <addrtablemap.h> <addrtablemap_v4.h> "filter2.h" "filterlist.h" "userlist.h" "urlfilterlist.h" "procnicknamelist.h" "monitor_range_list.h"
+define: FILTERSET_XMLTAG_FILTER "FilterSet"
+xmlroot: FILTERSET_XMLTAG_FILTER
+typedef: std::list<utm::filter2> filter_container
+typedef: std::list<std::string> lat_as_string_container
+typedef: std::list<utm::addrtablemaprec<utm::addrtable_v4>> mat_container
+typedef: std::list<utm::fsuser> user_container
+typedef: std::list<utm::urlfilter> urlfilter_container
+typedef: std::list<utm::procnickname> procnickname_container
+typedef: std::list<utm::monitor_range> monitor_range_container
+virtual: filter_container get_filters() { return filters.items; };
+virtual: void parse_filter_string(const char *filter_string) { }
+virtual: lat_as_string_container get_lat() const { lat_as_string_container lm; return lm; }
+virtual: void parse_lat_string(const char *lat_string) { }
+virtual: mat_container get_mat() const { return table_mat.items; }
+virtual: void parse_mat_string(const char *mat_string) { }
+virtual: user_container get_users() { return users.items; };
+virtual: void parse_user_string(const char *user_string) { }
+virtual: urlfilter_container get_urlfilters() { return urlfilters.items; };
+virtual: void parse_urlfilter_string(const char *urlfilter_string) { }
+virtual: procnickname_container get_procnicknames() { return procs.items; };
+virtual: void parse_procnickname_string(const char *procnickname_string) { }
+virtual: monitor_range_container get_monitorranges() { return ranges.items; }
+virtual: void parse_monitorrange_string(const char *monitorrange_string) { }
+member: int (0) revision "FiltersetRevision"
+member: filterlist (.clear()) filters "Filter" get_filters() boost::bind(&$classname::parse_filter_string,this,_1)
+member: addrtable_v4 (.clear()) table_lat "LAT" get_lat() boost::bind(&$classname::parse_lat_string,this,_1)
+member: addrtablemap_v4 (.clear()) table_mat "MAT" get_mat() boost::bind(&$classname::parse_mat_string,this,_1)
+member: userlist (.clear()) users "User" get_users() boost::bind(&$classname::parse_user_string,this,_1)
+member: urlfilterlist (.clear()) urlfilters "UrlFilter" get_urlfilters() boost::bind(&$classname::parse_urlfilter_string,this,_1)
+member: procnicknamelist (.clear()) procs "Proc" get_procnicknames() boost::bind(&$classname::parse_procnickname_string,this,_1)
+member: monitor_range_list (.clear()) ranges "Range" get_monitorranges() boost::bind(&$classname::parse_monitorrange_string,this,_1)
+
+// Default User Profile
+member: int (0) m_nUserProfileAuthMode "UserProfileAuthMode"
+member: int	(0) m_nUserProfileStatus "UserProfileStatus"
+member: int (0) m_nUserProfileManageFilters "UserProfileManagerFilters"
+member: int (0) m_nUserProfileType "UserProfileType"
+member: int (0) m_nUserProfileDenyDoubleLogins "UserProfileDenyDoubleLogins"
+
+// TrafficPrefix (http://en.wikipedia.org/wiki/Megabyte)
+// use Mebibyte 1 megabyte = 1048576 bytes
+// By default,  1 megabyte = 1000000 bytes
+member: bool (true) m_bUseMiB "UseMebiBytes"
+member: gstring (.clear()) filterset_file "File"
+member: gstring (.clear()) descr "FiltersetDescription"
+member: gstring (.clear()) adodb_conn_string "DbConnString"
+member: bool (true) m_bKeepCounters "RestoreCounters"
+
+// Traffic Logging
+
+member: unsigned int (10) m_nLogCntFlushPeriod "LogCntXmlReportsFlushPeriod"
+member: gstring (.clear()) m_szLogCntFolder1 "LogCntXmlReportsFolder"
+member: gstring (.clear()) m_szLogCntFolder2 "LogCntBackupReportsFolder"
+member: gstring (.clear()) m_szLogCntXSLFile1 "LogCntXmlReportsXsl"
+member: bool (false) m_bLogCntDbEnable "LogCntDbEnable"
+member: unsigned int (20) m_nLogCntDbFlushPeriod "LogCntDbFlushPeriod"
+member: gstring (.clear()) m_szLogCntDbTable "LogCntDbTable"
+member: unsigned int (20) m_nLogCntDbSamples "LogCntDbSamples"

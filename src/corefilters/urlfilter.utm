@@ -1,0 +1,20 @@
+include: <ubase.h> <gstring.h> <idset.h>
+define: URLFILTER_XMLTAG_ROOT "UrlFilter"
+define: URLFILTER_ADDRPART_ANY 3
+define: URLFILTER_ADDRPART_HOST 1
+define: URLFILTER_ADDRPART_URI 2
+xmlroot: URLFILTER_XMLTAG_ROOT
+typedef: std::list<std::string> urlrules_container
+virtual: std::string get_filter_ids_str() const { return fids.to_string(); }
+virtual: void parse_filter_ids(const char *p) { fids.from_string(p); }
+virtual: std::string get_urlrules_str() const { return std::string(); }
+virtual: void parse_urlrules_str(const char *p) { };
+member: unsigned int (0) ufid "ufid"
+member: gstring (.clear()) name "Name"
+member: gstring (.clear()) file "File"
+member: bool (false) is_disabled "Disabled"
+member: bool (false) is_any_filter "AnyFilter"
+member: int (URLFILTER_ADDRPART_ANY) addr_part "AddrPart"
+member: int (0) ext_file "ExtFile"
+member: idset (.clear()) fids "Fids" get_filter_ids_str() boost::bind(&$classname::parse_filter_ids,this,_1)
+member: urlrules_container (.clear()) urlrules "Rules" get_urlrules_str() boost::bind(&$classname::parse_urlrules_str,this,_1)

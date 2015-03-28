@@ -1,0 +1,7 @@
+include: <ubase.h> <blob.h> <string>
+define: FILTERCONS_XMLTAG_FILTERCONS "F"
+xmlroot: FILTERCONS_XMLTAG_FILTERCONS
+member: unsigned int (0) filter_id "I"
+member: __int64 (0) bytes_sent "S"
+member: __int64 (0) bytes_recv "R"
+member: blob (.clear()) speed_array "SP"

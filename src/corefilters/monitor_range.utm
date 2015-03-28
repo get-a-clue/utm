@@ -1,0 +1,39 @@
+include: <ubase.h> <gstring.h> <addrip_v4.h> <addrmac.h> <ubaselist.h> "monitor_detail_list.h"
+define: MONRANGE_XMLTAG_ROOT "Range"
+define: PING_STATUS_MAXITEMS 4
+define: PING_STATUS_UNKNOWN 0
+define: PING_STATUS_OK 1
+define: PING_STATUS_OFFLINE 2
+define: PING_STATUS_QUALITYDROP 3
+define: PING_STATUS_OKQUALITYDROP 1000
+define: PING_STATUS_UNKNOWN_COLOR RGB(255, 255, 255)
+define: PING_STATUS_OK_COLOR RGB(222, 255, 222)
+define: PING_STATUS_OFFLINE_COLOR RGB(255, 222, 222)
+define: PING_STATUS_QUALITYDROP_COLOR RGB(255, 255, 128)
+define: MAX_PINGATTEMPTS 8
+define: MIN_PINGATTEMPTS 2
+define: MIN_POLLINTERVAL 2
+define: MAX_POLLINTERVAL 15
+xmlroot: MONRANGE_XMLTAG_ROOT
+typedef: std::list<utm::monitor_detail_record> mdr_container
+virtual: const mdr_container& get_details() const { return details.items; }
+virtual: void parse_details_string(const char* p) { }
+member: unsigned int (0) id "Id"
+member: unsigned int (0) attempts "Att"
+member: unsigned int (0) poll_interval "Poll"
+member: bool (true) active "Enabled"
+member: unsigned int (0) location "Location"
+member: unsigned int (0) rangetype "Type"
+member: bool (false) no_macaddr "NoMacAddr"
+member: bool (false) no_macvend "NoMacVendor"
+member: bool (false) reverse_lookup "ReverseLookup"
+member: addrip_v4 (.clear()) dnsserver "DnsServer"
+member: gstring (.clear()) comment "Comment"
+member: gstring (.clear()) table "Table"
+member: addrip_v4 (.clear()) start_addr "Start"
+member: addrip_v4 (.clear()) end_addr "End"
+member: unsigned int (PING_STATUS_UNKNOWN_COLOR) color0 "Color0" 
+member: unsigned int (PING_STATUS_OK_COLOR) color1 "Color1" 
+member: unsigned int (PING_STATUS_OFFLINE_COLOR) color2 "Color2" 
+member: unsigned int (PING_STATUS_QUALITYDROP_COLOR) color3 "Color3" 
+member: monitor_detail_list (.clear()) details "Entry" get_details() boost::bind(&$classname::parse_details_string,this,_1)

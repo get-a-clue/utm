@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<TrafficCounters>
+	<Comment>This file contains the current traffic counters of your filterset. This is not a final report, it is just temporary file. Don't delete it or modify it!</Comment>
+	<FiltersetFile>default.tmf</FiltersetFile>
+	<Filter Id="1">
+		<Name>ICMP traffic - sample filter</Name>
+		<Sent>123456</Sent>
+		<Recv>654321</Recv>
+		<LimExc>0</LimExc>
+		<LimWarn>0</LimWarn>
+		<LimFlags>0</LimFlags>
+		<LastReset>2013-11-01 11:14:16</LastReset>
+	</Filter>
+	<Filter Id="2">
+		<Name>traffic to www.w3.org - sample filter</Name>
+		<Sent>234567</Sent>
+		<Recv>765432</Recv>
+		<LimExc>0</LimExc>
+		<LimWarn>0</LimWarn>
+		<LimFlags>0</LimFlags>
+		<LastReset>2013-11-01 11:14:16</LastReset>
+	</Filter>
+	<Filter Id="5">
+		<Name>All traffic of this computer - sample filter</Name>
+		<Sent>5678901</Sent>
+		<Recv>5678902</Recv>
+		<LimExc>0</LimExc>
+		<LimWarn>0</LimWarn>
+		<LimFlags>0</LimFlags>
+		<LastReset>2013-11-01 11:14:16</LastReset>
+	</Filter>
+	<LastModified>November, 05 2013 23:29:12</LastModified>
+</TrafficCounters>

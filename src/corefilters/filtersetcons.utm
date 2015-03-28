@@ -1,0 +1,18 @@
+include: <string> <list> <utime.h> <blob.h> <filtercons.h> <filterconslist.h>
+define: FILTERSETCONS_XMLTAG_TRAFFICCONS "TrafficConsole"
+xmlroot: FILTERSETCONS_XMLTAG_TRAFFICCONS
+typedef: std::list<utm::filtercons> filtercons_container
+virtual: filtercons_container get_filtercons() { return filtercons_s.items; };
+virtual: void parse_filtercons_string(const char *filtercons_string) { }
+member: __int64 (0) total_bytes_captured "TB"
+member: unsigned int (0) total_bytes_speed "TBS"
+member: __int64 (0) total_packets_captured "TP"
+member: unsigned int (0) total_packets_speed "TPS"
+member: unsigned int (0) total_netflow_packets_captured "TN"
+member: unsigned int (0) total_points "totpnt"
+member: unsigned int (0) next_seqnum "nseq"
+member: unsigned int (0) diff_size "dsize"
+member: unsigned int (0) start_diffindex "dindex"
+member: blob (.clear()) diff_seqnum "SN"
+member: blob (.clear()) diff_time "TM"
+member: filterconslist (.clear()) filtercons_s "F" get_filtercons() boost::bind(&$classname::parse_filtercons_string,this,_1)

@@ -1,0 +1,9 @@
+include: <ubase.h> <utime.h> <gstring.h>
+define: FILTERSTATE_XMLTAG_FILTER "Filter"
+xmlroot: FILTERSTATE_XMLTAG_FILTER
+member: unsigned int (0) filter_id "Id"
+member: gstring (.clear()) filter_name "Name"
+member: __int64 (0) bytes_sent "Sent"
+member: __int64 (0) bytes_recv "Recv"
+member: unsigned short (0) limflags "LimFlags"
+member: utime (.clear()) lastreset "LastReset"

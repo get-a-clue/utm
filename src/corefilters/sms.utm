@@ -1,0 +1,11 @@
+include: <time.h> <ubase.h> <gstring.h> <idset.h>
+define: SMS_XMLTAG_ROOT "Sms"
+xmlroot: SMS_XMLTAG_ROOT
+member: unsigned int (0) sender_uid "SenderUid"
+member: gstring (.clear()) sender_name "SenderName"
+member: unsigned int (0) recp_uid "RecpUid"
+member: gstring (.clear()) recp_name "RecpName"
+member: time_t (0) time_creation "Create"
+member: time_t (0) time_expire "Expire"
+member: gstring (.clear()) msg_text "MsgText"
+member: std::string (.clear()) msg_id "MsgId"

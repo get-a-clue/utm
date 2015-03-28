@@ -1,0 +1,29 @@
+include: <ubase.h> <addrip_v4.h> <addrmac.h> <gstring.h> <utimestamp.h>
+define: MONITORRESULT_XMLTAG_MONITORRESULT "MonitorResults"
+xmlroot: MONITORRESULT_XMLTAG_MONITORRESULT
+member: unsigned int (0) id "Id"
+member: int (0) range_id "RangeId"
+member: int (0) action_type "ActionType" // Type of action: 0 - none; 1 - mac address is appeared; 2 - mac address is disappear
+member: int (0) status "Status"
+member: utimestamp (.clear()) last_status_change "LastStatusChange"
+member: utimestamp (.clear()) last_ping_reply "LastPingReply"
+member: unsigned int (0) curr_serial_request_count "CurrentSerialRequestCount"
+member: unsigned int (0) curr_serial_reply_count "CurrentSerialReplyCount"
+member: unsigned int (0) last_serial_request_count "LastSerialRequestCount"
+member: unsigned int (0) last_serial_reply_count "LastSerialReplyCount"
+member: unsigned int (0) total_ping_request_count "TotalPingRequest"
+member: unsigned int (0) total_ping_reply_count "TotalPingReply"
+member: unsigned int (0) serial "Serial"
+member: unsigned int (0) serial_attempts "SerialAttempts"
+member: std::int64_t (0) curr_tick_request "CurrentTickRequest"
+member: std::int64_t (0) curr_tick_reply "CurrentTickReply"
+//member: unsigned short (0) curr_seq_request "CurrentSeqRequest"
+//member: unsigned short (0) curr_seq_reply "CurrentSeqReply"
+member: addrip_v4 (.clear()) addr "Addr"
+member: addrmac (.clear()) mac "Mac"
+member: unsigned int (0) flags "Flags"
+member: gstring (.clear()) hostname "Hostname"
+member: gstring (.clear()) descr "Descr"
+//TCHAR*	m_pszLastDescr;
+//UINT	m_nDescrId;
+//COLORREF	m_colors[PING_STATUS_COUNT];

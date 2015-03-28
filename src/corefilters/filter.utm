@@ -1,0 +1,97 @@
+include: <ubase.h> <ubaselist.h> <addrip_v4.h> <addrmac.h> <gstring.h> <rule.h> <rulelist.h>
+define: FILTER_XMLTAG_FILTER "Filter"
+define: LOGPKT_MAXCOLSIZE 1200
+define: LOGPKT_SQLADDR_CHAR 0
+define: LOGPKT_SQLADDR_UINT 1
+define: LOGPKT_SQLADDR_INT 2
+define: LOGPKT_DISABLED 0
+define: LOGPKT_INTOFILE 1
+define: LOGPKT_INTODB 2
+define: LOGHH_DISABLED 0
+define: LOGHH_INTOFILE 1
+define: LOGHH_INTODB 2
+define: LOGHH_SQUID 3
+define: RESETCNT_NEVER 0
+define: RESETCNT_DAILY 1
+define: RESETCNT_MONTHLY 2
+define: RESETCNT_MONDAY 3
+define: RESETCNT_TUESDAY 4
+define: RESETCNT_WEDNESDAY 5
+define: RESETCNT_THURSDAY 6
+define: RESETCNT_FRIDAY 7
+define: RESETCNT_SATURDAY 8
+define: RESETCNT_SUNDAY 9
+define: RESETCNT_HOURLY 10
+define: TRAFFICLIMIT_SENT_OR_RECV 0
+define: TRAFFICLIMIT_SENT_PLUS_RECV 1
+define: TRAFFICLIMIT_SENT 2
+define: TRAFFICLIMIT_RECV 3
+define: TRAFFICLIMIT_REVERS 100
+define: CHECKADDR_MYPC_SRC 1
+define: CHECKADDR_MYPC_DST 2
+define: CHECKADDR_LAT_SRC 4
+define: CHECKADDR_LAT_DST 8
+define: CHECKADDR_MYNET_SRC 16
+define: CHECKADDR_MYNET_DST 32
+define: TRAFFICLIMIT_BLOCK 0
+define: TRAFFICLIMIT_SPEED2 1
+xmlroot: FILTER_XMLTAG_FILTER
+typedef: std::list<utm::rule> rule_container
+virtual: rule_container& get_ruleset() { return rules.items; }
+virtual: std::string get_workhours_str() const { return std::string(""); }
+virtual: void parse_rule_string(const char *rule_string) { }
+virtual: void parse_workhours_string(const char *workhours_string) { }
+member: int (0) m_id "Id"
+member: gstring (.clear()) m_szFilterName "Name"
+member: unsigned int (255) m_color "Color"
+member: bool (false) m_bRevers "Revers"
+member: bool (false) m_bBlocked "Blocked"
+member: bool (false) m_bDisable "Disable"
+member: bool (true) m_bVisible "Visible"
+member: bool (false) m_bVpn "ParseVpn"
+member: bool (false) m_bExcludeCntReports "ExcludeCnt"
+member: bool (false) m_bExcludeUrlFiltering "ExcludeUrlFiltering"
+member: int (RESETCNT_MONTHLY) m_nResetCnt "ResetCnt"
+member: unsigned int (0xFF) m_nWorkHours[7] "WorkHours" get_workhours_str() boost::bind(&$classname::parse_workhours_string,this,_1)
+member: unsigned int (20000101) m_nStartDay "StartDay"
+member: unsigned int (20991231) m_nEndDay "EndDay"
+member: gstring (.clear()) m_szEmail "Email"
+member: gstring (.clear()) m_szComment "Comment"
+member: int (0) m_nRewMask "RewriteMask"
+member: addrip_v4 (.clear()) m_dwRewSrcIp "RewriteSrcIp"
+member: addrip_v4 (.clear()) m_dwRewDstIp "RewriteDstIp"
+member: unsigned short (0) m_wRewSrcPort "RewriteSrcPort"
+member: unsigned short (0) m_wRewDstPort "RewriteDstPort"
+member: rulelist (.clear()) rules "RuleNT" get_ruleset() boost::bind(&$classname::parse_rule_string,this,_1)
+// Traffic limit
+member: __int64 (0) m_nTrafficLimitMb "TrafficLimitMb"					// size of Traffic Limit in megabytes
+member: int (0) m_nTrafficLimitType "TrafficLimitType"					// type of Traffic Limit
+member: int	(0) m_nTrafficLimitAction "TrafficLimitAction"				// Action for Traffic Limit (0 - блокировать, 1 - изменить скорость) 
+member: unsigned short (80) m_wTrafficLimitWarnLevel "TrafficLimitWarnLevel"		// Level (in percentage) for traffic limit warning
+member: unsigned short (0) m_wTrafficLimitFlags "TrafficLimitFlags"				// Flags for traffic limit 
+																		// (is already flags created after traffic limit event?) :
+																		// 0x0001 - for exceeded
+																		// 0x0002 - for warning
+
+// Packet Logging Options
+member: int (LOGPKT_DISABLED) m_nPktLogDest "PackLogDest"               // 0 - disabled, 1 - into file, 2 - into database
+member: int	(0) m_nPktLogOpt "PackLogOpt"                               // options
+member: gstring (.clear()) m_szPktLogFilename "PackLogFilenameTemplate"
+member: gstring (.clear()) m_szPktLogTable "PackLogDbTable"
+member: int (LOGPKT_SQLADDR_CHAR) m_nPktLogSqlSyntax "PackLogSQLSyntax"
+member: int (LOGPKT_MAXCOLSIZE) m_nPktLogMaxColSize "PackLogMaxColSize"
+member: int (100) m_nPktLogAlertColUsage "PackLogAlertColUsage"
+// HostHeader Logging Options
+member: int (LOGHH_DISABLED) m_nHhLogDest "HhLogDest"
+member: gstring (.clear()) m_szHhLogFilename "HhLogFilenameTemplate"
+member: gstring (.clear()) m_szHhLogTable "HhLogDbTable"
+// Traffic shaping
+member: int (0) m_nMaster "Master"                 // Этот фильтр может быть мастер-фильтром
+member: int (0) m_nSpeed "SpeedKiloBytes"          // Скорость (in kbytes per second)
+member: int (0) m_nSpeed2 "SpeedKiloBytes2"        // Скорость после порога перключения (in kbytes per second)
+member: int (0) m_nSpeedMaster "SpeedMaster"       // Скорость при выполнении доп. условия (in kbytes per second)
+member: int (0) m_nMasterFilterId "MasterFid"      // FilterId мастер-фильтра, при превышении значения m_nSlaveLevelSpeed в котором 
+ 											       // будет установлена скорость m_nSpeedMaster в текущем фильтре
+member: int (0) m_nMasterLevelSpeed "MasterLevel"  // Порог скорости в мастер-фильтре, при превышении которого будет установлена скорость m_nSpeedMaster в текущем фильтре
+member: int (0) m_nMasterOptions "MasterOpt"       // Опции выполенения условия проверки скорости в мастер-фильтре
+

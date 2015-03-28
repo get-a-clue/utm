@@ -1,0 +1,7 @@
+template: utemplate_noxml
+define: CONFIGNAT_XMLTAG_PORTRDR "PortRdr"
+xmlroot: CONFIGNAT_XMLTAG_PORTRDR
+member: int (0) proto "Proto"
+member: unsigned short (0) public_port "PublicPort"
+member: unsigned short (0) remote_port "RemotePort"
+member: unsigned long (0) remote_ip "RemoteIp"

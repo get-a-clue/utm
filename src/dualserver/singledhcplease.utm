@@ -1,0 +1,8 @@
+include: <ubase.h> <gstring.h> <addrip_v4.h> <utimestamp.h>
+define: SINGLEDHCPLEASE_XMLTAG_ROOT "SDL"
+xmlroot: SINGLEDHCPLEASE_XMLTAG_ROOT
+member: unsigned int (0) id "Id"
+member: gstring (.clear()) mac "Mac"
+member: addrip_v4 (.clear()) ipaddr "IPAddr"
+member: utimestamp (.clear()) leasetime "LeaseTime"
+member: gstring (.clear()) hostname "Hostname"

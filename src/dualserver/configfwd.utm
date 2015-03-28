@@ -1,0 +1,6 @@
+threadsafe_rw:true
+include: <ubase.h> <addrip_v4.h>
+define: CONFIGFWD_XMLTAG_FWD "FwdSettings"
+xmlroot: CONFIGFWD_XMLTAG_FWD
+member: unsigned short (0) fwd_port "FwdPort"
+member: addrip_v4 (.clear()) fwd_ip "FwdIp"

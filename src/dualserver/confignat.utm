@@ -1,0 +1,12 @@
+threadsafe_rw:true
+include: <vector> <ubase.h> "confignat_portrdr.h"
+define: CONFIGDNS_XMLTAG_NAT "NatSettings"
+typedef: std::vector<utm::confignat_portrdr> confignat_portrdr_container
+xmlroot: CONFIGDNS_XMLTAG_NAT
+virtual: std::vector<std::string> create_portrdr_string() const { return std::vector<std::string>(); }
+virtual: void parse_portrdr_string(const char *portrdr_string) { }
+member: bool (false) enabled "NatEnabled"
+member: bool (false) exclude_first_filter "ExcludeFirst"
+member: bool (false) auto_public "AutoPublic"
+member: addrip_v4 (.clear()) public_ip "PublicIp"
+member: confignat_portrdr_container (.clear()) portrdr "PortRdr" create_portrdr_string() boost::bind(&$classname::parse_portrdr_string,this,_1)

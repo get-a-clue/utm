@@ -1,0 +1,13 @@
+include: <ubase.h> <gstring.h> <string>
+define: FILTERAGENT_XMLTAG_FILTERAGENT "Filter"
+xmlroot: FILTERAGENT_XMLTAG_FILTERAGENT
+member: unsigned int (0) filter_id "I"
+member: gstring (.clear()) filter_name "N"
+member: bool (false) disabled "D"
+member: int (0) speed "SP"
+member: __int64 (0) traffic_limit_mb "TLM"
+member: int (0) traffic_limit_type "TLT"
+member: __int64 (0) bytes_sent "S"
+member: std::string (.clear()) speed_array_sent "SA"
+member: __int64 (0) bytes_recv "R"
+member: std::string (.clear()) speed_array_recv "RA"

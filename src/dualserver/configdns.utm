@@ -1,0 +1,10 @@
+threadsafe_rw:true
+include: <ubase.h> <addrip_v4.h> <addrpair.h> <addrpair_v4.h>
+define: CONFIGDNS_XMLTAG_DNS "DnsSettings"
+virtual: std::string create_allowedhosts_string() const { return std::string(); }
+virtual: void parse_allowedhosts_string(const char *hosts) { }
+xmlroot: CONFIGDNS_XMLTAG_DNS
+member: bool (false) enabled "DnsEnabled"
+member: addrip_v4 (.clear()) fwd_server1 "ForwardingServer"
+member: addrip_v4 (.clear()) fwd_server2 "ForwardingServer2"
+member: std::vector<addrpair_v4> (.clear()) allowedhosts "ExtraAllowedHosts" create_allowedhosts_string() boost::bind(&$classname::parse_allowedhosts_string,this,_1)

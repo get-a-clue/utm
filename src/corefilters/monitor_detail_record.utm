@@ -1,0 +1,9 @@
+registry:false
+include: <ubase.h> <gstring.h> <addrip_v4.h> <addrmac.h>
+define: MONDETREC_XMLTAG_ROOT "Entry"
+xmlroot: MONDETREC_XMLTAG_ROOT
+member: unsigned int (0) id "Id"
+member: unsigned int (0) flags "Flag"
+member: addrip_v4 (.clear()) ip "Ip"
+member: addrmac (.clear()) mac  "Mac"
+member: gstring (.clear()) comment "Comment"

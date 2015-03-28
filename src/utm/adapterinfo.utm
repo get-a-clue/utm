@@ -1,0 +1,14 @@
+include: <ubase.h> <gstring.h> <addrmac.h>
+define: ADAPTERINFO_XMLTAG_NIC "Nic"
+xmlroot: ADAPTERINFO_XMLTAG_NIC
+member: gstring (.clear()) name "Name"
+member: gstring (.clear()) descr "Descr"
+member: addrmac (.clear()) mac_permanent "MacPerm"
+member: addrmac (.clear()) mac_current "MacCurrent"
+member: unsigned int (0) medium "Medium"
+member: unsigned int (0) ipaddr_v4 "Ip"
+member: unsigned int (0) mask_v4 "Mask"
+member: unsigned int (0) alias "Alias"
+member: unsigned int (0) original_index "Orig"
+member: bool (false) is_promiscuous "Promiscuous"
+member: bool (false) is_selected "Selected"

@@ -1,0 +1,13 @@
+include: <ubase.h> <gstring.h> <utimestamp.h>
+define: PROCROW_XMLTAG_PROCROW "Pr"
+xmlroot: PROCROW_XMLTAG_PROCROW
+member: unsigned int (0) id "Id"
+member: unsigned int (0) pid "Pid"
+member: unsigned short (0) nick_id "Nid"
+member: std::uint64_t (0) bytes_sent "S"
+member: std::uint64_t (0) bytes_recv "R"
+member: unsigned short (0) speed_sent "SSp"
+member: unsigned short (0) speed_recv "RSp"
+member: utimestamp (.clear()) last_activity "A"
+member: gstring (.clear()) exename "E"
+member: gstring (.clear()) username "U"

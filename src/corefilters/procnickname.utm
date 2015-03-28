@@ -1,0 +1,6 @@
+include: <ubase.h> <gstring.h>
+define: PROCNICKNAME_XMLTAG_ROOT "Proc"
+xmlroot: PROCNICKNAME_XMLTAG_ROOT
+member: unsigned int (0) nid "nid"
+member: gstring (.clear()) nickname "Nick"
+member: gstring (.clear()) pathexe "Exe"

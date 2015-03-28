@@ -1,0 +1,9 @@
+include: <ubase.h> <gstring.h> "trafficreport_hourticklist.h"
+typedef: std::list<utm::trafficreport_hourtick> trafficreport_hourtick_container
+virtual: trafficreport_hourtick_container get_hourticks() { return hourticks.items; }
+virtual: void parse_hourticks_string(const char *hourtick_string) { }
+define: TR_DAYTICK_XMLTAG_ROOT "Day"
+xmlroot: TR_DAYTICK_XMLTAG_ROOT
+member: __int64 (0) sent "Sent"
+member: __int64 (0) recv "Recv"
+member: trafficreport_hourticklist (.clear()) hourticks "Day" get_hourticks() boost::bind(&$classname::parse_hourticks_string,this,_1)

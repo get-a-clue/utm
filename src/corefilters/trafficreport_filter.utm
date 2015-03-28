@@ -1,0 +1,11 @@
+include: <ubase.h> <gstring.h> "trafficreport_dayticklist.h"
+typedef: std::list<utm::trafficreport_daytick> trafficreport_daytick_container
+virtual: trafficreport_daytick_container get_dayticks() { return dayticks.items; }
+virtual: void parse_dayticks_string(const char *daytick_string) { }
+define: TR_FILTER_XMLTAG_ROOT "Filter"
+xmlroot: TR_FILTER_XMLTAG_ROOT
+member: __int64 (0) sent "Sent"
+member: __int64 (0) recv "Recv"
+member: gstring (.clear()) name "Name"
+member: unsigned int (0) color "Color"
+member: trafficreport_dayticklist (.clear()) dayticks "Day" get_dayticks() boost::bind(&$classname::parse_dayticks_string,this,_1)

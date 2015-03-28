@@ -1,0 +1,8 @@
+rm "src\utm.sdf"
+rd /Q /S "src\ipch"
+FOR %%A IN (Debug DebugU DebugTest DebugUTest Release ReleaseU) DO rd /Q /S "src\%%A"
+FOR %%A IN (Debug DebugU DebugTest DebugUTest Release ReleaseU) DO rd /Q /S "src\utm\%%A"
+FOR %%A IN (Debug DebugU DebugTest DebugUTest Release ReleaseU) DO rd /Q /S "src\monitor\%%A"
+FOR %%A IN (Debug DebugU DebugTest DebugUTest Release ReleaseU) DO rd /Q /S "src\dualserver\%%A"
+FOR %%A IN (Debug DebugU DebugTest DebugUTest Release ReleaseU) DO rd /Q /S "src\proxyserver\%%A"
+FOR %%A IN (Debug DebugU DebugTest DebugUTest Release ReleaseU) DO rd /Q /S "src\corefilters\%%A"

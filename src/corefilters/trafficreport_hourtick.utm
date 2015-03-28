@@ -1,0 +1,5 @@
+include: <ubase.h> <gstring.h>
+define: TR_HOURTICK_XMLTAG_ROOT "Day2h"
+xmlroot: TR_HOURTICK_XMLTAG_ROOT
+member: __int64 (0) sent "Sent"
+member: __int64 (0) recv "Recv"
