@@ -302,6 +302,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>utmd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Console</SubSystem>
     </Link>
     <Lib>
       <AdditionalDependencies>utmd.lib</AdditionalDependencies>
@@ -336,6 +337,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>utmdU.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Console</SubSystem>
     </Link>
     <Lib>
       <AdditionalDependencies>utmd.lib</AdditionalDependencies>
