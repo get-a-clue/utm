@@ -80,23 +80,6 @@ void trafficreport_hourtick_base::xml_catch_value(const char *keyname, const cha
 
 #ifdef UTM_WIN
 
-LONG trafficreport_hourtick_base::CreateRegistry(const TCHAR* pRegistryPath, const HKEY hk)
-{
-    HKEY h;
-    LONG result = RegOpenKeyEx(hk, pRegistryPath, 0, KEY_READ, &h);
-    if (result == ERROR_FILE_NOT_FOUND)
-    {
-       result = RegCreateKeyEx(hk, pRegistryPath, NULL, NULL, NULL, KEY_ALL_ACCESS, NULL, &h, NULL);
-    }
-
-    if (result == ERROR_SUCCESS)
-    {
-       RegCloseKey(h);
-    };
-
-    return result;
-}
-
 LONG trafficreport_hourtick_base::SaveToRegistry(const TCHAR* pRegistryPath, const HKEY hk)
 {
     HKEY h;

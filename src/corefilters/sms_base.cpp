@@ -110,23 +110,6 @@ void sms_base::xml_catch_value(const char *keyname, const char *keyvalue)
 
 #ifdef UTM_WIN
 
-LONG sms_base::CreateRegistry(const TCHAR* pRegistryPath, const HKEY hk)
-{
-    HKEY h;
-    LONG result = RegOpenKeyEx(hk, pRegistryPath, 0, KEY_READ, &h);
-    if (result == ERROR_FILE_NOT_FOUND)
-    {
-       result = RegCreateKeyEx(hk, pRegistryPath, NULL, NULL, NULL, KEY_ALL_ACCESS, NULL, &h, NULL);
-    }
-
-    if (result == ERROR_SUCCESS)
-    {
-       RegCloseKey(h);
-    };
-
-    return result;
-}
-
 LONG sms_base::SaveToRegistry(const TCHAR* pRegistryPath, const HKEY hk)
 {
     HKEY h;

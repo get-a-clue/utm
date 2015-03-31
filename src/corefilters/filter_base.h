@@ -81,7 +81,6 @@ public:
     bool m_bRevers;
     bool m_bBlocked;
     bool m_bDisable;
-    bool m_bVisible;
     bool m_bVpn;
     bool m_bExcludeCntReports;
     bool m_bExcludeUrlFiltering;
@@ -131,7 +130,6 @@ public:
 
 #ifdef UTM_WIN
 
-    virtual LONG CreateRegistry(const TCHAR* pRegistryPath, const HKEY hk = HKEY_LOCAL_MACHINE);
     virtual LONG SaveToRegistry(const TCHAR* pRegistryPath, const HKEY hk = HKEY_LOCAL_MACHINE);
     virtual LONG ReadFromRegistry(const TCHAR* pRegistryPath, const HKEY hk = HKEY_LOCAL_MACHINE);
 #endif // UTM_WIN

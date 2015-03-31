@@ -38,7 +38,6 @@ filter_base& filter_base::operator=(const filter_base& rhs)
     m_bRevers = rhs.m_bRevers;
     m_bBlocked = rhs.m_bBlocked;
     m_bDisable = rhs.m_bDisable;
-    m_bVisible = rhs.m_bVisible;
     m_bVpn = rhs.m_bVpn;
     m_bExcludeCntReports = rhs.m_bExcludeCntReports;
     m_bExcludeUrlFiltering = rhs.m_bExcludeUrlFiltering;
@@ -87,7 +86,6 @@ bool filter_base::operator==(const filter_base& rhs) const
     if (!(m_bRevers == rhs.m_bRevers)) return false;
     if (!(m_bBlocked == rhs.m_bBlocked)) return false;
     if (!(m_bDisable == rhs.m_bDisable)) return false;
-    if (!(m_bVisible == rhs.m_bVisible)) return false;
     if (!(m_bVpn == rhs.m_bVpn)) return false;
     if (!(m_bExcludeCntReports == rhs.m_bExcludeCntReports)) return false;
     if (!(m_bExcludeUrlFiltering == rhs.m_bExcludeUrlFiltering)) return false;
@@ -137,7 +135,6 @@ void filter_base::clear()
     m_bRevers = false;
     m_bBlocked = false;
     m_bDisable = false;
-    m_bVisible = true;
     m_bVpn = false;
     m_bExcludeCntReports = false;
     m_bExcludeUrlFiltering = false;
@@ -198,7 +195,6 @@ void filter_base::xml_create()
     xml_append_node("Revers", m_bRevers, orig.m_bRevers);
     xml_append_node("Blocked", m_bBlocked, orig.m_bBlocked);
     xml_append_node("Disable", m_bDisable, orig.m_bDisable);
-    xml_append_node("Visible", m_bVisible, orig.m_bVisible);
     xml_append_node("ParseVpn", m_bVpn, orig.m_bVpn);
     xml_append_node("ExcludeCnt", m_bExcludeCntReports, orig.m_bExcludeCntReports);
     xml_append_node("ExcludeUrlFiltering", m_bExcludeUrlFiltering, orig.m_bExcludeUrlFiltering);
@@ -246,7 +242,6 @@ void filter_base::xml_catch_value(const char *keyname, const char *keyvalue)
     if (xml_check_value(keyname, "Revers", keyvalue, m_bRevers)) return;
     if (xml_check_value(keyname, "Blocked", keyvalue, m_bBlocked)) return;
     if (xml_check_value(keyname, "Disable", keyvalue, m_bDisable)) return;
-    if (xml_check_value(keyname, "Visible", keyvalue, m_bVisible)) return;
     if (xml_check_value(keyname, "ParseVpn", keyvalue, m_bVpn)) return;
     if (xml_check_value(keyname, "ExcludeCnt", keyvalue, m_bExcludeCntReports)) return;
     if (xml_check_value(keyname, "ExcludeUrlFiltering", keyvalue, m_bExcludeUrlFiltering)) return;
@@ -289,23 +284,6 @@ void filter_base::xml_catch_value(const char *keyname, const char *keyvalue)
 
 
 #ifdef UTM_WIN
-
-LONG filter_base::CreateRegistry(const TCHAR* pRegistryPath, const HKEY hk)
-{
-    HKEY h;
-    LONG result = RegOpenKeyEx(hk, pRegistryPath, 0, KEY_READ, &h);
-    if (result == ERROR_FILE_NOT_FOUND)
-    {
-       result = RegCreateKeyEx(hk, pRegistryPath, NULL, NULL, NULL, KEY_ALL_ACCESS, NULL, &h, NULL);
-    }
-
-    if (result == ERROR_SUCCESS)
-    {
-       RegCloseKey(h);
-    };
-
-    return result;
-}
 
 LONG filter_base::SaveToRegistry(const TCHAR* pRegistryPath, const HKEY hk)
 {

@@ -98,23 +98,6 @@ void configdns_base::threadsafe_copyobj(bool lock_src, const configdns_base& src
 
 #ifdef UTM_WIN
 
-LONG configdns_base::CreateRegistry(const TCHAR* pRegistryPath, const HKEY hk)
-{
-    HKEY h;
-    LONG result = RegOpenKeyEx(hk, pRegistryPath, 0, KEY_READ, &h);
-    if (result == ERROR_FILE_NOT_FOUND)
-    {
-       result = RegCreateKeyEx(hk, pRegistryPath, NULL, NULL, NULL, KEY_ALL_ACCESS, NULL, &h, NULL);
-    }
-
-    if (result == ERROR_SUCCESS)
-    {
-       RegCloseKey(h);
-    };
-
-    return result;
-}
-
 LONG configdns_base::SaveToRegistry(const TCHAR* pRegistryPath, const HKEY hk)
 {
     HKEY h;

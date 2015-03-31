@@ -164,7 +164,6 @@ void filter::test_fillparams(int test_num)
 	m_bRevers = true;
 	m_bBlocked = true;
 	m_bDisable = true;
-	m_bVisible = true;
 	m_bVpn = true;
 	m_bExcludeCntReports = true;
 	m_bExcludeUrlFiltering = true;

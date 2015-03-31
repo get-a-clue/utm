@@ -7,11 +7,11 @@ rem erase /Q /S lib
 
 start.pl
 
-rem cd src
+cd src
 rem svn up
-rem update_currenttag.pl
+update_currenttag.pl
 rem svn commit utm\utm.h -m "Updated CurrentTag"
-rem cd ..
+cd ..
 
 call cph.bat
 

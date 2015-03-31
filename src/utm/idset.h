@@ -51,6 +51,7 @@ public:
 	}
 
 	virtual void add_id(unsigned int id) = 0;
+	virtual void remove_id(unsigned int id) = 0;
 
 	bool check_id(unsigned int id) const
 	{
@@ -103,6 +104,12 @@ public:
 		TEST_CASE_CHECK(str1, std::string("0 1 2 3 4 5 6 7 8 9 10"));
 		from_string(str1.c_str());
 		TEST_CASE_CHECK(str1, std::string("0 1 2 3 4 5 6 7 8 9 10"));
+
+		remove_id(3);
+		remove_id(5);
+		remove_id(11);
+		std::string str2 = to_string();
+		TEST_CASE_CHECK(str2, std::string("0 1 2 4 6 7 8 9 10"));
 	}
 #endif
 };
@@ -113,6 +120,15 @@ public:
 	void add_id(unsigned int id)
 	{
 		ids.insert(id);
+	}
+
+	void remove_id(unsigned int id)
+	{
+		auto iter = ids.find(id);
+		if (iter != ids.end())
+		{
+			ids.erase(iter);
+		}
 	}
 
 #ifdef UTM_DEBUG
@@ -131,6 +147,18 @@ public:
 	void add_id(unsigned int id)
 	{
 		ids.push_back(id);
+	}
+
+	void remove_id(unsigned int id)
+	{
+		for (auto iter = ids.begin(); iter != ids.end(); ++iter)
+		{
+			if (id == *iter)
+			{
+				ids.erase(iter);
+				break;
+			}
+		}
 	}
 
 #ifdef UTM_DEBUG
