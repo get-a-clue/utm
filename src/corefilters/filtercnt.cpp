@@ -74,25 +74,21 @@ void filtercnt::do_refresh(unsigned int total_points, unsigned int next_point)
 
 	if (delta < 0)
 	{
-		cnt_speed = static_cast<unsigned int>(delta / -REFRESH_INTERVAL);
+		delta = -delta;
 	}
-	else
-	{
-		cnt_speed = static_cast<unsigned int>(delta / REFRESH_INTERVAL);
-	}
+	cnt_speed = static_cast<unsigned int>(delta / REFRESH_INTERVAL);
+
+	cnt_set[next_point] = filtercnt::pack_speed(cnt_speed);
+	cnt_prev = cnt;
 
 	if (delta != 0)
 	{
-		cnt_set[next_point] = filtercnt::pack_speed(cnt_speed);
-
 		// For XML Traffic Reports
 		cnt_xml += delta;
 		cnt_xml2 += delta;
 
 		// For Database Traffic Reports
 		cnt_logdb += delta;
-
-		cnt_prev = cnt_prev + delta;
 	}
 
 	// Calc average speed for last N points
