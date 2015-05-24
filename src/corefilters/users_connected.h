@@ -32,7 +32,11 @@ public:
 	users_connected(const users_connected& rhs);
 	virtual ~users_connected(void);
 
-    bool  operator==(const users_connected& rhs) const;
+private:
+	users_connected& operator=(const users_connected& rhs);
+
+public:
+	bool  operator==(const users_connected& rhs) const;
 	void copy_from_safe(const users_connected& source);
 	void copy_to_safe(users_connected& destination) const;
 

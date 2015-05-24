@@ -22,13 +22,17 @@ users_connected::users_connected(const users_connected& rhs)
 	ips = rhs.ips;
 }
 
+users_connected& users_connected::operator=(const users_connected& rhs)
+{
+	// this operator is private and can't be used
+	return *this;
+}
+
 bool users_connected::operator==(const users_connected& rhs) const
 {
-	bool cond1 = users == rhs.users;
-	bool cond2 = ips == rhs.ips;
-	cond2 = true;
+	boost::mutex::scoped_lock lock(guard);
 
-	return (cond1 && cond2);
+	return users == rhs.users;
 }
 
 void users_connected::copy_from_safe(const users_connected& source)
