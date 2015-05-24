@@ -6,6 +6,8 @@
 #define MAXVALUES 1400
 #define REFRESH_INTERVAL 2
 
+#include <atomic>
+
 #include <base64.h>
 #include <gstring.h>
 
@@ -17,15 +19,36 @@ public:
 	filtercnt(void);
 	~filtercnt(void);
 
+	filtercnt& operator=(const filtercnt& rhs);
+	filtercnt(const filtercnt& rhs);
+
 	void reset(bool also_reset_history);
 	void copy(const filtercnt& fc);
 
-	__int64			cnt;
+private:
 	__int64			cnt_prev;
-	__int64			delta;
-	__int64			cnt_xml;
-	__int64			cnt_xml2;
-	__int64			cnt_logdb;
+	std::atomic<int_fast64_t>	cnt;
+	std::atomic<int_fast64_t>	cnt_xml;
+	std::atomic<int_fast64_t>	cnt_xml2;
+	std::atomic<int_fast64_t>	cnt_logdb;
+
+public:
+	__int64 get_cnt() const;
+	void set_cnt(__int64 value);
+	void add_cnt(__int64 value);
+
+	__int64 get_xml() const;
+	void set_xml(__int64 value);
+	void add_xml(__int64 value);
+
+	__int64 get_xml2() const;
+	void set_xml2(__int64 value);
+	void add_xml2(__int64 value);
+
+	__int64 get_logdb() const;
+	void set_logdb(__int64 value);
+	void add_logdb(__int64 value);
+
 	unsigned short	cnt_set[MAXVALUES];
 	unsigned int	cnt_momspeed1;
 	unsigned int	cnt_speed;

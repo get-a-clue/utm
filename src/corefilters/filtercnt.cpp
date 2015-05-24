@@ -33,9 +33,88 @@ void filtercnt::reset(bool also_reset_history)
 	};
 }
 
+filtercnt& filtercnt::operator=(const filtercnt& rhs)
+{
+	copy(rhs);
+	return *this;
+}
+
+filtercnt::filtercnt(const filtercnt& rhs)
+{
+	copy(rhs);
+}
+
 void filtercnt::copy(const filtercnt& fc)
 {
-	memcpy(this, &fc, sizeof(filtercnt));
+	cnt_prev = fc.cnt_prev;
+	cnt.store(fc.cnt.load());
+	cnt_xml.store(fc.cnt_xml.load());
+	cnt_xml2.store(fc.cnt_xml2.load());
+	cnt_logdb.store(fc.cnt_logdb.load());
+
+	memcpy(cnt_set, fc.cnt_set, sizeof(unsigned short) * MAXVALUES);
+	cnt_momspeed1 = fc.cnt_momspeed1;
+	cnt_speed = fc.cnt_speed;
+}
+
+__int64 filtercnt::get_cnt() const
+{
+	return cnt.load();
+}
+
+void filtercnt::set_cnt(__int64 value)
+{
+	cnt.store(value);
+}
+
+void filtercnt::add_cnt(__int64 value)
+{
+	cnt.fetch_add(value);
+}
+
+__int64 filtercnt::get_xml() const
+{
+	return cnt_xml.load();
+}
+
+void filtercnt::set_xml(__int64 value)
+{
+	cnt_xml.store(value);
+}
+
+void filtercnt::add_xml(__int64 value)
+{
+	cnt_xml.fetch_add(value);
+}
+
+__int64 filtercnt::get_xml2() const
+{
+	return cnt_xml2.load();
+}
+
+void filtercnt::set_xml2(__int64 value)
+{
+	cnt_xml2.store(value);
+}
+
+void filtercnt::add_xml2(__int64 value)
+{
+	cnt_xml2.fetch_add(value);
+}
+
+__int64 filtercnt::get_logdb() const
+{
+	return cnt_logdb.load();
+}
+
+void filtercnt::set_logdb(__int64 value)
+{
+	cnt_logdb.store(value);
+}
+
+void filtercnt::add_logdb(__int64 value)
+{
+	cnt_logdb.fetch_add(value);
 }
 
 // This procedure packs the 32-bit speed of packets flow (in bytes/sec)
@@ -70,7 +149,9 @@ unsigned int filtercnt::unpack_speed(unsigned short packed_speed)
 
 void filtercnt::do_refresh(unsigned int total_points, unsigned int next_point)
 {
-	delta = cnt - cnt_prev;
+	__int64 local_cnt = cnt.load();
+	__int64 delta = local_cnt - cnt_prev;
+	cnt_prev = local_cnt;
 
 	if (delta < 0)
 	{
@@ -79,16 +160,15 @@ void filtercnt::do_refresh(unsigned int total_points, unsigned int next_point)
 	cnt_speed = static_cast<unsigned int>(delta / REFRESH_INTERVAL);
 
 	cnt_set[next_point] = filtercnt::pack_speed(cnt_speed);
-	cnt_prev = cnt;
 
 	if (delta != 0)
 	{
 		// For XML Traffic Reports
-		cnt_xml += delta;
-		cnt_xml2 += delta;
+		cnt_xml.fetch_add(delta);
+		cnt_xml2.fetch_add(delta);
 
 		// For Database Traffic Reports
-		cnt_logdb += delta;
+		cnt_logdb.fetch_add(delta);
 	}
 
 	// Calc average speed for last N points

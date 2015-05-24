@@ -35,8 +35,8 @@ void filtersetcons::fill_from_filterset(const filterset& fs, unsigned int seqnum
 
 		filtercons fc;
 		fc.filter_id = iter->get_id();
-		fc.bytes_sent = iter->cnt_sent.cnt;
-		fc.bytes_recv = iter->cnt_recv.cnt;
+		fc.bytes_sent = iter->cnt_sent.get_cnt();
+		fc.bytes_recv = iter->cnt_recv.get_cnt();
 		fc.speed_array.set(reinterpret_cast<unsigned char*>(diff), diff_size*2*sizeof(unsigned short));
 
 		filtercons_s.items.push_back(fc);
@@ -80,8 +80,8 @@ void filtersetcons::apply_to_filterset(filterset& fs)
 				continue;
 		}
 
-		pf->cnt_recv.cnt = iter->bytes_recv;
-		pf->cnt_sent.cnt = iter->bytes_sent;
+		pf->cnt_recv.set_cnt(iter->bytes_recv);
+		pf->cnt_sent.set_cnt(iter->bytes_sent);
 		unsigned int points = iter->speed_array.size() / sizeof(unsigned short);
 		unsigned short* diff_sent = reinterpret_cast<unsigned short*>(iter->speed_array.get());
 		unsigned short* diff_recv = reinterpret_cast<unsigned short*>(iter->speed_array.get());

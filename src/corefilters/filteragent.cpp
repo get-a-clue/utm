@@ -20,8 +20,8 @@ void filteragent::create(unsigned int total_points, unsigned int next_point, uns
 	speed = f.m_nSpeed;
 	traffic_limit_mb = f.m_nTrafficLimitMb;
 	traffic_limit_type = f.m_nTrafficLimitType;
-	bytes_sent = f.cnt_sent.cnt;
-	bytes_recv = f.cnt_recv.cnt;
+	bytes_sent = f.cnt_sent.get_cnt();
+	bytes_recv = f.cnt_recv.get_cnt();
 	f.cnt_sent.select_speedarray_base64(total_points, next_point, array_elements_count, speed_array_sent);
 	f.cnt_recv.select_speedarray_base64(total_points, next_point, array_elements_count, speed_array_recv);
 

@@ -24,8 +24,8 @@ void filtersetstate::create_from_filterset(const filterset& fs)
 		filterstate fst;
 		fst.filter_id = iter->get_id();
 		fst.filter_name = iter->get_name();
-		fst.bytes_recv = iter->cnt_recv.cnt;
-		fst.bytes_sent = iter->cnt_sent.cnt;
+		fst.bytes_recv = iter->cnt_recv.get_cnt();
+		fst.bytes_sent = iter->cnt_sent.get_cnt();
 		fst.limflags = iter->m_wTrafficLimitFlags;
 		fst.lastreset.from_time_t(iter->last_reset_ts.ts);
 
@@ -40,8 +40,8 @@ void filtersetstate::apply_to_filterset(filterset& fs) const
 		filter2* pf = fs.filters.findptr_by_id(iter->get_id());
 		if (pf != NULL)
 		{
-			pf->cnt_recv.cnt = iter->bytes_recv;
-			pf->cnt_sent.cnt = iter->bytes_sent;
+			pf->cnt_recv.set_cnt(iter->bytes_recv);
+			pf->cnt_sent.set_cnt(iter->bytes_sent);
 			pf->m_wTrafficLimitFlags = iter->limflags;
 			pf->last_reset_ts = utm::utimestamp(iter->lastreset.to_time_t());
 		}
