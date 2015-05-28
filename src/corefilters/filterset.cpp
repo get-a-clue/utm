@@ -146,7 +146,7 @@ void filterset::process_traffic_limit_flags(const gstring& flagfolder)
 				f.open(flagfile.c_str(), std::fstream::out);
 				if (f)
 				{
-					f << nowstr << " " << iter->cnt_sent.cnt << "/" << iter->cnt_recv.cnt;
+					f << nowstr << " " << iter->cnt_sent.get_cnt() << "/" << iter->cnt_recv.get_cnt();
 					f.close();
 				}
 
@@ -178,7 +178,7 @@ void filterset::process_traffic_limit_flags(const gstring& flagfolder)
 				f.open(flagfile.c_str(), std::fstream::out);
 				if (f)
 				{
-					f << nowstr << " " << iter->cnt_sent.cnt << "/" << iter->cnt_recv.cnt;
+					f << nowstr << " " << iter->cnt_sent.get_cnt() << "/" << iter->cnt_recv.get_cnt();
 					f.close();
 				}
 

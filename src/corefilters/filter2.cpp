@@ -119,22 +119,22 @@ bool filter2::is_traffic_limit_exceeded(int mbytes, bool check_warning_level) co
 	{
 		switch(m_nTrafficLimitType)
 		{
-			case TRAFFICLIMIT_SENT_PLUS_RECV:	if ((cnt_sent.cnt + cnt_recv.cnt) >= a) return true;
+			case TRAFFICLIMIT_SENT_PLUS_RECV:	if ((cnt_sent.get_cnt() + cnt_recv.get_cnt()) >= a) return true;
 												break;
 
-			case TRAFFICLIMIT_SENT:				if (cnt_sent.cnt >= a) return true;
+			case TRAFFICLIMIT_SENT:				if (cnt_sent.get_cnt() >= a) return true;
 												break;
 
-			case TRAFFICLIMIT_RECV:				if (cnt_recv.cnt >= a) return true;
+			case TRAFFICLIMIT_RECV:				if (cnt_recv.get_cnt() >= a) return true;
 												break;
 
-			default:							if ((cnt_sent.cnt >= a) || (cnt_recv.cnt >= a)) return true;
+			default:							if ((cnt_sent.get_cnt() >= a) || (cnt_recv.get_cnt() >= a)) return true;
 												break;
 		};
 	}
 	else
 	{
-		if ((m_nTrafficLimitType > 0) && ((cnt_sent.cnt < 0) || (cnt_recv.cnt < 0)))
+		if ((m_nTrafficLimitType > 0) && ((cnt_sent.get_cnt() < 0) || (cnt_recv.get_cnt() < 0)))
 			return true;
 	};
 
@@ -155,19 +155,19 @@ bool filter2::is_traffic_limitwarn_exceeded(int mbytes) const
 	switch(m_nTrafficLimitType)
 	{
 		case TRAFFICLIMIT_SENT_PLUS_RECV:
-											if ((cnt_sent.cnt + cnt_recv.cnt) >= a) return true;
+											if ((cnt_sent.get_cnt() + cnt_recv.get_cnt()) >= a) return true;
 											break;
 
 		case TRAFFICLIMIT_SENT:
-											if (cnt_sent.cnt >= a) return true;
+											if (cnt_sent.get_cnt() >= a) return true;
 											break;
 
 		case TRAFFICLIMIT_RECV:
-											if (cnt_recv.cnt >= a) return true;
+											if (cnt_recv.get_cnt() >= a) return true;
 											break;
 
 		default:
-											if ((cnt_sent.cnt >= a) || (cnt_recv.cnt >= a)) return true;
+											if ((cnt_sent.get_cnt() >= a) || (cnt_recv.get_cnt() >= a)) return true;
 											break;
 	};
 
@@ -725,43 +725,43 @@ void filter2::match_filter(const match_filter_input& data, match_filter_result& 
 			switch (prule->condition_type)
 			{
 				case COND_SENT_LESS:
-								is_match = cnt_sent.cnt < lim;
+								is_match = cnt_sent.get_cnt() < lim;
 								break;
 
 				case COND_SENT_GREATER:
-								is_match = cnt_sent.cnt > lim;
+								is_match = cnt_sent.get_cnt() > lim;
 								break;
 
 				case COND_RECV_LESS:
-								is_match = cnt_recv.cnt < lim;
+								is_match = cnt_recv.get_cnt() < lim;
 								break;
 
 				case COND_RECV_GREATER:
-								is_match = cnt_recv.cnt > lim;
+								is_match = cnt_recv.get_cnt() > lim;
 								break;
 
 				case COND_SENT_OR_RECV_LESS:
-								is_match = (cnt_sent.cnt < lim) || (cnt_recv.cnt < lim);
+								is_match = (cnt_sent.get_cnt() < lim) || (cnt_recv.get_cnt() < lim);
 								break;
 
 				case COND_SENT_OR_RECV_GREATER:
-								is_match = (cnt_sent.cnt > lim) || (cnt_recv.cnt > lim);
+								is_match = (cnt_sent.get_cnt() > lim) || (cnt_recv.get_cnt() > lim);
 								break;
 
 				case COND_SENT_AND_RECV_LESS:
-								is_match = (cnt_sent.cnt < lim) && (cnt_recv.cnt < lim);
+								is_match = (cnt_sent.get_cnt() < lim) && (cnt_recv.get_cnt() < lim);
 								break;
 
 				case COND_SENT_AND_RECV_GREATER:
-								is_match = (cnt_sent.cnt > lim) && (cnt_recv.cnt > lim);
+								is_match = (cnt_sent.get_cnt() > lim) && (cnt_recv.get_cnt() > lim);
 								break;
 
 				case COND_SENT_PLUS_RECV_LESS:
-								is_match = (cnt_sent.cnt + cnt_recv.cnt) < lim;
+								is_match = (cnt_sent.get_cnt() + cnt_recv.get_cnt()) < lim;
 								break;
 
 				case COND_SENT_PLUS_RECV_GREATER:
-								is_match = (cnt_sent.cnt + cnt_recv.cnt) > lim;
+								is_match = (cnt_sent.get_cnt() + cnt_recv.get_cnt()) > lim;
 								break;
 			};
 
@@ -929,22 +929,22 @@ void filter2::match_filter(const match_filter_input& data, match_filter_result& 
 					{
 						if (!m_bRevers)
 						{
-							cnt_sent.cnt += ip->length;
+							cnt_sent.add_cnt(ip->length);
 						}
 						else
 						{
-							cnt_sent.cnt -= ip->length;
+							cnt_sent.add_cnt(-ip->length);
 						};
 					}
 					else
 					{
 						if (!m_bRevers)
 						{
-							cnt_recv.cnt += ip->length;
+							cnt_recv.add_cnt(ip->length);
 						}
 						else
 						{
-							cnt_recv.cnt -= ip->length;
+							cnt_recv.add_cnt(-ip->length);
 						}
 					};
 
@@ -1081,15 +1081,15 @@ void filter2::test_match_filter()
 
 		f1.match_filter(input, result, true);
 		TEST_CASE_CHECK(result.filter_match_result, true);
-		TEST_CASE_CHECK(f1.cnt_sent.cnt, __int64(60));
-		TEST_CASE_CHECK(f1.cnt_recv.cnt, __int64(0));
+		TEST_CASE_CHECK(f1.cnt_sent.get_cnt(), __int64(60));
+		TEST_CASE_CHECK(f1.cnt_recv.get_cnt(), __int64(0));
 
 		input.nModifyCounter = MODIFY_COUNTER_NO;
 
 		f1.match_filter(input, result, true);
 		TEST_CASE_CHECK(result.filter_match_result, true);
-		TEST_CASE_CHECK(f1.cnt_sent.cnt, __int64(60));
-		TEST_CASE_CHECK(f1.cnt_recv.cnt, __int64(0));
+		TEST_CASE_CHECK(f1.cnt_sent.get_cnt(), __int64(60));
+		TEST_CASE_CHECK(f1.cnt_recv.get_cnt(), __int64(0));
 
 		input.nModifyCounter = MODIFY_COUNTER_YES;
 
@@ -1097,8 +1097,8 @@ void filter2::test_match_filter()
 
 		f1.match_filter(input, result, true);
 		TEST_CASE_CHECK(result.filter_match_result, false);
-		TEST_CASE_CHECK(f1.cnt_sent.cnt, __int64(60));
-		TEST_CASE_CHECK(f1.cnt_recv.cnt, __int64(0));
+		TEST_CASE_CHECK(f1.cnt_sent.get_cnt(), __int64(60));
+		TEST_CASE_CHECK(f1.cnt_recv.get_cnt(), __int64(0));
 
 		input.nPreCheckAddrTables = CHECKADDR_MYPC_SRC;
 
@@ -1108,8 +1108,8 @@ void filter2::test_match_filter()
 
 		f1.match_filter(input, result, true);
 		TEST_CASE_CHECK(result.filter_match_result, false);
-		TEST_CASE_CHECK(f1.cnt_sent.cnt, __int64(60));
-		TEST_CASE_CHECK(f1.cnt_recv.cnt, __int64(0));
+		TEST_CASE_CHECK(f1.cnt_sent.get_cnt(), __int64(60));
+		TEST_CASE_CHECK(f1.cnt_recv.get_cnt(), __int64(0));
 
 		f1.rules_clear();
 		rule r3(RULE_MYIP, "0.0.0.0", "255.255.255.255", RULE_IP, "10.0.0.181", "255.255.255.0");
@@ -1119,8 +1119,8 @@ void filter2::test_match_filter()
 
 		f1.match_filter(input, result, true);
 		TEST_CASE_CHECK(result.filter_match_result, true);
-		TEST_CASE_CHECK(f1.cnt_sent.cnt, __int64(60));
-		TEST_CASE_CHECK(f1.cnt_recv.cnt, __int64(60));
+		TEST_CASE_CHECK(f1.cnt_sent.get_cnt(), __int64(60));
+		TEST_CASE_CHECK(f1.cnt_recv.get_cnt(), __int64(60));
 
 		rule r4(RULE_MYIP, "0.0.0.0", "255.255.255.255", RULE_IP, "0.0.0.0", "0.0.0.0");
 		f1.rule_add(r4);
@@ -1129,8 +1129,8 @@ void filter2::test_match_filter()
 
 		f1.match_filter(input, result, true);
 		TEST_CASE_CHECK(result.filter_match_result, true);
-		TEST_CASE_CHECK(f1.cnt_sent.cnt, __int64(120));
-		TEST_CASE_CHECK(f1.cnt_recv.cnt, __int64(60));
+		TEST_CASE_CHECK(f1.cnt_sent.get_cnt(), __int64(120));
+		TEST_CASE_CHECK(f1.cnt_recv.get_cnt(), __int64(60));
 
 		// RULE_LAN, RULE_WAN
 
@@ -1141,8 +1141,8 @@ void filter2::test_match_filter()
 
 		f1.match_filter(input, result, true);
 		TEST_CASE_CHECK(result.filter_match_result, true);
-		TEST_CASE_CHECK(f1.cnt_sent.cnt, __int64(180));
-		TEST_CASE_CHECK(f1.cnt_recv.cnt, __int64(60));
+		TEST_CASE_CHECK(f1.cnt_sent.get_cnt(), __int64(180));
+		TEST_CASE_CHECK(f1.cnt_recv.get_cnt(), __int64(60));
 
 		f1.rules_clear();
 		rule r6(RULE_LAN, "255.255.255.255", "255.255.255.255", RULE_WAN, "255.255.255.255", "255.255.255.255");
@@ -1151,8 +1151,8 @@ void filter2::test_match_filter()
 
 		f1.match_filter(input, result, true);
 		TEST_CASE_CHECK(result.filter_match_result, true);
-		TEST_CASE_CHECK(f1.cnt_sent.cnt, __int64(240));
-		TEST_CASE_CHECK(f1.cnt_recv.cnt, __int64(60));
+		TEST_CASE_CHECK(f1.cnt_sent.get_cnt(), __int64(240));
+		TEST_CASE_CHECK(f1.cnt_recv.get_cnt(), __int64(60));
 
 		// RULE_MAC
 
@@ -1165,8 +1165,8 @@ void filter2::test_match_filter()
 
 		f1.match_filter(input, result, true);
 		TEST_CASE_CHECK(result.filter_match_result, true);
-		TEST_CASE_CHECK(f1.cnt_sent.cnt, __int64(240));
-		TEST_CASE_CHECK(f1.cnt_recv.cnt, __int64(120));
+		TEST_CASE_CHECK(f1.cnt_sent.get_cnt(), __int64(240));
+		TEST_CASE_CHECK(f1.cnt_recv.get_cnt(), __int64(120));
 
 		r7.src_mac.from_string("FF:FE:FD:FC:FB:F0");
 		f1.rules_clear();
@@ -1174,8 +1174,8 @@ void filter2::test_match_filter()
 
 		f1.match_filter(input, result, true);
 		TEST_CASE_CHECK(result.filter_match_result, false);
-		TEST_CASE_CHECK(f1.cnt_sent.cnt, __int64(240));
-		TEST_CASE_CHECK(f1.cnt_recv.cnt, __int64(120));
+		TEST_CASE_CHECK(f1.cnt_sent.get_cnt(), __int64(240));
+		TEST_CASE_CHECK(f1.cnt_recv.get_cnt(), __int64(120));
 
 		// RULE_RANGE
 
@@ -1186,8 +1186,8 @@ void filter2::test_match_filter()
 
 		f1.match_filter(input, result, true);
 		TEST_CASE_CHECK(result.filter_match_result, true);
-		TEST_CASE_CHECK(f1.cnt_sent.cnt, __int64(300));
-		TEST_CASE_CHECK(f1.cnt_recv.cnt, __int64(120));
+		TEST_CASE_CHECK(f1.cnt_sent.get_cnt(), __int64(300));
+		TEST_CASE_CHECK(f1.cnt_recv.get_cnt(), __int64(120));
 
 		f1.rules_clear();
 		r8.src_ip.from_string("192.168.1.3");
@@ -1195,8 +1195,8 @@ void filter2::test_match_filter()
 
 		f1.match_filter(input, result, true);
 		TEST_CASE_CHECK(result.filter_match_result, false);
-		TEST_CASE_CHECK(f1.cnt_sent.cnt, __int64(300));
-		TEST_CASE_CHECK(f1.cnt_recv.cnt, __int64(120));
+		TEST_CASE_CHECK(f1.cnt_sent.get_cnt(), __int64(300));
+		TEST_CASE_CHECK(f1.cnt_recv.get_cnt(), __int64(120));
 
 		// RULE_ADDRGRP
 
@@ -1208,8 +1208,8 @@ void filter2::test_match_filter()
 
 		f1.match_filter(input, result, true);
 		TEST_CASE_CHECK(result.filter_match_result, false);
-		TEST_CASE_CHECK(f1.cnt_sent.cnt, __int64(300));
-		TEST_CASE_CHECK(f1.cnt_recv.cnt, __int64(120));
+		TEST_CASE_CHECK(f1.cnt_sent.get_cnt(), __int64(300));
+		TEST_CASE_CHECK(f1.cnt_recv.get_cnt(), __int64(120));
 
 		addrtablemaprec_v4 amr;
 		amr.set_id(11);
@@ -1218,8 +1218,8 @@ void filter2::test_match_filter()
 
 		f1.match_filter(input, result, true);
 		TEST_CASE_CHECK(result.filter_match_result, true);
-		TEST_CASE_CHECK(f1.cnt_sent.cnt, __int64(360));
-		TEST_CASE_CHECK(f1.cnt_recv.cnt, __int64(120));
+		TEST_CASE_CHECK(f1.cnt_sent.get_cnt(), __int64(360));
+		TEST_CASE_CHECK(f1.cnt_recv.get_cnt(), __int64(120));
 
 		// RULE_ADDRGRP_NO
 
@@ -1231,8 +1231,8 @@ void filter2::test_match_filter()
 
 		f1.match_filter(input, result, true);
 		TEST_CASE_CHECK(result.filter_match_result, false);
-		TEST_CASE_CHECK(f1.cnt_sent.cnt, __int64(360));
-		TEST_CASE_CHECK(f1.cnt_recv.cnt, __int64(120));
+		TEST_CASE_CHECK(f1.cnt_sent.get_cnt(), __int64(360));
+		TEST_CASE_CHECK(f1.cnt_recv.get_cnt(), __int64(120));
 
 		// RULE_HOST
 
@@ -1250,20 +1250,20 @@ void filter2::test_match_filter()
 
 		f1.match_filter(input, result, true);
 		TEST_CASE_CHECK(result.filter_match_result, false);
-		TEST_CASE_CHECK(f1.cnt_sent.cnt, __int64(360));
-		TEST_CASE_CHECK(f1.cnt_recv.cnt, __int64(120));
+		TEST_CASE_CHECK(f1.cnt_sent.get_cnt(), __int64(360));
+		TEST_CASE_CHECK(f1.cnt_recv.get_cnt(), __int64(120));
 
 		input.ip->dst_ip_addr = utm::addrip_v4("127.0.0.1");
 		f1.match_filter(input, result, true);
 		TEST_CASE_CHECK(result.filter_match_result, true);
-		TEST_CASE_CHECK(f1.cnt_sent.cnt, __int64(420));
-		TEST_CASE_CHECK(f1.cnt_recv.cnt, __int64(120));
+		TEST_CASE_CHECK(f1.cnt_sent.get_cnt(), __int64(420));
+		TEST_CASE_CHECK(f1.cnt_recv.get_cnt(), __int64(120));
 
 		input.ip->dst_ip_addr = utm::addrip_v4("127.0.0.2");
 		f1.match_filter(input, result, true);
 		TEST_CASE_CHECK(result.filter_match_result, false);
-		TEST_CASE_CHECK(f1.cnt_sent.cnt, __int64(420));
-		TEST_CASE_CHECK(f1.cnt_recv.cnt, __int64(120));
+		TEST_CASE_CHECK(f1.cnt_sent.get_cnt(), __int64(420));
+		TEST_CASE_CHECK(f1.cnt_recv.get_cnt(), __int64(120));
 
 	}
 }
