@@ -3,6 +3,7 @@
 #include "adapterinfo.h"
 #include "addrip_v4.h"
 #include "stringtools.h"
+#include "utime.h"
 
 namespace utm {
 
@@ -40,6 +41,8 @@ void adapterinfo::test_fillparams(int num)
 	mac_permanent.from_string("cacbcccdcecf");
 	is_promiscuous = true;
 	is_selected = true;
+	original_index = 8;
+	alias = 10;
 
 	std::string s = getstr_adapterinfo("test");
 	TEST_CASE_CHECK(s, std::string("test Realtek 8139A, IP=192.0.0.1, Promiscous mode=on"));
@@ -47,12 +50,26 @@ void adapterinfo::test_fillparams(int num)
 
 void adapterinfo::test_all()
 {
-	adapterinfo ai;
-	ai.test_fillparams(1);
+	utm::utime t1;
+	t1.now();
 
-	std::string s;
-	ai.xml_create();
-	ai.xml_get_string(s, true);
+	for (int i = 0; i < 10; i++)
+	{
+		adapterinfo ai;
+		ai.test_fillparams(1);
+
+		std::string s;
+		ai.xml_create();
+		ai.xml_get_string(s, true);
+
+		adapterinfo ai2;
+		ai2.xml_parse(s.c_str());
+	}
+
+	utm::utime t2;
+	t2.now();
+
+	time_t diff = t2.to_time_t() - t1.to_time_t();
 
 	return;
 }

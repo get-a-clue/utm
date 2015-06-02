@@ -450,6 +450,7 @@
     <ClInclude Include="event_pkt.h" />
     <ClInclude Include="event_pkt_queue.h" />
     <ClInclude Include="event_test.h" />
+    <ClInclude Include="fastformat.h" />
     <ClInclude Include="gstring.h" />
     <ClInclude Include="idset.h" />
     <ClInclude Include="keyvalue.h" />
@@ -563,6 +564,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugUTest|x64'">Use</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="event_pkt_queue.cpp" />
+    <ClCompile Include="fastformat.cpp" />
     <ClCompile Include="gstring.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugTest|Win32'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugTest|x64'">Use</PrecompiledHeader>

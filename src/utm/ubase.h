@@ -20,6 +20,7 @@
 #include <pugixml.hpp>
 #include <gstring.h>
 #include <addrip_v4.h>
+#include <fastformat.h>
 
 typedef std::map<std::string, std::string> xmlattr_container;
 
@@ -149,38 +150,14 @@ protected:
 	bool xml_check_value(const char* current_keyname, const char* wanted_keyname, const char* current_keyvalue, gstring& wanted_keyvalue);
 	bool xml_check_value(const char* current_keyname, const char* wanted_keyname, const char* current_keyvalue, bool& wanted_keyvalue);
 	bool xml_check_value(const char* current_keyname, const char* wanted_keyname, const char* current_keyvalue, addrip_v4& wanted_keyvalue);
-
-	bool xml_check_value(const char* current_keyname, const char* wanted_keyname, const char* current_keyvalue, std::atomic_uint_fast32_t& wanted_keyvalue)
-	{
-		if (!xml_check_args(current_keyname, wanted_keyname))
-			return false;
-
-		std::uint32_t v = 0;
-		if (current_keyvalue != NULL)
-		{
-			std::istringstream iss(current_keyvalue);
-			iss >> v;
-		}
-		wanted_keyvalue = v;
-
-		return true;
-	}
-
-	bool xml_check_value(const char* current_keyname, const char* wanted_keyname, const char* current_keyvalue, std::atomic_uint_fast64_t& wanted_keyvalue)
-	{
-		if (!xml_check_args(current_keyname, wanted_keyname))
-			return false;
-
-		std::uint64_t v = 0;
-		if (current_keyvalue != NULL)
-		{
-			std::istringstream iss(current_keyvalue);
-			iss >> v;
-		}
-		wanted_keyvalue = v;
-
-		return true;
-	}
+	bool xml_check_value(const char* current_keyname, const char* wanted_keyname, const char* current_keyvalue, short& wanted_keyvalue);
+	bool xml_check_value(const char* current_keyname, const char* wanted_keyname, const char* current_keyvalue, unsigned short& wanted_keyvalue);
+	bool xml_check_value(const char* current_keyname, const char* wanted_keyname, const char* current_keyvalue, int& wanted_keyvalue);
+	bool xml_check_value(const char* current_keyname, const char* wanted_keyname, const char* current_keyvalue, unsigned int& wanted_keyvalue);
+	bool xml_check_value(const char* current_keyname, const char* wanted_keyname, const char* current_keyvalue, std::int64_t& wanted_keyvalue);
+	bool xml_check_value(const char* current_keyname, const char* wanted_keyname, const char* current_keyvalue, std::uint64_t& wanted_keyvalue);
+	bool xml_check_value(const char* current_keyname, const char* wanted_keyname, const char* current_keyvalue, std::atomic_uint_fast32_t& wanted_keyvalue);
+	bool xml_check_value(const char* current_keyname, const char* wanted_keyname, const char* current_keyvalue, std::atomic_uint_fast64_t& wanted_keyvalue);
 
 	bool xml_check_value(const char* current_keyname, const char* wanted_keyname, const char* current_keyvalue, boost::function<void (const char *)> parser)
 	{

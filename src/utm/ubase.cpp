@@ -363,7 +363,87 @@ bool ubase::xml_check_value(const char* current_keyname, const char* wanted_keyn
 	return true;
 }
 
-bool ubase::xml_check_args(const char* current_keyname, const char* wanted_keyname)
+bool ubase::xml_check_value(const char* current_keyname, const char* wanted_keyname, const char* current_keyvalue, short& wanted_keyvalue)
+{
+	if (!xml_check_args(current_keyname, wanted_keyname))
+		return false;
+
+	wanted_keyvalue = fastformat::parse_short(current_keyvalue);
+
+	return true;
+}
+
+bool ubase::xml_check_value(const char* current_keyname, const char* wanted_keyname, const char* current_keyvalue, unsigned short& wanted_keyvalue)
+{
+	if (!xml_check_args(current_keyname, wanted_keyname))
+		return false;
+
+	wanted_keyvalue = fastformat::parse_ushort(current_keyvalue);
+
+	return true;
+}
+
+bool ubase::xml_check_value(const char* current_keyname, const char* wanted_keyname, const char* current_keyvalue, int& wanted_keyvalue)
+{
+	if (!xml_check_args(current_keyname, wanted_keyname))
+		return false;
+
+	wanted_keyvalue = fastformat::parse_int(current_keyvalue);
+
+	return true;
+}
+
+bool ubase::xml_check_value(const char* current_keyname, const char* wanted_keyname, const char* current_keyvalue, unsigned int& wanted_keyvalue)
+{
+	if (!xml_check_args(current_keyname, wanted_keyname))
+		return false;
+
+	wanted_keyvalue = fastformat::parse_uint(current_keyvalue);
+
+	return true;
+}
+
+bool ubase::xml_check_value(const char* current_keyname, const char* wanted_keyname, const char* current_keyvalue, std::int64_t& wanted_keyvalue)
+{
+	if (!xml_check_args(current_keyname, wanted_keyname))
+		return false;
+
+	wanted_keyvalue = fastformat::parse_int64(current_keyvalue);
+
+	return true;
+}
+
+bool ubase::xml_check_value(const char* current_keyname, const char* wanted_keyname, const char* current_keyvalue, std::uint64_t& wanted_keyvalue)
+{
+	if (!xml_check_args(current_keyname, wanted_keyname))
+		return false;
+
+	wanted_keyvalue = fastformat::parse_uint64(current_keyvalue);
+
+	return true;
+}
+
+bool ubase::xml_check_value(const char* current_keyname, const char* wanted_keyname, const char* current_keyvalue, std::atomic_uint_fast32_t& wanted_keyvalue)
+{
+	if (!xml_check_args(current_keyname, wanted_keyname))
+		return false;
+
+	wanted_keyvalue.store(fastformat::parse_uint(current_keyvalue));
+
+	return true;
+}
+
+bool ubase::xml_check_value(const char* current_keyname, const char* wanted_keyname, const char* current_keyvalue, std::atomic_uint_fast64_t& wanted_keyvalue)
+{
+	if (!xml_check_args(current_keyname, wanted_keyname))
+		return false;
+
+	wanted_keyvalue.store(fastformat::parse_uint64(current_keyvalue));
+
+	return true;
+}
+
+inline bool ubase::xml_check_args(const char* current_keyname, const char* wanted_keyname)
 {
 	if ((current_keyname == NULL) || (wanted_keyname == NULL))
 		return false;

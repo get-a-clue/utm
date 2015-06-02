@@ -5,6 +5,7 @@
 #include <sstream>
 #include <fstream>
 
+#include "fastformat.h"
 #include "addrpair_v4.h"
 #include "addrip_v4.h"
 #include "addrtable_v4.h"
@@ -67,6 +68,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	{
 		try
 		{
+			utm::fastformat::test_all();
 			utm::md5::test_all();
 			utm::base64::test_all();
 			utm::crc32::test_all();
