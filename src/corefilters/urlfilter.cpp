@@ -4,6 +4,8 @@
 #include <stringtools.h>
 #include <ubase_test.h>
 
+#define UTM_AVERAGE_URLFILTER_LENGTH 12
+
 namespace utm {
 
 const char urlfilter::this_class_name[] = "urlfilter";
@@ -16,11 +18,6 @@ urlfilter::~urlfilter(void)
 {
 }
 
-//void urlfilter::xml_catch_value(const char *keyname, const char *keyvalue)
-//{
-//	urlfilter_base::xml_catch_value(keyname, keyvalue);
-//}
-
 std::string urlfilter::get_urlrules_str() const
 {
 	const static std::string delim(" ");
@@ -30,7 +27,7 @@ std::string urlfilter::get_urlrules_str() const
 std::string urlfilter::get_urlrules_str(const std::string& delimiter) const
 {
 	std::string retval;
-	retval.reserve(urlrules.size() * 12);
+	retval.reserve(urlrules.size() * UTM_AVERAGE_URLFILTER_LENGTH);
 
 	urlrules_container::const_iterator iter;
 	for (iter = urlrules.begin(); iter != urlrules.end(); ++iter)
@@ -53,11 +50,17 @@ void urlfilter::parse_urlrules_str(const char *p)
 
 void urlfilter::parse_urlrules_str(const char *p, char delimiter)
 {
+	urlrules.clear();
+
 	std::vector<std::string> tmp_urlrules;
 	stringtools::split(tmp_urlrules, p, delimiter);
-	for (std::vector<std::string>::iterator iter = tmp_urlrules.begin(); iter != tmp_urlrules.end(); ++iter)
+	for (auto iter = tmp_urlrules.begin(); iter != tmp_urlrules.end(); ++iter)
 	{
-		urlrules.push_back(*iter);
+		std::string& current_item = *iter;
+		if (!current_item.empty())
+		{
+			urlrules.push_back(current_item);
+		}
 	}
 }
 
@@ -69,15 +72,13 @@ bool urlfilter::check_fid(unsigned int filter_id) const
 int urlfilter::match(const char *host, const char *uri, const char *hosturi) const
 {
 	int result = URLFILTERING_NO_MATCH;
-	const char *p;
-	int n;
 
 	if (!is_disabled)
 	{
 		urlrules_container::const_iterator iter;
 		for (iter = urlrules.begin(); iter != urlrules.end(); ++iter)
 		{
-			p = NULL;
+			const char *p = NULL;
 
 			if ((addr_part & URLFILTER_ADDRPART_HOST) && (addr_part & URLFILTER_ADDRPART_URI))
 			{
@@ -91,7 +92,7 @@ int urlfilter::match(const char *host, const char *uri, const char *hosturi) con
 
 			if (p != NULL)
 			{
-				n = match_rule((*iter).c_str(), p);
+				int n = match_rule((*iter).c_str(), p);
 				if (n != URLFILTERING_NO_MATCH)
 				{
 					result = n;

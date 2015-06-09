@@ -20,8 +20,6 @@ public:
 	urlfilter(void);
 	~urlfilter(void);
 
-	//void xml_catch_value(const char *keyname, const char *keyvalue);
-
 	void set_id(unsigned int id) { ufid = id; };
 	unsigned int get_id() const { return ufid; };
 	const gstring& get_name() const { return name; };
