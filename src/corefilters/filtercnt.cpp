@@ -67,9 +67,21 @@ void filtercnt::set_cnt(__int64 value)
 	cnt.store(value);
 }
 
+void filtercnt::set_cnt_with_prev(__int64 value)
+{
+	cnt.store(value);
+	cnt_prev = value;
+}
+
 void filtercnt::add_cnt(__int64 value)
 {
 	cnt.fetch_add(value);
+}
+
+void filtercnt::add_cnt_with_prev(__int64 value)
+{
+	cnt.fetch_add(value);
+	cnt_prev += value;
 }
 
 __int64 filtercnt::get_xml() const

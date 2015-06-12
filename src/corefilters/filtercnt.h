@@ -35,7 +35,9 @@ private:
 public:
 	__int64 get_cnt() const;
 	void set_cnt(__int64 value);
+	void set_cnt_with_prev(__int64 value);
 	void add_cnt(__int64 value);
+	void add_cnt_with_prev(__int64 value);
 
 	__int64 get_xml() const;
 	void set_xml(__int64 value);
