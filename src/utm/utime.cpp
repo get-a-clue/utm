@@ -68,7 +68,7 @@ tm utime::to_tm() const
 time_t utime::to_time_t() const
 {
 	tm lt = boost::posix_time::to_tm(ptime);
-	lt.tm_isdst = 1;
+	lt.tm_isdst = 0;
 	return mktime(&lt);
 }
 
@@ -289,7 +289,7 @@ utime utime::start_of_lastdayweek(const utime& t, int weekday)
 	lt.tm_hour = 0;
 	lt.tm_min = 0;
 	lt.tm_sec = 0;
-	lt.tm_isdst = 1;
+	lt.tm_isdst = 0;
 	time_t tt = mktime(&lt) + (diff * UTM_SECONDS_IN_DAY);
 
 	utime retval;
