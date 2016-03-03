@@ -3,8 +3,9 @@
 
 #include "utime.h"
 
-#include <boost/random.hpp>
-#include <ctime>  
+#include <random>
+#include <ctime>
+#include <iostream>
 
 namespace utm {
 
@@ -15,13 +16,9 @@ const char* get_utmversion()
 
 int get_random(int min, int max)
 {
-    static boost::minstd_rand gen((unsigned int)std::time(NULL));
-    boost::uniform_int<int> dist(min, max);
-    boost::variate_generator<
-        boost::minstd_rand&,
-        boost::uniform_int<int>> combgen(gen, dist);
-
-    return combgen();
+	std::mt19937 rng;
+	std::uniform_int_distribution<> gen(min, max);
+	return gen(rng);
 }
 
 unsigned short get_pid()
