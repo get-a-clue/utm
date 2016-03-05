@@ -610,7 +610,7 @@ LONG adapterlist::SaveSelectedListToRegistry(HKEY hkey, const TCHAR *pRegistryPa
 }
 
 #endif
-/*
+
 #ifdef UTM_DEBUG
 void adapterlist::test_fillparams(int test_num)
 {
@@ -658,5 +658,4 @@ void adapterlist::test_all()
 }
 
 #endif
-*/
 }

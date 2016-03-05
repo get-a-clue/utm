@@ -28,7 +28,7 @@ std::string adapterinfo::getstr_adapterinfo(const char *text) const
 	oss << text << " " << descr.getmb() << ", IP=" << addrip_v4(ipaddr_v4).to_string() << ", " << pmode;
 	return oss.str();
 }
-/*
+
 #ifdef UTM_DEBUG
 void adapterinfo::test_fillparams(int num)
 {
@@ -44,8 +44,8 @@ void adapterinfo::test_fillparams(int num)
 	original_index = 8;
 	alias = 10;
 
-	std::string s = getstr_adapterinfo("test");
-	BOOST_REQUIRE_EQUAL(s, std::string("test Realtek 8139A, IP=192.0.0.1, Promiscous mode=on"));
+//	std::string s = getstr_adapterinfo("test");
+//	BOOST_REQUIRE_EQUAL(s, std::string("test Realtek 8139A, IP=192.0.0.1, Promiscous mode=on"));
 }
 
 void adapterinfo::test_all()
@@ -75,5 +75,4 @@ void adapterinfo::test_all()
 }
 
 #endif
-*/
 }

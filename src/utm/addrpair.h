@@ -132,6 +132,7 @@ public:
 		}
 	}
 
+	static void test_all();
 	
 };
 

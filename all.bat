@@ -1,7 +1,6 @@
 set BOOST_INCLUDE=c:\install\boost
 set BOOST_LIB=c:\install\boost\stage\lib
-set SolutionDir=s:\home\utm\src\
-
+set SolutionDir=s:\home\utmwork\src\
 Setlocal EnableDelayedExpansion
 
 mkdir c:\tmp
@@ -34,21 +33,43 @@ erase /Q /S "src\DebugUTest"
 call cp.bat
 
 FOR %%A IN (Debug DebugU DebugTest DebugUTest Release ReleaseU) DO (
-  msbuild src\utm\utm.vcxproj /p:Configuration=%%A
-  if not !ERRORLEVEL!==0 goto fail
-  copy /y src\%%A\*.lib lib
-  msbuild src\proxyserver\proxyserver.vcxproj /p:Configuration=%%A
-  if not !ERRORLEVEL!==0 goto fail
-  copy /y src\%%A\*.lib lib
-  msbuild src\corefilters\corefilters.vcxproj /p:Configuration=%%A
-  if not !ERRORLEVEL!==0 goto fail
-  copy /y src\%%A\*.lib lib
-  msbuild src\monitor\monitor.vcxproj /p:Configuration=%%A
-  if not !ERRORLEVEL!==0 goto fail
-  copy /y src\%%A\*.lib lib
-  msbuild src\dualserver\dualserver.vcxproj /p:Configuration=%%A
-  if not !ERRORLEVEL!==0 goto fail
-  copy /y src\%%A\*.lib lib
+   del done.%%A
+   del fail.%%A
+   del build.%%A
+)
+
+FOR %%A IN (Debug DebugU Release ReleaseU) DO (
+  start cmd /I /k all_config %%A
+)
+
+:wait
+sleep 5
+FOR %%A IN (Debug DebugU Release ReleaseU) DO (
+   IF NOT EXIST done.%%A GOTO wait
+)
+
+FOR %%A IN (Debug DebugU Release ReleaseU) DO (
+   IF EXIST fail.%%A (
+      echo "Building failure for %%A"
+      exit /b 1
+   )
+)
+
+FOR %%A IN (DebugTest DebugUTest) DO (
+  start cmd /I /k all_config %%A
+)
+
+:wait2
+sleep 5
+FOR %%A IN (DebugTest DebugUTest) DO (
+   IF NOT EXIST done.%%A GOTO wait2
+)
+
+FOR %%A IN (DebugTest DebugUTest) DO (
+   IF EXIST fail.%%A (
+      echo "Building failure for %%A"
+      exit /b 1
+   )
 )
 
 FOR %%A IN (utm monitor corefilters proxyserver dualserver) DO "src\DebugTest\%%A"

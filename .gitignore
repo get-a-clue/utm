@@ -45,6 +45,7 @@ src/proxyserver/DebugTest/
 src/proxyserver/DebugUTest/
 src/proxyserver/Release/
 src/proxyserver/ReleaseU/
-
-
-
+src/utm.opensdf
+build.*
+done.*
+fail.*
