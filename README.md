@@ -20,7 +20,10 @@ restricting the speed of the Internet access (for example, 256 kbit/s) for speci
 HOW TO BUILD UTM
 
 1. Install Microsoft Visual Studio Profession 2013+ with C++ compilier
-2. Download and build boost library (http://www.boost.org)
+2. Download and build boost library (http://www.boost.org):
+   Run: bootstrap.bat
+   Run: b2 -a toolset=msvc-12.0 --build-type=complete --with-thread --with-atomic --with-exception --with-filesystem --with-regex --with-system --with-date_time --with-signals --with-test --abbreviate-paths architecture=x86 install -j4
+
 3. Set environmnet variables:
    BOOST_INCLUDE=c:\install\boost
    BOOST_LIB=c:\install\boost\stage\lib
