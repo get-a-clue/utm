@@ -3,7 +3,7 @@
 
 #include "uhex.h"
 
-#include "ubase_test.h"
+#include <boost/test/unit_test.hpp>
 
 namespace utm {
 
@@ -282,23 +282,19 @@ namespace md5 {
 		md5_string(u, result);
 	}
 
-#ifdef UTM_DEBUG
-	void test_all()
+	BOOST_AUTO_TEST_CASE(md5_test_all)
 	{
-		test_report("md5");
-
 		std::string r1;
 		md5_string("Hey Jude! Don't make it bad.", r1);
-		TEST_CASE_CHECK(r1, std::string("f29e5a0af737ee60be064e4f056c0e11"));
+		BOOST_REQUIRE_EQUAL(r1, std::string("f29e5a0af737ee60be064e4f056c0e11"));
 
 		std::string n1, n2;
 		md5_random(n1);
 		md5_random(n2);
-		TEST_CASE_NOTCHECK(n1, n2);
+		BOOST_CHECK(n1 != n2);
 
 		return;
 	}
-#endif
 }
 
 }

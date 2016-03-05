@@ -47,7 +47,7 @@ public:
 	static std::int64_t parse_int64(const char *p);
 	static std::uint64_t parse_uint64(const char *p);
 
-	static void test_all();
+	
 };
 
 }

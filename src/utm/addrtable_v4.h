@@ -23,7 +23,7 @@ public:
 	bool import_from_txt(const gstring& input_filename);
 
 #ifdef UTM_DEBUG
-	static void test_all();
+	
 #endif
 };
 

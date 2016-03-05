@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "event_pkt_queue.h"
 
-#include "ubase_test.h"
+#include <boost/test/unit_test.hpp>
 
 namespace utm {
 
@@ -21,10 +21,9 @@ void event_pkt_queue::parse_diff_dump(const char *xml_dump)
 	xml_parse(xml_dump, true);
 }
 
-#ifdef UTM_DEBUG
-void event_pkt_queue::test_all()
+BOOST_AUTO_TEST_CASE(event_pkt_queue_test_all)
 {
-	test_report tr(this_class_name);
+	
 
 	event_pkt_queue q;
 
@@ -62,20 +61,21 @@ void event_pkt_queue::test_all()
 	event_pkt_queue u;
 	u.parse_diff_dump(x1.c_str());
 
-	TEST_CASE_CHECK(u.size(), size_t(2));
+	BOOST_REQUIRE_EQUAL(u.size(), size_t(2));
 
 	{
 		event_pkt k1;
 		u.pop_front_item(k1);
-		TEST_CASE_CHECK_NOSERIALIZE(k1, p1);
+		BOOST_CHECK(k1 == p1);
+//		BOOST_REQUIRE_EQUAL_NOSERIALIZE(k1, p1);
 
 		event_pkt k2;
 		u.pop_front_item(k2);
-		TEST_CASE_CHECK_NOSERIALIZE(k2, p2);
+		BOOST_CHECK(k2 == p2);
+//		BOOST_REQUIRE_EQUAL_NOSERIALIZE(k2, p2);
 	}
 
-	TEST_CASE_CHECK(u.size(), size_t(0));
+	BOOST_REQUIRE_EQUAL(u.size(), size_t(0));
 }
-#endif
 
 }

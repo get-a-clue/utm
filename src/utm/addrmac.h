@@ -45,7 +45,7 @@ private:
 
 #ifdef UTM_DEBUG
 public:
-	static void test_all();
+	
 #endif
 };
 

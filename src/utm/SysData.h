@@ -41,7 +41,7 @@ public:
 	static void DetectServices(service_status_container& ssc);
 
 #ifdef UTM_DEBUG
-	static void test_all();
+	
 #endif
 };
 

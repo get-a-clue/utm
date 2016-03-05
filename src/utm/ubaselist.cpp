@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "ubaselist.h"
-#include "ubase_test.h"
+#include <boost/test/unit_test.hpp>
 
 #ifdef UTM_DEBUG
 
@@ -16,11 +16,11 @@ void check_sequence(const ubaselist_test& ubt)
 			break;
 
 		bool b = ((*iter).get_id() >= (*iter2).get_id());
-		TEST_CASE_CHECK(b, bool(false));
+		BOOST_REQUIRE_EQUAL(b, bool(false));
 	}
 }
 
-void ubaselist_test::test_all()
+BOOST_AUTO_TEST_CASE(ubaselist_test_all)
 {
 	ubaselist_test ubt;
 
@@ -32,7 +32,7 @@ void ubaselist_test::test_all()
 		i += 4;
 	}
 
-	TEST_CASE_CHECK(ubt.size(), size_t(5));
+	BOOST_REQUIRE_EQUAL(ubt.size(), size_t(5));
 
 	{
 		testitem t(8);

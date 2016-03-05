@@ -17,7 +17,7 @@ public:
 	static unsigned int calc(const char *text);
 
 #ifdef _DEBUG
-	static void test_all();
+	
 #endif
 };
 

@@ -1,3 +1,9 @@
+set BOOST_INCLUDE=c:\install\boost
+set BOOST_LIB=c:\install\boost\stage\lib
+set SolutionDir=s:\home\utm\src\
+
+Setlocal EnableDelayedExpansion
+
 mkdir c:\tmp
 mkdir include
 mkdir lib
@@ -27,28 +33,23 @@ erase /Q /S "src\DebugUTest"
 
 call cp.bat
 
-msbuild src/utm.sln /p:Configuration=Debug
-if not %ERRORLEVEL%==0 goto fail
-
-msbuild src/utm.sln /p:Configuration=Release
-if not %ERRORLEVEL%==0 goto fail
-
-msbuild src/utm.sln /p:Configuration=DebugU
-if not %ERRORLEVEL%==0 goto fail
-
-msbuild src/utm.sln /p:Configuration=ReleaseU
-if not %ERRORLEVEL%==0 goto fail
-
-msbuild src/utm.sln /p:Configuration="DebugTest"
-if not %ERRORLEVEL%==0 goto fail
-
-msbuild src/utm.sln /p:Configuration="DebugUTest"
-if not %ERRORLEVEL%==0 goto fail
-
-copy src\debug\*.lib lib
-copy src\release\*.lib lib
-copy src\debugU\*.lib lib
-copy src\releaseU\*.lib lib
+FOR %%A IN (Debug DebugU DebugTest DebugUTest Release ReleaseU) DO (
+  msbuild src\utm\utm.vcxproj /p:Configuration=%%A
+  if not !ERRORLEVEL!==0 goto fail
+  copy /y src\%%A\*.lib lib
+  msbuild src\proxyserver\proxyserver.vcxproj /p:Configuration=%%A
+  if not !ERRORLEVEL!==0 goto fail
+  copy /y src\%%A\*.lib lib
+  msbuild src\corefilters\corefilters.vcxproj /p:Configuration=%%A
+  if not !ERRORLEVEL!==0 goto fail
+  copy /y src\%%A\*.lib lib
+  msbuild src\monitor\monitor.vcxproj /p:Configuration=%%A
+  if not !ERRORLEVEL!==0 goto fail
+  copy /y src\%%A\*.lib lib
+  msbuild src\dualserver\dualserver.vcxproj /p:Configuration=%%A
+  if not !ERRORLEVEL!==0 goto fail
+  copy /y src\%%A\*.lib lib
+)
 
 FOR %%A IN (utm monitor corefilters proxyserver dualserver) DO "src\DebugTest\%%A"
 FOR %%A IN (utm monitor corefilters proxyserver dualserver) DO "src\DebugUTest\%%A"
@@ -60,5 +61,6 @@ ziputm.pl
 exit /b 0
 
 :fail
+echo "Building failure"
 pause
 exit /b 1

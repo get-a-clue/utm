@@ -2,7 +2,7 @@
 
 #include "addrip_v4.h"
 #include "uhex.h"
-#include "ubase_test.h"
+#include <boost/test/unit_test.hpp>
 
 namespace utm {
 
@@ -288,58 +288,56 @@ bool addrip_v4::is_netmask() const
 	return (r == 0);
 }
 
-#ifdef UTM_DEBUG
-void addrip_v4::test_all()
+BOOST_AUTO_TEST_CASE(addrip_v4_test_all)
 {
-	test_report tr(this_class_name);
+	
 
 	{
 		addrip_v4 a1("127.0.0.1");
-		TEST_CASE_CHECK(a1.m_addr, unsigned long(2130706433));
+		BOOST_REQUIRE_EQUAL(a1.m_addr, unsigned long(2130706433));
 	}
 
 	{
 		addrip_v4 a2("255.255.255.255");
-		TEST_CASE_CHECK(a2.m_addr, unsigned long(0xFFFFFFFF));
+		BOOST_REQUIRE_EQUAL(a2.m_addr, unsigned long(0xFFFFFFFF));
 	}
 
 	{
 		addrip_v4 a3("0.0.0.0");
-		TEST_CASE_CHECK(a3.m_addr, unsigned long(0));
+		BOOST_REQUIRE_EQUAL(a3.m_addr, unsigned long(0));
 	}
 
 	{
 		std::ostringstream oss;
 		oss << addrip_v4("0.0.0.255");
-		TEST_CASE_CHECK(oss.str(), std::string("0.0.0.255"));
+		BOOST_REQUIRE_EQUAL(oss.str(), std::string("0.0.0.255"));
 	}
 
 	{
 		addrip_v4 a4;
-		TEST_CASE_CHECK(a4.from_string("256.0.0.1", true), bool(false));
+		BOOST_REQUIRE_EQUAL(a4.from_string("256.0.0.1", true), bool(false));
 	}
 
 	{
 		addrip_v4 a5;
 		std::istringstream iss1("192.168.255.255");
 		iss1 >> a5;
-		TEST_CASE_CHECK(a5.to_string(), std::string("192.168.255.255"));
+		BOOST_REQUIRE_EQUAL(a5.to_string(), std::string("192.168.255.255"));
 	}
 
 	{
 		utm::addrip_v4 mask("255.255.255.1");
-		TEST_CASE_CHECK(mask.is_netmask(), bool(false));
+		BOOST_REQUIRE_EQUAL(mask.is_netmask(), bool(false));
 		mask.m_addr--;
-		TEST_CASE_CHECK(mask.is_netmask(), bool(true));
+		BOOST_REQUIRE_EQUAL(mask.is_netmask(), bool(true));
 	}
 
 	{
 		unsigned char b[4] = { 0xC0, 0xA8, 0x0, 0x2 };
 		addrip_v4 a6;
 		a6.set(b);
-		TEST_CASE_CHECK(a6.to_string(), std::string("192.168.0.2"));
+		BOOST_REQUIRE_EQUAL(a6.to_string(), std::string("192.168.0.2"));
 	}
 }
-#endif
 
 }

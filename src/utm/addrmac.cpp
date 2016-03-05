@@ -2,7 +2,7 @@
 
 #include "addrmac.h"
 #include "uhex.h"
-#include "ubase_test.h"
+#include <boost/test/unit_test.hpp>
 
 #include <iostream>
 
@@ -179,35 +179,34 @@ std::istream& operator>>(std::istream& s, addrmac& obj)
 	return s;
 }
 
-#ifdef UTM_DEBUG
-void addrmac::test_all()
+BOOST_AUTO_TEST_CASE(addrmac_test_all)
 {
-	test_report tr(this_class_name);
+	
 
 	std::string mac1("81:92:a3:b4:c5:e6");
 	std::string mac2("81-92-A3-B4-c5-e6");
 
 	{
 		addrmac m1(mac1);
-		TEST_CASE_CHECK(m1.to_string(), mac1);
+		BOOST_REQUIRE_EQUAL(m1.to_string(), mac1);
 	}
 
 	{
 		addrmac m1(mac2);
-		TEST_CASE_CHECK(m1.to_string(), mac1);
+		BOOST_REQUIRE_EQUAL(m1.to_string(), mac1);
 	}
 
 	{
 		addrmac m1(mac1);
 		std::ostringstream oss;
 		oss << m1;
-		TEST_CASE_CHECK(oss.str(), mac1);
+		BOOST_REQUIRE_EQUAL(oss.str(), mac1);
 	}
 
 	{
 		addrmac m1(mac1);
 		addrmac m2(mac2);
-		TEST_CASE_CHECK(m1 == m2, bool(true));
+		BOOST_REQUIRE_EQUAL(m1 == m2, bool(true));
 	}
 
 	{
@@ -215,16 +214,15 @@ void addrmac::test_all()
 		char sz[20];
 		m1.as_hex(sz);
 		addrmac m2(sz);
-		TEST_CASE_CHECK(m1 == m2, bool(true));
+		BOOST_REQUIRE_EQUAL(m1 == m2, bool(true));
 	}
 
 	{
 		addrmac m1(mac1);
 		unsigned char macbinary[] = { 0x81, 0x92, 0xa3, 0xb4, 0xc5, 0xe6 };
 		bool eq = m1.is_equal(macbinary);
-		TEST_CASE_CHECK(eq, bool(true));
+		BOOST_REQUIRE_EQUAL(eq, bool(true));
 	}
 }
-#endif
 
 }

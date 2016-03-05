@@ -63,7 +63,7 @@ public:
 	ubase* xml_catch_subnode(const char *name) { return NULL; };
 
 #ifdef UTM_DEBUG
-	static void test_all();
+	
 #endif
 };
 

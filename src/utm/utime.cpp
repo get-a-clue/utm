@@ -8,7 +8,7 @@
 #include <string>
 #include <time.h>
 
-#include "ubase_test.h"
+#include <boost/test/unit_test.hpp>
 
 namespace utm {
 
@@ -340,65 +340,62 @@ std::istream& operator>>(std::istream& s, utime& obj)
 	return s;
 }
 
-#ifdef UTM_DEBUG
-void utime::test_all()
+BOOST_AUTO_TEST_CASE(utime_test_all)
 {
-	test_report tr(this_class_name);
-
 	utime ut1;
 	ut1.set(2010, 12, 31, 10, 19, 59);
 	std::string s1 = ut1.to_string();
-	TEST_CASE_CHECK(s1, std::string("2010-12-31 10:19:59"));
+	BOOST_REQUIRE_EQUAL(s1, std::string("2010-12-31 10:19:59"));
 
 	utime ut2;
 	ut2.set(2012, 2, 3, 4, 5, 6);
 	std::string s2 = ut2.to_string();
-	TEST_CASE_CHECK(s2, std::string("2012-02-03 04:05:06"));
+	BOOST_REQUIRE_EQUAL(s2, std::string("2012-02-03 04:05:06"));
 
 	utime ut3;
 	ut3.from_string(s1.c_str(), utime::format_log);
-	TEST_CASE_CHECK(ut1, ut3);
+	BOOST_REQUIRE_EQUAL(ut1, ut3);
 
 	utime ut4;
 	ut4.from_string(s1.c_str(), utime::format_sql);
-	TEST_CASE_CHECK(ut1, ut4);
+	BOOST_REQUIRE_EQUAL(ut1, ut4);
 
 	time_t t1 = ut1.to_time_t();
 	utime ut5;
 	ut5.from_time_t(t1);
-	TEST_CASE_CHECK(ut1, ut5);
+	BOOST_REQUIRE_EQUAL(ut1, ut5);
 
 	std::ostringstream oss1;
 	oss1 << ut1;
 	std::string soss1 = oss1.str();
-	TEST_CASE_CHECK(s1, std::string("2010-12-31 10:19:59"));
+	BOOST_REQUIRE_EQUAL(s1, std::string("2010-12-31 10:19:59"));
 
 	utime ut6;
 	std::istringstream iss1("2010-12-31 10:19:59");
 	iss1 >> ut6;
 	std::string s6 = ut6.to_string();
-	TEST_CASE_CHECK(s6, std::string("2010-12-31 10:19:59"));
+	BOOST_REQUIRE_EQUAL(s6, std::string("2010-12-31 10:19:59"));
 
 	int year, month, day, hour, minute, second;
 	ut6.get(year, month, day, hour, minute, second);
-	TEST_CASE_CHECK(year, 2010);
-	TEST_CASE_CHECK(month, 12);
-	TEST_CASE_CHECK(day, 31);
-	TEST_CASE_CHECK(hour, 10);
-	TEST_CASE_CHECK(minute, 19);
-	TEST_CASE_CHECK(second, 59);
+	BOOST_REQUIRE_EQUAL(year, 2010);
+	BOOST_REQUIRE_EQUAL(month, 12);
+	BOOST_REQUIRE_EQUAL(day, 31);
+	BOOST_REQUIRE_EQUAL(hour, 10);
+	BOOST_REQUIRE_EQUAL(minute, 19);
+	BOOST_REQUIRE_EQUAL(second, 59);
 
 	utime ut7 = utime::start_of_hour(ut6);
 	std::string s7 = ut7.to_string();
-	TEST_CASE_CHECK(s7, std::string("2010-12-31 10:00:00"));
+	BOOST_REQUIRE_EQUAL(s7, std::string("2010-12-31 10:00:00"));
 
 	utime ut8 = utime::start_of_day(ut6);
 	std::string s8 = ut8.to_string();
-	TEST_CASE_CHECK(s8, std::string("2010-12-31 00:00:00"));
+	BOOST_REQUIRE_EQUAL(s8, std::string("2010-12-31 00:00:00"));
 
 	utime ut9 = utime::start_of_month(ut6);
 	std::string s9 = ut9.to_string();
-	TEST_CASE_CHECK(s9, std::string("2010-12-01 00:00:00"));
+	BOOST_REQUIRE_EQUAL(s9, std::string("2010-12-01 00:00:00"));
 
 	int days[UTM_DAYS_IN_WEEK] = { 26, 27, 28, 29, 30, 31, 25 };
 	for (int i = 0; i < UTM_DAYS_IN_WEEK; i++)
@@ -408,18 +405,17 @@ void utime::test_all()
 
 		int year, month, day, hour, minute, second;
 		ut10.get(year, month, day, hour, minute, second);
-		TEST_CASE_CHECK(year, 2010);
-		TEST_CASE_CHECK(month, 12);
-		TEST_CASE_CHECK(day, days[i]);
-		TEST_CASE_CHECK(hour, 0);
-		TEST_CASE_CHECK(minute, 0);
-		TEST_CASE_CHECK(second, 0);
+		BOOST_REQUIRE_EQUAL(year, 2010);
+		BOOST_REQUIRE_EQUAL(month, 12);
+		BOOST_REQUIRE_EQUAL(day, days[i]);
+		BOOST_REQUIRE_EQUAL(hour, 0);
+		BOOST_REQUIRE_EQUAL(minute, 0);
+		BOOST_REQUIRE_EQUAL(second, 0);
 	}
 
 	size_t st = sizeof(time_t);
 
 	return;
 }
-#endif
 
 }

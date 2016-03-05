@@ -2,7 +2,7 @@
 #include "event_pkt.h"
 
 #include "base64.h"
-#include "ubase_test.h"
+#include <boost/test/unit_test.hpp>
 #include "uproto.h"
 
 #include <vector>
@@ -161,13 +161,12 @@ void event_pkt::xml_catch_value(const char *keyname, const char *keyvalue)
 	}
 }
 
-#ifdef UTM_DEBUG
-void event_pkt::test_all()
+BOOST_AUTO_TEST_CASE(event_pkt_test_all)
 {
-	test_report tr(this_class_name);
+	
 
 	size_t size_event_pkt_bare = sizeof(event_pkt_bare);
-	TEST_CASE_CHECK(size_event_pkt_bare, size_t(56));
+	BOOST_REQUIRE_EQUAL(size_event_pkt_bare, size_t(56));
 
 	event_pkt ep1;
 	{
@@ -192,8 +191,7 @@ void event_pkt::test_all()
 	event_pkt ep2;
 	ep2.from_string_for_xml(eps1.c_str());
 
-	TEST_CASE_CHECK_NOSERIALIZE(ep1, ep2);
+	BOOST_CHECK(ep1 == ep2);
 }
-#endif
 
 }

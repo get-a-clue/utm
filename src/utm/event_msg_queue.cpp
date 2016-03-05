@@ -2,6 +2,8 @@
 
 #include "event_msg_queue.h"
 
+#include <boost/test/unit_test.hpp>
+
 namespace utm {
 
 const char event_msg_queue::this_class_name[] = "event_msg_queue";
@@ -54,7 +56,7 @@ void event_msg_queue::parse_diff_dump(const char *xml_dump, event_msg_flags_cont
 #ifdef UTM_DEBUG
 void event_msg_queue::test_parse_diff_dump_flags()
 {
-	test_report tr(this_class_name);
+	
 
 	event_msg_queue q1;
 	q1.add_message(event_pane::EP_AGENT, event_type::ET_DEBUG, "message 1");
@@ -80,7 +82,7 @@ void event_msg_queue::test_parse_diff_dump_flags()
 	q2.parse_diff_dump(xml1.c_str());
 	q2.parse_diff_dump(xml2.c_str(), flags);
 
-	TEST_CASE_CHECK(q2.size(), size_t(6));
+	BOOST_REQUIRE_EQUAL(q2.size(), size_t(6));
 
 	event_msg_queue_container c1;
 	q1.safe_copy_container(c1, 0);
@@ -92,12 +94,12 @@ void event_msg_queue::test_parse_diff_dump_flags()
 	event_msg_queue_iterator iter2 = c2.begin();
 	for (iter1 = c1.begin(); iter1 != c1.end(); ++iter1, ++iter2)
 	{
-		TEST_CASE_CHECK_NOSERIALIZE(*iter1, *iter2);
+		BOOST_CHECK(*iter1 == *iter2);
 	}
 
-	TEST_CASE_CHECK(flags[std::string("message 5")], event_id(4));
-	TEST_CASE_CHECK(flags[std::string("message 4")], event_id(3));
-	TEST_CASE_CHECK(flags[std::string("message 3")], event_id(0));
+	BOOST_REQUIRE_EQUAL(flags[std::string("message 5")], event_id(4));
+	BOOST_REQUIRE_EQUAL(flags[std::string("message 4")], event_id(3));
+	BOOST_REQUIRE_EQUAL(flags[std::string("message 3")], event_id(0));
 }
 
 #endif

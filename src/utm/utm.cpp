@@ -16,8 +16,9 @@ const char* get_utmversion()
 
 int get_random(int min, int max)
 {
-	std::mt19937 rng;
-	std::uniform_int_distribution<> gen(min, max);
+	std::random_device rd;
+	std::mt19937 rng(rd());
+	std::uniform_int_distribution<int> gen(min, max);
 	return gen(rng);
 }
 

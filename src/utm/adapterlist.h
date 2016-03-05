@@ -76,7 +76,7 @@ public:
 //	const char* xml_get_stylesheet() const { return "test"; };
 	static int test_get_testcases_number() { return 3; };
 	void test_fillparams(int test_num);
-	static void test_all();
+	
 #endif
 };
 

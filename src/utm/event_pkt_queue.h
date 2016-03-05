@@ -31,7 +31,7 @@ public:
 		clear();
 	}
 
-	static void test_all();
+	
 #endif
 };
 

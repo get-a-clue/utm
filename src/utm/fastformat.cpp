@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "fastformat.h"
 
-#include "ubase_test.h"
+#include <boost/test/unit_test.hpp>
 
 namespace utm {
 
@@ -56,14 +56,14 @@ std::uint64_t fastformat::parse_uint64(const char *p)
 	return retval;
 }
 
-void fastformat::test_all()
+BOOST_AUTO_TEST_CASE(fastformat_test_all)
 {
-	TEST_CASE_CHECK(1, utm::fastformat::parse_int("1"));
-	TEST_CASE_CHECK(1000, utm::fastformat::parse_int("1000"));
-	TEST_CASE_CHECK(2147483647, utm::fastformat::parse_int("2147483647"));
-	TEST_CASE_CHECK(-2147483647, utm::fastformat::parse_int("-2147483647"));
-	TEST_CASE_CHECK(-2147483647123, utm::fastformat::parse_int64("-2147483647123"));
-	TEST_CASE_CHECK(std::uint64_t(3147483647123), utm::fastformat::parse_uint64("3147483647123"));
+	BOOST_REQUIRE_EQUAL(1, utm::fastformat::parse_int("1"));
+	BOOST_REQUIRE_EQUAL(1000, utm::fastformat::parse_int("1000"));
+	BOOST_REQUIRE_EQUAL(2147483647, utm::fastformat::parse_int("2147483647"));
+	BOOST_REQUIRE_EQUAL(-2147483647, utm::fastformat::parse_int("-2147483647"));
+	BOOST_REQUIRE_EQUAL(-2147483647123, utm::fastformat::parse_int64("-2147483647123"));
+	BOOST_REQUIRE_EQUAL(std::uint64_t(3147483647123), utm::fastformat::parse_uint64("3147483647123"));
 }
 
 }

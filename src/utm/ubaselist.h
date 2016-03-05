@@ -502,7 +502,7 @@ namespace utm {
 		void xml_catch_value(const char *keyname, const char *keyvalue) { };
 		ubase* xml_catch_subnode(const char *keyname) { return NULL; };
 
-		static void test_all();
+		
 	};
 #endif
 

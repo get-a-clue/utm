@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "crc32.h"
 
-#include <ubase_test.h>
+#include <boost/test/unit_test.hpp>
 
 namespace utm {
 
@@ -96,14 +96,12 @@ unsigned int crc32::calc(const char *text)
 	return ulCRC ^ 0xffffffff;
 }
 
-#ifdef _DEBUG
-void crc32::test_all()
+BOOST_AUTO_TEST_CASE(crc32_test_all)
 {
-	test_report tr(this_class_name);
+	
 
 	unsigned int c = crc32::calc("mama myla ramu");
-	TEST_CASE_CHECK(c, unsigned int(2035335899));
+	BOOST_REQUIRE_EQUAL(c, unsigned int(2035335899));
 }
-#endif _DEBUG
 
 }

@@ -64,7 +64,7 @@ public:
 #ifdef UTM_DEBUG
 	void test_fillparams(int num);
 	static int test_get_testcases_number() { return 1; };
-	static void test_all();
+	
 #endif
 };
 

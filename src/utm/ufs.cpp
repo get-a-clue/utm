@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "ufs.h"
 
-#include "ubase_test.h"
+#include <boost/test/unit_test.hpp>
 
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/path.hpp>
@@ -212,33 +212,31 @@ gstring ufs::make_full_filepath(const gstring& folder, const gstring& filename, 
 	return make_full_filepath(folder, replace_file_extension(filename, newext));
 }
 
-#ifdef UTM_DEBUG
-void ufs::test_all()
+BOOST_AUTO_TEST_CASE(ufs_test_all)
 {
-	test_report tr(this_class_name);
+	
 
 	gstring str1 = ufs::replace_file_extension("default.tmf", "firewall");
-	TEST_CASE_CHECK(str1, gstring("default.firewall"));
+	BOOST_REQUIRE_EQUAL(str1, gstring("default.firewall"));
 
 	gstring str2 = ufs::make_full_filepath(gstring("c:\\tmp\\"), gstring("test.txt"));
-	TEST_CASE_CHECK(str2, gstring("c:\\tmp\\test.txt"));
+	BOOST_REQUIRE_EQUAL(str2, gstring("c:\\tmp\\test.txt"));
 
 	gstring str3 = ufs::make_full_filepath(gstring("c:\\some path\\tmp\\"), gstring("test.txt"), gstring("exe"));
-	TEST_CASE_CHECK(str3, gstring("c:\\some path\\tmp\\test.exe"));
+	BOOST_REQUIRE_EQUAL(str3, gstring("c:\\some path\\tmp\\test.exe"));
 
 	gstring str4 = ufs::make_full_filepath(gstring("c:\\tmp"), gstring("test4.txt"));
-	TEST_CASE_CHECK(str4, gstring("c:\\tmp\\test4.txt"));
+	BOOST_REQUIRE_EQUAL(str4, gstring("c:\\tmp\\test4.txt"));
 
-	gstring& currentdir = get_current_directory();
-	TEST_CASE_NOTCHECK(currentdir, gstring(""));
+	gstring& currentdir = ufs::get_current_directory();
+	BOOST_CHECK(currentdir != gstring(""));
 
 	utime u1;
 	u1.set(2012, 12, 31, 23, 59, 30);
 	gstring temp1("program files common %Y_%m_%d %Y-%m-%d %y*%T %y*%M");
 	gstring res1;
 	ufs::derive_fullpath(u1, temp1, res1);
-	TEST_CASE_CHECK(res1, gstring("program files common 2012_12_31 2012-12-31 12*December 12*Dec"));
+	BOOST_REQUIRE_EQUAL(res1, gstring("program files common 2012_12_31 2012-12-31 12*December 12*Dec"));
 }
-#endif
 
 }

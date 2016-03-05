@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "blob.h"
 
-#include <ubase_test.h>
+#include <boost/test/unit_test.hpp>
 #include <base64.h>
 
 namespace utm {
@@ -105,10 +105,9 @@ void blob::from_string(const char* str)
 	}
 }
 
-#ifdef UTM_DEBUG
-void blob::test_all()
+BOOST_AUTO_TEST_CASE(blob_test_all)
 {
-	test_report tr(this_class_name);
+	
 
 	unsigned char r[] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09 };
 	blob b;
@@ -120,16 +119,14 @@ void blob::test_all()
 	blob b2;
 	b2.from_string(s.c_str());
 
-	TEST_CASE_CHECK(b == b2, true);
+	BOOST_REQUIRE_EQUAL(b == b2, true);
 
 	for (int i = 0; i < 10; i++)
 	{
 		unsigned char ch = static_cast<unsigned char>(i);
-		TEST_CASE_CHECK(*(b2.get() + i), ch);
+		BOOST_REQUIRE_EQUAL(*(b2.get() + i), ch);
 	}
 
 }
-#endif
-
 
 }

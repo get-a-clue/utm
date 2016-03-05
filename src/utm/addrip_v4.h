@@ -77,7 +77,7 @@ public:
 	static void convert_ipmask_to_range(const addrip_v4& ip, const addrip_v4& mask, addrip_v4& startip, addrip_v4& endip);
 
 #ifdef UTM_DEBUG
-	static void test_all();
+	
 #endif
 };
 

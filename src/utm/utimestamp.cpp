@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "utimestamp.h"
 
-#include "ubase_test.h"
+#include <boost/test/unit_test.hpp>
 
 namespace utm {
 
@@ -93,25 +93,21 @@ void utimestamp::from_filetime(const FILETIME& ft)
 }
 #endif
 
-#ifdef UTM_DEBUG
-void utimestamp::test_all()
+BOOST_AUTO_TEST_CASE(utimestamp_test_all)
 {
-	test_report tr(this_class_name);
-
-	utimestamp u(unsigned int(777));
+    utimestamp u(unsigned int(777));
 
 	std::ostringstream oss;
 	oss << u;
 	std::string us = oss.str();
-	TEST_CASE_CHECK(us, std::string("777"));
+	BOOST_REQUIRE_EQUAL(us, std::string("777"));
 
 	utimestamp t;
 	std::istringstream iss(us.c_str());
 	iss >> t;
-	TEST_CASE_CHECK(t.to_string(), std::string("777"));
+	BOOST_REQUIRE_EQUAL(t.to_string(), std::string("777"));
 
 	return;
 }
-#endif
 
 }

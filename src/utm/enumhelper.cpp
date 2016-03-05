@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "enumhelper.h"
 
-#include "ubase_test.h"
+#include <boost/test/unit_test.hpp>
 
 namespace utm {
 
@@ -79,28 +79,26 @@ int enumhelper::from_str_ci(const char* str, const char** enum_str, const int* e
 }
 
 #ifdef UTM_DEBUG
-void enumhelper::test_all()
+BOOST_AUTO_TEST_CASE(enumhelper_test_all)
 {
-	test_report tr(this_class_name);
-
 	const char* c1 = enumhelper::to_str((int)enumhelper::info, &enumhelper::teststates_str[0], &enumhelper::teststates_int[0], MAX_TESTSTATES_ITEMS);
-	TEST_CASE_CHECK(c1, "info");
+	BOOST_REQUIRE_EQUAL(c1, "info");
 
 	const char* c2 = enumhelper::to_str((int)enumhelper::debug, &enumhelper::teststates_str[0], &enumhelper::teststates_int[0], MAX_TESTSTATES_ITEMS);
-	TEST_CASE_CHECK(c2, "debug");
+	BOOST_REQUIRE_EQUAL(c2, "debug");
 
 	const char* c3 = enumhelper::to_str(-1, &enumhelper::teststates_str[0], &enumhelper::teststates_int[0], MAX_TESTSTATES_ITEMS);
 	const char* nptr = NULL;
-	TEST_CASE_CHECK(c3, nptr);
+	BOOST_REQUIRE_EQUAL(c3, nptr);
 
 	int k1 = enumhelper::from_str("info", &enumhelper::teststates_str[0], &enumhelper::teststates_int[0], MAX_TESTSTATES_ITEMS, (int)enumhelper::error);
-	TEST_CASE_CHECK(k1, (int)enumhelper::info);
+	BOOST_REQUIRE_EQUAL(k1, (int)enumhelper::info);
 
 	int k2 = enumhelper::from_str("debug", &enumhelper::teststates_str[0], &enumhelper::teststates_int[0], MAX_TESTSTATES_ITEMS, (int)enumhelper::error);
-	TEST_CASE_CHECK(k2, (int)enumhelper::debug);
+	BOOST_REQUIRE_EQUAL(k2, (int)enumhelper::debug);
 
 	int k3 = enumhelper::from_str("debug2", &enumhelper::teststates_str[0], &enumhelper::teststates_int[0], MAX_TESTSTATES_ITEMS, (int)enumhelper::error);
-	TEST_CASE_CHECK(k3, (int)enumhelper::error);
+	BOOST_REQUIRE_EQUAL(k3, (int)enumhelper::error);
 }
 #endif
 

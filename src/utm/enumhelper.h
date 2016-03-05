@@ -32,7 +32,7 @@ public:
 	static const char* teststates_str[];
 	static const int teststates_int[];
 
-	static void test_all();
+	
 #endif
 };
 

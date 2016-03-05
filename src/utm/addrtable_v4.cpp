@@ -2,7 +2,7 @@
 
 #include "addrtable_v4.h"
 #include "stringtools.h"
-#include "ubase_test.h"
+#include <boost/test/unit_test.hpp>
 
 #include <boost/algorithm/string.hpp>
 
@@ -197,10 +197,9 @@ bool addrtable_v4::import_from_txt(const gstring& input_filename)
 	return true;
 }
 
-#ifdef UTM_DEBUG
-void addrtable_v4::test_all()
+BOOST_AUTO_TEST_CASE(addrtable_v4_test_all)
 {
-	test_report tr(this_class_name);
+	
 
 	addrtable_v4 a1;
 	a1.AddAddrPair("192.168.0.0", "192.168.0.19", true);
@@ -210,7 +209,7 @@ void addrtable_v4::test_all()
 	a1.AddAddrPair("192.168.4.0", "192.168.4.19", true);
 	a1.AddAddrPair("192.168.4.21", "192.168.5.2", true);
 
-	TEST_CASE_CHECK(a1.GetAddrCount(), size_t(5));
+	BOOST_REQUIRE_EQUAL(a1.GetAddrCount(), size_t(5));
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -233,32 +232,32 @@ void addrtable_v4::test_all()
 			a1.AddAddrPair("0.0.0.0", "255.255.255.255", true);
 		}
 
-		TEST_CASE_CHECK(a1.CheckAddrRange(addrip_v4("0.0.0.0")), result0);
-		TEST_CASE_CHECK(a1.CheckAddrRange(addrip_v4("10.10.10.10")), result0);
-		TEST_CASE_CHECK(a1.CheckAddrRange(addrip_v4("191.167.255.255")), result0);
-		TEST_CASE_CHECK(a1.CheckAddrRange(addrip_v4("192.168.0.0")), result1);
-		TEST_CASE_CHECK(a1.CheckAddrRange(addrip_v4("192.168.0.1")), result1);
-		TEST_CASE_CHECK(a1.CheckAddrRange(addrip_v4("192.168.0.19")), result1);
-		TEST_CASE_CHECK(a1.CheckAddrRange(addrip_v4("192.168.0.20")), result1);
-		TEST_CASE_CHECK(a1.CheckAddrRange(addrip_v4("192.168.0.21")), result1);
-		TEST_CASE_CHECK(a1.CheckAddrRange(addrip_v4("192.168.0.255")), result1);
-		TEST_CASE_CHECK(a1.CheckAddrRange(addrip_v4("192.168.1.0")), result0);
-		TEST_CASE_CHECK(a1.CheckAddrRange(addrip_v4("192.168.1.255")), result0);
-		TEST_CASE_CHECK(a1.CheckAddrRange(addrip_v4("192.168.2.0")), result1);
-		TEST_CASE_CHECK(a1.CheckAddrRange(addrip_v4("192.168.2.2")), result1);
-		TEST_CASE_CHECK(a1.CheckAddrRange(addrip_v4("192.168.2.255")), result1);
-		TEST_CASE_CHECK(a1.CheckAddrRange(addrip_v4("192.168.3.255")), result0);
-		TEST_CASE_CHECK(a1.CheckAddrRange(addrip_v4("192.168.4.0")), result1);
-		TEST_CASE_CHECK(a1.CheckAddrRange(addrip_v4("192.168.4.10")), result1);
-		TEST_CASE_CHECK(a1.CheckAddrRange(addrip_v4("192.168.4.19")), result1);
-		TEST_CASE_CHECK(a1.CheckAddrRange(addrip_v4("192.168.4.20")), result0);
-		TEST_CASE_CHECK(a1.CheckAddrRange(addrip_v4("192.168.4.21")), result1);
-		TEST_CASE_CHECK(a1.CheckAddrRange(addrip_v4("192.168.4.22")), result1);
-		TEST_CASE_CHECK(a1.CheckAddrRange(addrip_v4("192.168.4.255")), result1);
-		TEST_CASE_CHECK(a1.CheckAddrRange(addrip_v4("192.168.5.0")), result1);
-		TEST_CASE_CHECK(a1.CheckAddrRange(addrip_v4("192.168.255.255")), result0);
-		TEST_CASE_CHECK(a1.CheckAddrRange(addrip_v4("217.89.12.88")), result0);
-		TEST_CASE_CHECK(a1.CheckAddrRange(addrip_v4("255.255.255.255")), result0);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrRange(addrip_v4("0.0.0.0")), result0);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrRange(addrip_v4("10.10.10.10")), result0);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrRange(addrip_v4("191.167.255.255")), result0);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrRange(addrip_v4("192.168.0.0")), result1);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrRange(addrip_v4("192.168.0.1")), result1);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrRange(addrip_v4("192.168.0.19")), result1);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrRange(addrip_v4("192.168.0.20")), result1);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrRange(addrip_v4("192.168.0.21")), result1);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrRange(addrip_v4("192.168.0.255")), result1);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrRange(addrip_v4("192.168.1.0")), result0);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrRange(addrip_v4("192.168.1.255")), result0);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrRange(addrip_v4("192.168.2.0")), result1);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrRange(addrip_v4("192.168.2.2")), result1);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrRange(addrip_v4("192.168.2.255")), result1);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrRange(addrip_v4("192.168.3.255")), result0);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrRange(addrip_v4("192.168.4.0")), result1);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrRange(addrip_v4("192.168.4.10")), result1);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrRange(addrip_v4("192.168.4.19")), result1);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrRange(addrip_v4("192.168.4.20")), result0);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrRange(addrip_v4("192.168.4.21")), result1);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrRange(addrip_v4("192.168.4.22")), result1);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrRange(addrip_v4("192.168.4.255")), result1);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrRange(addrip_v4("192.168.5.0")), result1);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrRange(addrip_v4("192.168.255.255")), result0);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrRange(addrip_v4("217.89.12.88")), result0);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrRange(addrip_v4("255.255.255.255")), result0);
 
 		if (i == 2)
 		{
@@ -266,20 +265,20 @@ void addrtable_v4::test_all()
 			result1 = false;
 		}
 
-		TEST_CASE_CHECK(a1.CheckAddrSingle(addrip_v4("192.168.0.0")), result1);
-		TEST_CASE_CHECK(a1.CheckAddrSingle(addrip_v4("192.168.0.1")), result0);
-		TEST_CASE_CHECK(a1.CheckAddrSingle(addrip_v4("192.168.0.19")), result0);
-		TEST_CASE_CHECK(a1.CheckAddrSingle(addrip_v4("192.168.0.20")), result1);
-		TEST_CASE_CHECK(a1.CheckAddrSingle(addrip_v4("192.168.0.255")), result0);
-		TEST_CASE_CHECK(a1.CheckAddrSingle(addrip_v4("192.168.2.0")), result1);
-		TEST_CASE_CHECK(a1.CheckAddrSingle(addrip_v4("192.168.2.1")), result0);
-		TEST_CASE_CHECK(a1.CheckAddrSingle(addrip_v4("192.168.4.0")), result1);
-		TEST_CASE_CHECK(a1.CheckAddrSingle(addrip_v4("192.168.4.1")), result0);
-		TEST_CASE_CHECK(a1.CheckAddrSingle(addrip_v4("192.168.4.19")), result0);
-		TEST_CASE_CHECK(a1.CheckAddrSingle(addrip_v4("192.168.4.20")), result0);
-		TEST_CASE_CHECK(a1.CheckAddrSingle(addrip_v4("192.168.4.21")), result1);
-		TEST_CASE_CHECK(a1.CheckAddrSingle(addrip_v4("192.168.4.22")), result0);
-		TEST_CASE_CHECK(a1.CheckAddrSingle(addrip_v4("192.168.4.255")), result0);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrSingle(addrip_v4("192.168.0.0")), result1);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrSingle(addrip_v4("192.168.0.1")), result0);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrSingle(addrip_v4("192.168.0.19")), result0);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrSingle(addrip_v4("192.168.0.20")), result1);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrSingle(addrip_v4("192.168.0.255")), result0);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrSingle(addrip_v4("192.168.2.0")), result1);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrSingle(addrip_v4("192.168.2.1")), result0);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrSingle(addrip_v4("192.168.4.0")), result1);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrSingle(addrip_v4("192.168.4.1")), result0);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrSingle(addrip_v4("192.168.4.19")), result0);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrSingle(addrip_v4("192.168.4.20")), result0);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrSingle(addrip_v4("192.168.4.21")), result1);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrSingle(addrip_v4("192.168.4.22")), result0);
+		BOOST_REQUIRE_EQUAL(a1.CheckAddrSingle(addrip_v4("192.168.4.255")), result0);
 	}
 
 	addrtable_v4 a2;
@@ -310,34 +309,33 @@ void addrtable_v4::test_all()
 			a2.AddAddrPair("0.0.0.0", "0.0.0.0", false);
 		}
 
-		TEST_CASE_CHECK(a2.check_addr_network(addrip_v4("0.0.0.0")), result0);
-		TEST_CASE_CHECK(a2.check_addr_network(addrip_v4("10.0.0.0")), result1);
-		TEST_CASE_CHECK(a2.check_addr_network(addrip_v4("192.168.0.0")), result1);
-		TEST_CASE_CHECK(a2.check_addr_network(addrip_v4("192.168.0.1")), result1);
-		TEST_CASE_CHECK(a2.check_addr_network(addrip_v4("192.168.0.255")), result1);
-		TEST_CASE_CHECK(a2.check_addr_network(addrip_v4("192.168.1.0")), result0);
-		TEST_CASE_CHECK(a2.check_addr_network(addrip_v4("192.168.1.255")), result0);
-		TEST_CASE_CHECK(a2.check_addr_network(addrip_v4("192.168.2.0")), result1);
-		TEST_CASE_CHECK(a2.check_addr_network(addrip_v4("192.168.2.1")), result1);
-		TEST_CASE_CHECK(a2.check_addr_network(addrip_v4("192.168.2.255")), result1);
-		TEST_CASE_CHECK(a2.check_addr_network(addrip_v4("192.168.3.0")), result1);
-		TEST_CASE_CHECK(a2.check_addr_network(addrip_v4("192.168.3.255")), result1);
-		TEST_CASE_CHECK(a2.check_addr_network(addrip_v4("192.168.4.0")), result0);
-		TEST_CASE_CHECK(a2.check_addr_network(addrip_v4("192.168.4.1")), result0);
-		TEST_CASE_CHECK(a2.check_addr_network(addrip_v4("192.168.4.255")), result0);
-		TEST_CASE_CHECK(a2.check_addr_network(addrip_v4("192.168.7.255")), result0);
-		TEST_CASE_CHECK(a2.check_addr_network(addrip_v4("192.168.8.0")), result1);
-		TEST_CASE_CHECK(a2.check_addr_network(addrip_v4("192.168.8.1")), result1);
-		TEST_CASE_CHECK(a2.check_addr_network(addrip_v4("192.168.8.2")), result1);
-		TEST_CASE_CHECK(a2.check_addr_network(addrip_v4("192.168.10.0")), result1);
-		TEST_CASE_CHECK(a2.check_addr_network(addrip_v4("192.168.11.255")), result1);
-		TEST_CASE_CHECK(a2.check_addr_network(addrip_v4("192.168.12.0")), result0);
-		TEST_CASE_CHECK(a2.check_addr_network(addrip_v4("192.168.12.1")), result0);
-		TEST_CASE_CHECK(a2.check_addr_network(addrip_v4("192.168.255.255")), result0);
-		TEST_CASE_CHECK(a2.check_addr_network(addrip_v4("255.255.255.255")), result0);
+		BOOST_REQUIRE_EQUAL(a2.check_addr_network(addrip_v4("0.0.0.0")), result0);
+		BOOST_REQUIRE_EQUAL(a2.check_addr_network(addrip_v4("10.0.0.0")), result1);
+		BOOST_REQUIRE_EQUAL(a2.check_addr_network(addrip_v4("192.168.0.0")), result1);
+		BOOST_REQUIRE_EQUAL(a2.check_addr_network(addrip_v4("192.168.0.1")), result1);
+		BOOST_REQUIRE_EQUAL(a2.check_addr_network(addrip_v4("192.168.0.255")), result1);
+		BOOST_REQUIRE_EQUAL(a2.check_addr_network(addrip_v4("192.168.1.0")), result0);
+		BOOST_REQUIRE_EQUAL(a2.check_addr_network(addrip_v4("192.168.1.255")), result0);
+		BOOST_REQUIRE_EQUAL(a2.check_addr_network(addrip_v4("192.168.2.0")), result1);
+		BOOST_REQUIRE_EQUAL(a2.check_addr_network(addrip_v4("192.168.2.1")), result1);
+		BOOST_REQUIRE_EQUAL(a2.check_addr_network(addrip_v4("192.168.2.255")), result1);
+		BOOST_REQUIRE_EQUAL(a2.check_addr_network(addrip_v4("192.168.3.0")), result1);
+		BOOST_REQUIRE_EQUAL(a2.check_addr_network(addrip_v4("192.168.3.255")), result1);
+		BOOST_REQUIRE_EQUAL(a2.check_addr_network(addrip_v4("192.168.4.0")), result0);
+		BOOST_REQUIRE_EQUAL(a2.check_addr_network(addrip_v4("192.168.4.1")), result0);
+		BOOST_REQUIRE_EQUAL(a2.check_addr_network(addrip_v4("192.168.4.255")), result0);
+		BOOST_REQUIRE_EQUAL(a2.check_addr_network(addrip_v4("192.168.7.255")), result0);
+		BOOST_REQUIRE_EQUAL(a2.check_addr_network(addrip_v4("192.168.8.0")), result1);
+		BOOST_REQUIRE_EQUAL(a2.check_addr_network(addrip_v4("192.168.8.1")), result1);
+		BOOST_REQUIRE_EQUAL(a2.check_addr_network(addrip_v4("192.168.8.2")), result1);
+		BOOST_REQUIRE_EQUAL(a2.check_addr_network(addrip_v4("192.168.10.0")), result1);
+		BOOST_REQUIRE_EQUAL(a2.check_addr_network(addrip_v4("192.168.11.255")), result1);
+		BOOST_REQUIRE_EQUAL(a2.check_addr_network(addrip_v4("192.168.12.0")), result0);
+		BOOST_REQUIRE_EQUAL(a2.check_addr_network(addrip_v4("192.168.12.1")), result0);
+		BOOST_REQUIRE_EQUAL(a2.check_addr_network(addrip_v4("192.168.255.255")), result0);
+		BOOST_REQUIRE_EQUAL(a2.check_addr_network(addrip_v4("255.255.255.255")), result0);
 	}
 
 }
-#endif
 
 }

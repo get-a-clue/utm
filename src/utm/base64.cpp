@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-#include "ubase_test.h"
+#include <boost/test/unit_test.hpp>
 
 namespace utm {
 
@@ -69,40 +69,39 @@ void base64::encode(const unsigned char *srcdata, size_t srclen, std::string& re
         result[result_len - 1 - k] = '=';
 }
 
-#ifdef UTM_DEBUG
-void base64::test_all()
+BOOST_AUTO_TEST_CASE(base64_test_all)
 {
-	test_report tr(this_class_name);
+	
 
 	{
 		std::string a1("Hello World");
 		std::string b1;
-		encode(reinterpret_cast<const unsigned char*>(a1.c_str()), a1.size(), b1);
-		TEST_CASE_CHECK(b1, std::string("SGVsbG8gV29ybGQ="));
+		base64::encode(reinterpret_cast<const unsigned char*>(a1.c_str()), a1.size(), b1);
+		BOOST_REQUIRE_EQUAL(b1, std::string("SGVsbG8gV29ybGQ="));
 		std::vector<unsigned char> c1;
-		decode(b1.c_str(), c1);
-		TEST_CASE_CHECK(strncmp((a1.c_str()), reinterpret_cast<const char*>(c1.data()), c1.size()), 0);
+		base64::decode(b1.c_str(), c1);
+		BOOST_REQUIRE_EQUAL(strncmp((a1.c_str()), reinterpret_cast<const char*>(c1.data()), c1.size()), 0);
 	}
 
 	{
 		std::string a2("Hello World!");
 		std::string b2;
-		encode(reinterpret_cast<const unsigned char*>(a2.c_str()), a2.size(), b2);
-		TEST_CASE_CHECK(b2, std::string("SGVsbG8gV29ybGQh"));
+		base64::encode(reinterpret_cast<const unsigned char*>(a2.c_str()), a2.size(), b2);
+		BOOST_REQUIRE_EQUAL(b2, std::string("SGVsbG8gV29ybGQh"));
 		std::vector<unsigned char> c2;
-		decode(b2.c_str(), c2);
-		TEST_CASE_CHECK(strncmp((a2.c_str()), reinterpret_cast<const char*>(c2.data()), c2.size()), 0);
+		base64::decode(b2.c_str(), c2);
+		BOOST_REQUIRE_EQUAL(strncmp((a2.c_str()), reinterpret_cast<const char*>(c2.data()), c2.size()), 0);
 	}
 
 	{
 		std::string a3("Hello World!?");
 		std::string b3;
-		encode(reinterpret_cast<const unsigned char*>(a3.c_str()), a3.size(), b3);
-		TEST_CASE_CHECK(b3, std::string("SGVsbG8gV29ybGQhPw=="));
+		base64::encode(reinterpret_cast<const unsigned char*>(a3.c_str()), a3.size(), b3);
+		BOOST_REQUIRE_EQUAL(b3, std::string("SGVsbG8gV29ybGQhPw=="));
 		std::vector<unsigned char> c3;
-		decode(b3.c_str(), c3);
-		TEST_CASE_CHECK(strncmp((a3.c_str()), reinterpret_cast<const char*>(c3.data()), c3.size()), 0);
+		base64::decode(b3.c_str(), c3);
+		BOOST_REQUIRE_EQUAL(strncmp((a3.c_str()), reinterpret_cast<const char*>(c3.data()), c3.size()), 0);
 	}
 }
-#endif
+
 }

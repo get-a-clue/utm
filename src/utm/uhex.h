@@ -82,7 +82,7 @@ public:
 	}
 
 #ifdef UTM_DEBUG
-	static void test_all();
+	
 #endif
 };
 
