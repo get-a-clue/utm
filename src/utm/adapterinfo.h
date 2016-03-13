@@ -45,7 +45,7 @@ public:
 	static const char promiscuous_on[];
 	static const char promiscuous_off[];
 
-	enum mediums { ADAPTER_MEDIUM_ETHERNET = 0, ADAPTER_MEDIUM_RAS = 3, ADAPTER_MEDIUM_NETFLOW = 5, ADAPTER_MEDIUM_UNKNOWN = 6 };
+	enum mediums { ADAPTER_MEDIUM_ETHERNET = 0, ADAPTER_MEDIUM_RAS = 3, ADAPTER_MEDIUM_NETFLOW = 5, ADAPTER_MEDIUM_UNKNOWN = 6, ADAPTER_MEDIUM_WIFI = 16 };
 
 	adapterinfo();
 	~adapterinfo();
