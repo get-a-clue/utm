@@ -5,6 +5,8 @@
 #include <vector>
 #include <string>
 
+#include <boost/test/unit_test.hpp>
+
 namespace utm {
 
 LocalizationFuncPtr stringtools::localize = NULL;
@@ -98,6 +100,17 @@ const gchar* stringtools::strLSTR(const gchar* str)
 		return str;
 
 	return (*localize)(str);
+}
+
+BOOST_AUTO_TEST_CASE(stringtools_test_all)
+{
+	std::vector<std::string> parts1;
+	utm::stringtools::split(parts1, "The quick brown fox jumps over the lazy dog", ' ');
+	BOOST_REQUIRE_EQUAL(parts1.size(), size_t(9));
+	BOOST_REQUIRE_EQUAL(parts1[0], std::string("The"));
+	BOOST_REQUIRE_EQUAL(parts1[1], std::string("quick"));
+
+	return;
 }
 
 }
