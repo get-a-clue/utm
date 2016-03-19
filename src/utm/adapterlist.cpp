@@ -29,7 +29,7 @@ void adapterlist::assign(const adapterlist& adlist)
 
 void adapterlist::clear()
 {
-	capture_mode = 0;
+	capture_mode = 1;
 	adapters.clear();
 }
 

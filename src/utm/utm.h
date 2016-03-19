@@ -6,7 +6,7 @@
 #endif
 
 #ifndef UTM_VERSION
-#define UTM_VERSION "15.0.102"
+#define UTM_VERSION "15.0.103"
 #endif
 
 #ifdef UTM_WIN
