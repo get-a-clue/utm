@@ -933,7 +933,8 @@ void filter2::match_filter(const match_filter_input& data, match_filter_result& 
 						}
 						else
 						{
-							cnt_sent.add_cnt(-ip->length);
+							__int64 ip_length = ip->length;
+							cnt_sent.add_cnt(-ip_length);
 						};
 					}
 					else
@@ -944,7 +945,8 @@ void filter2::match_filter(const match_filter_input& data, match_filter_result& 
 						}
 						else
 						{
-							cnt_recv.add_cnt(-ip->length);
+							__int64 ip_length = ip->length;
+							cnt_recv.add_cnt(-ip_length);
 						}
 					};
 

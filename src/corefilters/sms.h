@@ -11,8 +11,6 @@
 
 #include "sms_base.h"
 
-#include <boost/random.hpp>
-
 namespace utm {
 
 class sms : public sms_base
@@ -20,9 +18,6 @@ class sms : public sms_base
 public:
 	sms(void);
 	~sms(void);
-
-	static boost::uniform_int<int> rnd;
-	static boost::random::mt19937 eng;
 
 	void generate_msg_id();
 };
