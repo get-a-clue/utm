@@ -997,7 +997,10 @@ void CDualServer::addRRA(data5 *req)
 				if ((MYDWORD)(cache->expiry - time(NULL)) >= cfig.lease)
 					req->dp += pULong(req->dp, cfig.lease - 1);
 				else
-					req->dp += pULong(req->dp, (cache->expiry - time(NULL)));
+				{
+					time_t tmp_t = cache->expiry - time(NULL);
+					req->dp += pULong(req->dp, static_cast<unsigned int>(tmp_t));
+				}
 			}
 			else
 				req->dp += pULong(req->dp, cfig.lease);
@@ -1028,7 +1031,10 @@ void CDualServer::addRRPtr(data5 *req)
 			if ((MYDWORD)(cache->expiry - time(NULL)) >= cfig.lease)
 				req->dp += pULong(req->dp, cfig.lease - 1);
 			else
-				req->dp += pULong(req->dp, (cache->expiry - time(NULL)));
+			{
+				time_t tmp_t = cache->expiry - time(NULL);
+				req->dp += pULong(req->dp, static_cast<unsigned int>(tmp_t));
+			}
 		}
 		else
 			req->dp += pULong(req->dp, cfig.lease);
@@ -1114,7 +1120,10 @@ void CDualServer::addRRAny(data5 *req, bool adFlag)
 					if ((MYDWORD)(cache->expiry - time(NULL)) >= cfig.lease)
 						req->dp += pULong(req->dp, cfig.lease - 1);
 					else
-						req->dp += pULong(req->dp, (cache->expiry - time(NULL)));
+					{
+						time_t tmp_t = cache->expiry - time(NULL);
+						req->dp += pULong(req->dp, static_cast<unsigned int>(tmp_t));
+					}
 				}
 				else
 					req->dp += pULong(req->dp, cfig.lease);
@@ -1138,7 +1147,10 @@ void CDualServer::addRRAny(data5 *req, bool adFlag)
 					if ((MYDWORD)(cache->expiry - time(NULL)) >= cfig.lease)
 						req->dp += pULong(req->dp, cfig.lease - 1);
 					else
-						req->dp += pULong(req->dp, (cache->expiry - time(NULL)));
+					{
+						time_t tmp_t = cache->expiry - time(NULL);
+						req->dp += pULong(req->dp, static_cast<unsigned int>(tmp_t));
+					}
 				}
 				else
 					req->dp += pULong(req->dp, cfig.lease);
@@ -1395,7 +1407,10 @@ void CDualServer::addRRAOne(data5 *req)
 		if ((MYDWORD)(cache->expiry - time(NULL)) >= cfig.lease)
 			req->dp += pULong(req->dp, cfig.lease - 1);
 		else
-			req->dp += pULong(req->dp, (cache->expiry - time(NULL)));
+		{
+			time_t tmp_t = cache->expiry - time(NULL);
+			req->dp += pULong(req->dp, static_cast<unsigned int>(tmp_t));
+		}
 	}
 	else
 		req->dp += pULong(req->dp, cfig.lease);
@@ -1419,7 +1434,10 @@ void CDualServer::addRRPtrOne(data5 *req)
 		if ((MYDWORD)(cache->expiry - time(NULL)) >= cfig.lease)
 			req->dp += pULong(req->dp, cfig.lease - 1);
 		else
-			req->dp += pULong(req->dp, (cache->expiry - time(NULL)));
+		{
+			time_t tmp_t = cache->expiry - time(NULL);
+			req->dp += pULong(req->dp, static_cast<unsigned int>(tmp_t));
+		}
 	}
 	else
 		req->dp += pULong(req->dp, cfig.lease);
@@ -1504,7 +1522,7 @@ void CDualServer::GetActiveLeases(string *ps)
 	dhcpMap::iterator p;
 	MYBYTE bp_chaddr[16];
 
-	char tmp[512], t[512];
+	char tmp[512];
 	WCHAR wsz[22];
 
 	utm::dhcpleaselist dll;
@@ -1528,7 +1546,7 @@ void CDualServer::GetActiveLeases(string *ps)
 			}
 			else
 			{
-				sdl.leasetime.from_uint(dhcpEntry->expiry);
+				sdl.leasetime.from_uint(static_cast<unsigned int>(dhcpEntry->expiry));
 			}
 
 			cache = findEntry(cacheInd, IP2String(tmp, htonl(dhcpEntry->ip)));
@@ -1871,7 +1889,7 @@ void CDualServer::procTCP(data5 *req)
 		addRRNone(req);
 		req->dnsp->header.rcode = RCODE_NOTIMPL;
 		sendTCPmess(req);
-		sprintf(logBuff, "DNS TCP Query Type %s not supported", strqtype(tempbuff, req->qtype));
+		sprintf(logBuff, "DNS TCP Query Type %s not supported", strqtype(tempbuff, static_cast<unsigned char>(req->qtype)));
 		logTCPMess(req, logBuff, 1);
 	}
 	else if (strcasecmp(req->mapname, cfig.zone) && strcasecmp(req->mapname, cfig.authority))
@@ -2581,7 +2599,7 @@ MYWORD CDualServer::scanloc(data5 *req)
 			{
 				if (cfig.dnsLogLevel)
 				{
-					sprintf(logBuff, "%s, DNS Query Type %s not supported", req->query, strqtype(tempbuff, req->qtype));
+					sprintf(logBuff, "%s, DNS Query Type %s not supported", req->query, strqtype(tempbuff, static_cast<unsigned char>(req->qtype)));
 					logDNSMess(req, logBuff, 1);
 				}
 				addRRNone(req);
@@ -3380,7 +3398,6 @@ char* CDualServer::getResult(data5 *req)
 	tempbuff[0] = 0;
 	extbuff[0] = 0;
 	char *raw = &req->dnsp->data;
-	MYWORD queueIndex;
 
 	for (int i = 1; i <= ntohs(req->dnsp->header.qdcount); i++)
 	{
@@ -4012,8 +4029,8 @@ MYDWORD CDualServer::alad(data9 *req)
 	{
 		if (req->reqIP || req->req_type == DHCP_MESS_NONE)
 		{
-			cfig.serial1 = t;
-			cfig.serial2 = t;
+			cfig.serial1 = static_cast<unsigned int>(t);
+			cfig.serial2 = static_cast<unsigned int>(t);
 
 			if (cfig.replication == 2)
 			{
@@ -4521,13 +4538,12 @@ MYDWORD CDualServer::sendRepl(data7 *dhcpEntry)
 {
 	data9 req;
 	memset(&req, 0, sizeof(data9));
-	data3 op;
 	req.vp = req.dhcpp.vend_data;
 	req.messsize = sizeof(dhcp_packet);
 	req.dhcpEntry = dhcpEntry;
 
 	req.dhcpp.header.bp_op = BOOTP_REQUEST;
-	req.dhcpp.header.bp_xid = time(NULL);
+	req.dhcpp.header.bp_xid = static_cast<unsigned int>(time(NULL));
 	req.dhcpp.header.bp_ciaddr = dhcpEntry->ip;
 	req.dhcpp.header.bp_yiaddr = dhcpEntry->ip;;
 	req.dhcpp.header.bp_hlen = fromUUE(req.dhcpp.header.bp_chaddr, dhcpEntry->mapname);
@@ -5086,7 +5102,7 @@ void CDualServer::parseDhcpOptions(char *sectionBody, const char *sectionName, d
 				if (valType == 2 && valSize == 2)
 					j = fUShort(value);
 				else if (valType == 5 || valType == 6)
-					j = atol(value);
+					j = static_cast<unsigned char>(atol(value));
 				else
 				{
 					sprintf(logBuff, "Warning: section [%s] option %s, value should be between 0 & %u or 2 bytes, option ignored", sectionName, name, USHRT_MAX);
@@ -5118,7 +5134,7 @@ void CDualServer::parseDhcpOptions(char *sectionBody, const char *sectionName, d
 				if (valType == 2 && valSize == 1)
 					j = *value;
 				else if (valType == 6)
-					j = atol(value);
+					j = static_cast<unsigned char>(atol(value));
 				else
 				{
 					sprintf(logBuff, "Warning: section [%s] option %s, value should be between 0 & %u or single byte, option ignored", sectionName, name, UCHAR_MAX);
@@ -6401,8 +6417,8 @@ void CDualServer::checkSize(MYBYTE ind)
 				p++;
 				cache->local = 0;
 				dhcpAge.erase(q);
-				cfig.serial1 = time(NULL);
-				cfig.serial2 = time(NULL);
+				cfig.serial1 = static_cast<unsigned int>(time(NULL));
+				cfig.serial2 = static_cast<unsigned int>(time(NULL));
 
 				if (cfig.expire > (MYDWORD)(INT_MAX - t))
 					cfig.expireTime = INT_MAX;
@@ -7093,7 +7109,7 @@ MYDWORD CDualServer::getZone(MYBYTE updateCache, char *zone)
 								setLeaseExpiry(ip, 0);
 
 							if (expiry < (MYDWORD)(INT_MAX - t))
-								expiry += t;
+								expiry += static_cast<unsigned int>(t);
 
 							addToCache(updateCache, hostname, ip, expiry, LOCAL_A, NONE, serial1);
 							added++;
@@ -7132,7 +7148,7 @@ MYDWORD CDualServer::getZone(MYBYTE updateCache, char *zone)
 									setLeaseExpiry(ip, 0);
 
 								if (expiry < (MYDWORD)(INT_MAX - t))
-									expiry += t;
+									expiry += static_cast<unsigned int>(t);
 
 								addToCache(updateCache, hostname, ip, expiry, NONE, LOCAL_PTR_AUTH, serial1);
 								added++;
@@ -7467,7 +7483,7 @@ void CDualServer::getSecondary()
 									setLeaseExpiry(ip, 0);
 
 								if (expiry < (MYDWORD)(INT_MAX - t))
-									expiry += t;
+									expiry += static_cast<unsigned int>(t);
 
 								addToCache(cacheInd, hostname, ip, expiry, LOCAL_A, NONE, cfig.serial1);
 								addToCache(cacheInd, hostname, ip, expiry, NONE, LOCAL_PTR_AUTH, cfig.serial2);
@@ -7494,9 +7510,6 @@ void CDualServer::getSecondary()
 void CDualServer::init(void *lparam, int *nostatic)
 {
 	time_t t = time(NULL);
-	char raw[512];
-	char name[512];
-	char value[512];
 
 	memset(&cfig, 0, sizeof(cfig));
 	memset(&network, 0, sizeof(network));
@@ -8113,7 +8126,7 @@ void CDualServer::init(void *lparam, int *nostatic)
 
 						if (dhcpData.expiry > t)
 						{
-							setLeaseExpiry(dhcpEntry, dhcpData.expiry - t, dhcpData.local);
+							setLeaseExpiry(dhcpEntry, dhcpData.expiry - t, dhcpData.local != 0);
 
 							addToCache(cacheInd, dhcpData.hostname, dhcpEntry->ip, dhcpData.expiry, LOCAL_A, NONE, cfig.serial1);
 
@@ -8537,8 +8550,8 @@ void CDualServer::init(void *lparam, int *nostatic)
 */
 		GetDnsWildHosts();
 
-		cfig.serial1 = t;
-		cfig.serial2 = t;
+		cfig.serial1 = static_cast<unsigned int>(t);
+		cfig.serial2 = static_cast<unsigned int>(t);
 		cfig.expireTime = INT_MAX;
 
 		if (dhcpService)
@@ -8624,8 +8637,6 @@ void CDualServer::init(void *lparam, int *nostatic)
 			sprintf(logBuff, "Forwarding DNS Server: %s", IP2String(tempbuff, network.dns[i]));
 			logDNSMess(logBuff, 1);
 		}
-
-		char temp[128];
 
 		for (int i = 0; i <= MAX_RANGES && cfig.dnsRanges[i].rangeStart; i++)
 		{
@@ -9286,7 +9297,7 @@ bool CDualServer::detectChange()
 	int c = (int)cfig.failureCount;
 
 	if (cfig.failureCount)
-		eventWait = 10000 * pow(f2, c);
+		eventWait = 10000 * (unsigned int)pow(f2, c);
 
 	OVERLAPPED overlap;
 	MYDWORD ret;
