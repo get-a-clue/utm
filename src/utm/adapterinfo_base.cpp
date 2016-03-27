@@ -83,6 +83,7 @@ void adapterinfo_base::xml_create()
     adapterinfo_base orig;
 
     xml_append_root( ADAPTERINFO_XMLTAG_NIC);
+    add_class_name();
     if (xml_has_root_attr()) {
        xmlattr_container attr;
        xml_get_root_attr(attr);

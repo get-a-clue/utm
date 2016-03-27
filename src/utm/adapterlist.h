@@ -80,7 +80,7 @@ public:
 	void clear();
 	void xml_create();
 	void xml_catch_value(const char *keyname, const char *keyvalue);
-	ubase* xml_catch_subnode(const char *name);
+	ubase* xml_catch_subnode(const char *tag_name, const char *class_name);
 
 #ifdef UTM_WIN
 	bool FindAdapterInfoByName(PIP_ADAPTER_INFO ppai, const char* szAdapterName, adapterinfo& ai) const;

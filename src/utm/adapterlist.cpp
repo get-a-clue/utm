@@ -72,7 +72,7 @@ void adapterlist::xml_catch_value(const char *keyname, const char *keyvalue)
 	xml_check_value(keyname, ADAPTERINFO_XMLTAG_CAPTUREMODE, keyvalue, this->capture_mode);
 }
 
-ubase* adapterlist::xml_catch_subnode(const char *keyname)
+ubase* adapterlist::xml_catch_subnode(const char *keyname, const char *class_name)
 {
 	if (strcmp(keyname, ADAPTERINFO_XMLTAG_NIC) == 0)
 	{

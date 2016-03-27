@@ -172,7 +172,7 @@ public:
 		};
 	}
 
-	ubase* xml_catch_subnode(const char *name) { return NULL; };
+	ubase* xml_catch_subnode(const char *tag_name, const char *class_name) { return NULL; };
 
 	void make_diff_dump(const event_id remote_next_id, std::string& xml_dump, bool include_xml_declaration = true)
 	{

@@ -112,7 +112,7 @@ public:
 		}
 	};
 	
-	ubase* xml_catch_subnode(const char *name) { return NULL; };
+	ubase* xml_catch_subnode(const char *tag_name, const char *class_name) { return NULL; };
 };
 
 class addrtablemaprec_v4 : public addrtablemaprec<utm::addrtable_v4>

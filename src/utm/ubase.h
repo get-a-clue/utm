@@ -41,7 +41,7 @@ public:
 	virtual void clear() { xml_catch_value_callback = NULL; xml_catch_subnode_callback = NULL; };
 	virtual void xml_create() = 0;
 	virtual void xml_catch_value(const char *name, const char *value) = 0;
-	virtual ubase* xml_catch_subnode(const char *name) = 0;
+	virtual ubase* xml_catch_subnode(const char *tag_name, const char *class_name) = 0;
 	virtual void xml_catch_subnode_finished(const char *name);
 	virtual void xml_catch_subnode_attribute(const char *attrname, const char* attrvalue);
 	virtual void xml_catch_rootnode_attribute(const char *attrname, const char* attrvalue);
@@ -65,6 +65,9 @@ public:
 
 	boost::function<void(const char *name, const char *value)> xml_catch_value_callback;
 	boost::function<void(const char *name, const ubase *u)> xml_catch_subnode_callback;
+
+protected:
+	void add_class_name();
 
 public:
 #ifdef UTM_WIN

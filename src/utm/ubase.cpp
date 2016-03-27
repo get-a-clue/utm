@@ -38,7 +38,7 @@ bool ubase::xml_parse(const char* xml, bool appendmode)
 {
 	if (!appendmode)
 		clear();
-	
+
 	xml_init();
 
 	pugi::xml_parse_result parse_result = xdoc->load(xml);
@@ -95,15 +95,38 @@ void ubase::xml_parse_allnodes(pugi::xml_node& node)
 
 		if (is_keyvalue_empty)
 		{
-			ubase* u = xml_catch_subnode(keyname);
+			std::string class_name;
+			bool has_attributes = false;
+
+			{
+				// Extract class name from attributes
+				for (auto xaiter = node.attributes_begin(); xaiter != node.attributes_end(); ++xaiter)
+				{
+					const char* attr_name = xaiter->name();
+					const char* attr_value = xaiter->value();
+					if ((attr_name != NULL) && (attr_value != NULL) && (strcmp(attr_name, "CN") == 0))
+					{
+						class_name.assign(attr_value);
+						break;
+					}
+					else
+					{
+						has_attributes = true;
+					}
+				}
+			}
+
+			ubase* u = xml_catch_subnode(keyname, class_name.c_str());
 			if (u != NULL)
 			{
 				u->xml_parse(node);
 
-				pugi::xml_attribute_iterator xaiter;
-				for (xaiter = node.attributes_begin(); xaiter != node.attributes_end(); ++xaiter)
+				if (has_attributes)
 				{
-					u->xml_catch_subnode_attribute(xaiter->name(), xaiter->value());
+					for (auto xaiter = node.attributes_begin(); xaiter != node.attributes_end(); ++xaiter)
+					{
+						u->xml_catch_subnode_attribute(xaiter->name(), xaiter->value());
+					}
 				}
 
 				xml_catch_subnode_finished(keyname);
@@ -563,6 +586,13 @@ void ubase::xml_load(const char *filename)
 		std::string what = oss.str();
 		throw std::exception(what.c_str());
 	}
+}
+
+void ubase::add_class_name()
+{
+	pugi::xml_node root = xml_get_root();
+	pugi::xml_attribute attr = root.append_attribute("CN");
+	attr.set_value(get_this_class_name());
 }
 
 #ifdef UTM_WIN

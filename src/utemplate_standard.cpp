@@ -53,6 +53,7 @@ void $classname::xml_create()
     $classname orig;
 
 **xml_root_operator**
+    add_class_name();
     if (xml_has_root_attr()) {
        xmlattr_container attr;
        xml_get_root_attr(attr);
