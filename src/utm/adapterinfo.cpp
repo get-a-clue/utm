@@ -82,6 +82,15 @@ BOOST_AUTO_TEST_CASE(adapterinfo_test)
 {
 	adapterinfo ai;
 	BOOST_REQUIRE_EQUAL(ai.get_this_class_name(), std::string("adapterinfo"));
+
+	adapterinfo_base& aibase = (adapterinfo_base)ai;
+	BOOST_REQUIRE_EQUAL(aibase.get_this_class_name(), std::string("adapterinfo_base"));
+
+	adapterinfo_base *aib = (adapterinfo_base *)&ai;
+	BOOST_REQUIRE_EQUAL(aib->get_this_class_name(), std::string("adapterinfo"));
+
+	ubase *ub = (ubase *)&ai;
+	BOOST_REQUIRE_EQUAL(ub->get_this_class_name(), std::string("adapterinfo"));
 }
 
 }
