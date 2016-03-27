@@ -20,6 +20,8 @@ public:
 		return items == rhs.items;
 	}
 
+	virtual const char *get_this_class_name() const { return "keyvaluelist"; };
+
 	void xml_create()
 	{
 		xml_append_root("KeyValueList");

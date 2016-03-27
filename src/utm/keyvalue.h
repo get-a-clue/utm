@@ -23,6 +23,8 @@ public:
 		return (value == rhs.value);
 	}
 
+	virtual const char *get_this_class_name() const { return "keyvalue"; };
+
 	unsigned int id;
 	T key;
 	T value;

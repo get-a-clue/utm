@@ -50,6 +50,8 @@ public:
 	adapterinfo();
 	~adapterinfo();
 
+	virtual const char *get_this_class_name() const { return this_class_name; };
+
 #ifdef UTM_WIN
 	HANDLE handle;
 #endif

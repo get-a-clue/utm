@@ -35,6 +35,8 @@ public:
 
 	bool operator==(const event_msg& rhs) const;
 
+	virtual const char *get_this_class_name() const { return this_class_name; };
+
 	int				pane;
 	gstring			message;
 

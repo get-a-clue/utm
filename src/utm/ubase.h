@@ -35,7 +35,7 @@ public:
 	ubase(const ubase& r) { };
 	ubase& operator=(const ubase& r) { return *this; };
 
-	virtual const char *get_this_class_name() { return "ubase"; };
+	virtual const char *get_this_class_name() const { return "ubase"; };
 
 public:
 	virtual void clear() { xml_catch_value_callback = NULL; xml_catch_subnode_callback = NULL; };

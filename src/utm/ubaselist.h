@@ -29,6 +29,8 @@ namespace utm {
 		ubaselist(void) { };
 		~ubaselist(void) { };
 
+		virtual const char *get_this_class_name() const { return "ubaselist"; };
+
 		typedef std::list<T> ubaselist_container;
 
 		ubaselist_container items;

@@ -49,6 +49,8 @@ public:
 		return addrtable.itemsref() == rhs.addrtable.itemsref();
 	}
 
+	virtual const char *get_this_class_name() const { return "addrtablemaprec"; };
+
 	unsigned int key;
 	T addrtable;
 
@@ -141,6 +143,8 @@ public:
 	{
 		return items == rhs.items;
 	}
+
+	virtual const char *get_this_class_name() const { return "addrtablemaplist"; };
 
 	void clear()
 	{

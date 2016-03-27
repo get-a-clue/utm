@@ -5,6 +5,8 @@
 #include "stringtools.h"
 #include "utime.h"
 
+#include <boost/test/unit_test.hpp>
+
 namespace utm {
 
 const char adapterinfo::this_class_name[] = "adapterinfo";
@@ -44,8 +46,8 @@ void adapterinfo::test_fillparams(int num)
 	original_index = 8;
 	alias = 10;
 
-//	std::string s = getstr_adapterinfo("test");
-//	BOOST_REQUIRE_EQUAL(s, std::string("test Realtek 8139A, IP=192.0.0.1, Promiscous mode=on"));
+	//	std::string s = getstr_adapterinfo("test");
+	//	BOOST_REQUIRE_EQUAL(s, std::string("test Realtek 8139A, IP=192.0.0.1, Promiscous mode=on"));
 }
 
 void adapterinfo::test_all()
@@ -75,4 +77,11 @@ void adapterinfo::test_all()
 }
 
 #endif
+
+BOOST_AUTO_TEST_CASE(adapterinfo_test)
+{
+	adapterinfo ai;
+	BOOST_REQUIRE_EQUAL(ai.get_this_class_name(), std::string("adapterinfo"));
+}
+
 }

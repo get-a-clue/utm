@@ -58,6 +58,8 @@ public:
 
 	bool operator==(const adapterlist& rhs) const;
 
+	virtual const char *get_this_class_name() const { return this_class_name; };
+
 	// class members
 	std::vector<adapterinfo> adapters;
 	unsigned int capture_mode;

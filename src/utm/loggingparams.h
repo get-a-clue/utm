@@ -69,6 +69,8 @@ public:
 	loggingparams(void);
 	~loggingparams(void);
 
+	virtual const char *get_this_class_name() const { return this_class_name; };
+
 	void clear() { loggingparamsbase::clear(); };
 	void xml_create();
 	void xml_catch_value(const char *keyname, const char *keyvalue);

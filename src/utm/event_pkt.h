@@ -42,6 +42,8 @@ public:
 
 	bool operator==(const event_pkt& rhs) const;
 
+	virtual const char *get_this_class_name() const { return this_class_name; };
+
 	addrmac		src_mac;
 	addrmac		dst_mac;
 	addrip_v4	src_ip4;

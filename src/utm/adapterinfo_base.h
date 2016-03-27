@@ -30,6 +30,8 @@ public:
     adapterinfo_base& operator=(const adapterinfo_base& rhs);
     bool  operator==(const adapterinfo_base& rhs) const;
 
+    virtual const char *get_this_class_name() const { return "adapterinfo_base"; };
+
 
 
 public:

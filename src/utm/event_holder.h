@@ -47,6 +47,8 @@ public:
 		return events == rhs.events;
 	}
 
+	virtual const char *get_this_class_name() const { return "event_holder"; };
+
 	void safe_copy_container(event_holder_container& dest_holder, event_id from_event_id, bool clear_source = false)
 	{
 		boost::mutex::scoped_lock lock(guard);

@@ -28,6 +28,8 @@ public:
     $classname& operator=(const $classname& rhs);
     bool  operator==(const $classname& rhs) const;
 
+    virtual const char *get_this_class_name() const { return "$classname"; };
+
 **virtual**
 
 public:
