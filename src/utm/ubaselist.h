@@ -117,22 +117,23 @@ namespace utm {
 			temp_item.reset();
 		}
 
-		void init_temp_item(ubase* u)
+		ubase* init_and_get_temp_item(ubase* u)
 		{
 			temp_item.reset(u);
-		}
-
-		ubase* get_temp_item()
-		{
 			return temp_item.get();
 		}
 
 		void commit_temp_item()
 		{
-			std::unique_ptr<ubase> ethalon = std::unique_ptr<ubase>(createInstance());
-			if (!ethalon.get()->equals(temp_item.get()))
+			T t;
+			ubase* u = temp_item.get();
+			if (u != NULL)
 			{
-				add_element(temp_item.get());
+				if (!(t.equals(u)))
+				{
+					temp_item.release();
+					add_element(u);
+				}
 			}
 
 			delete_temp_item();

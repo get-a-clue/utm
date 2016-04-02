@@ -229,6 +229,23 @@ BOOST_AUTO_TEST_CASE(ubaselist_test_all)
 
 	}
 
+	{
+		testitem::destructor_calls = 0;
+		BOOST_REQUIRE_EQUAL(0, testitem::destructor_calls);
+		ubaselist_test ubt;
+		{
+			ubase* u = dynamic_cast<ubase *>(new testitem());
+			ubt.init_and_get_temp_item(u);
+			BOOST_REQUIRE_EQUAL(0, testitem::destructor_calls);
+			u->set_id(111);
+			ubt.commit_temp_item();
+			BOOST_REQUIRE_EQUAL(1, testitem::destructor_calls);
+		}
+		BOOST_REQUIRE_EQUAL(1, ubt.size());
+		BOOST_REQUIRE_EQUAL(true, ubt.findptr_by_id(111) != NULL);
+	}
+	BOOST_REQUIRE_EQUAL(2, testitem::destructor_calls);
+
 	return;
 }
 
