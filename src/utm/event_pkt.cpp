@@ -20,6 +20,17 @@ event_pkt::~event_pkt(void)
 {
 }
 
+bool event_pkt::equals(const ubase* rhs) const
+{
+	const event_pkt* p = dynamic_cast<const event_pkt *>(rhs);
+	if (p == NULL)
+	{
+		return false;
+	}
+
+	return operator==(*p);
+}
+
 bool event_pkt::operator==(const event_pkt& rhs) const
 {
 	if (id != rhs.id) return false;

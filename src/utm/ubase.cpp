@@ -16,6 +16,7 @@ namespace utm {
 
 const char ubase::xml_true[] = "1";
 const char ubase::xml_false[] = "0";
+const gstring ubase::empty_string = gstring("");
 
 ubase::ubase(void)
 {

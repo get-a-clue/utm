@@ -21,6 +21,17 @@ event_msg::~event_msg(void)
 {
 }
 
+bool event_msg::equals(const ubase* rhs) const
+{
+	const event_msg* p = dynamic_cast<const event_msg *>(rhs);
+	if (p == NULL)
+	{
+		return false;
+	}
+
+	return operator==(*p);
+}
+
 bool event_msg::operator==(const event_msg& rhs) const
 {
 	if (id != rhs.id)

@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#ifdef UTM_DEBUG
+
 #include "ubase_test.h"
 #include "adapterinfo.h"
 #include "adapterlist.h"
@@ -19,3 +21,5 @@ BOOST_AUTO_TEST_CASE(SimpleTestInMainTestingModule)
 	test_adapterlist.test_all();
 
 }
+
+#endif

@@ -43,6 +43,17 @@ public:
 		addrtable = _addrtable;
 	}
 
+	virtual bool equals(const ubase* rhs) const
+	{
+		const addrtablemaprec<T>* p = dynamic_cast<const addrtablemaprec<T> *>(rhs);
+		if (p == NULL)
+		{
+			return false;
+		}
+
+		return operator==(*p);
+	}
+
 	bool operator==(const addrtablemaprec& rhs) const
 	{
 		if (key != rhs.key) return false;
@@ -133,6 +144,7 @@ public:
 };
 
 template<class T>
+//class addrtablemaplist : public ubaselist<addrtablemaprec<T>>
 class addrtablemaplist : public ubaselist<addrtablemaprec<T>>
 {
 public:
@@ -161,14 +173,14 @@ public:
 	{
 	}
 
-	ubase* xml_catch_subnode(const char *keyname)
+	ubase* xml_catch_subnode(const char *keyname, const char *class_name)
 	{
 		ubase *u = NULL;
 
 		if (strcmp(keyname, ADDRTABLEMAP_XMLTAG_MAT) == 0)
 		{
-			addrtablemaprec<T>* r = insert_and_get_inserted();
-			u = (ubase *)r;
+			u = dynamic_cast<addrtablemaprec<T> *>(new addrtablemaprec<T>());
+			add_element(u);
 		}
 
 		return u;

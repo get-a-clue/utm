@@ -40,6 +40,7 @@ public:
 	event_pkt(void);
 	~event_pkt(void);
 
+	virtual bool equals(const ubase* rhs) const;
 	bool operator==(const event_pkt& rhs) const;
 
 	virtual const char *get_this_class_name() const { return this_class_name; };

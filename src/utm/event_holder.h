@@ -42,6 +42,17 @@ public:
 		return *this;
 	}
 
+	virtual bool equals(const ubase* rhs) const
+	{
+		const event_holder<T>* p = dynamic_cast<const event_holder<T> *>(rhs);
+		if (p == NULL)
+		{
+			return false;
+		}
+
+		return operator==(*p);
+	}
+
 	bool operator==(const event_holder<T>& rhs) const
 	{
 		return events == rhs.events;

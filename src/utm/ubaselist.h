@@ -5,6 +5,7 @@
 #include <utm.h>
 
 #include <list>
+#include <memory>
 
 #include <stringtools.h>
 #include <ubase.h>
@@ -27,38 +28,114 @@ namespace utm {
 	{
 	public:
 		ubaselist(void) { };
+		ubaselist(const ubaselist<T>& rhs)
+		{
+			operator=(rhs);
+		}
+
 		~ubaselist(void) { };
 
 		virtual const char *get_this_class_name() const { return "ubaselist"; };
 
-		typedef std::list<T> ubaselist_container;
+		typedef std::list<std::unique_ptr<ubase>> ubaselist_container;
 
 		ubaselist_container items;
-		T temp_item;
 
+		ubaselist<T>& operator=(const ubaselist<T>& rhs)
+		{
+			copyitems(rhs);
+			return *this;
+		}
+
+		void copyitems(const ubaselist<T>& rhs)
+		{
+			items.clear();
+			for (auto iter = rhs.items.begin(); iter != rhs.items.end(); ++iter)
+			{
+				ubase* u = iter->get();
+				T* t = (T *)u;
+				ubase* ucopy = copyInstance(*t);
+				items.push_back(std::unique_ptr<ubase>(ucopy));
+			}
+		}
+
+		bool operator==(const ubaselist<T>& rhs) const
+		{
+			size_t rhs_size = rhs.size();
+			if (size() != rhs_size)
+			{
+				return false;
+			}
+
+			auto iter2 = rhs.items.begin();
+			for (auto iter = items.begin(); iter != items.end(); ++iter, ++iter2)
+			{
+				ubase* ub = iter->get();
+				ubase* ub2 = iter2->get();
+
+				if (!ub->equals(ub2))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		virtual bool equals(const ubase* rhs) const
+		{
+			const ubaselist<T>* p = dynamic_cast<const ubaselist<T> *>(rhs);
+			if (p == NULL)
+			{
+				return false;
+			}
+
+			return operator==(*p);
+		}
+
+	protected:
+		std::unique_ptr<ubase> temp_item;
+
+		ubase* copyInstance(const T& e)
+		{
+			return new T(e);
+		}
+
+		virtual ubase* createInstance()
+		{
+			return NULL;
+		}
+
+	public:
 		virtual void clear()
 		{
 			items.clear();
 		}
 
-		void clear_temp()
+		void delete_temp_item()
 		{
-			temp_item.clear();
+			temp_item.reset();
 		}
 
-		T* get_temp_item()
+		void init_temp_item(ubase* u)
 		{
-			temp_item.clear();
-			return &temp_item;
+			temp_item.reset(u);
+		}
+
+		ubase* get_temp_item()
+		{
+			return temp_item.get();
 		}
 
 		void commit_temp_item()
 		{
-			T ethalon;
-			if (!(ethalon == temp_item))
-				add_element(temp_item);
+			std::unique_ptr<ubase> ethalon = std::unique_ptr<ubase>(createInstance());
+			if (!ethalon.get()->equals(temp_item.get()))
+			{
+				add_element(temp_item.get());
+			}
 
-			temp_item.clear();
+			delete_temp_item();
 		}
 
 		size_t size() const
@@ -82,11 +159,11 @@ namespace utm {
 		}
 
 	private:
-		unsigned int insert_element(int insert_type, const T& e, unsigned int element_id, unsigned int position_id)
+		unsigned int insert_element(int insert_type, ubase* e, unsigned int element_id, unsigned int position_id)
 		{
-			if (e.get_id() > 0)
+			if (e->get_id() > 0)
 			{
-				element_id = e.get_id();
+				element_id = e->get_id();
 				if (is_write_protected(element_id) && is_element_exist(element_id))
 				{
 					return element_id;
@@ -97,12 +174,11 @@ namespace utm {
 				element_id = get_next_id();
 			}
 
-			T e_copy(e);
-			e_copy.set_id(element_id);
+			e->set_id(element_id);
 
 			if (insert_type == INSERT_TYPE_TAIL)
 			{
-				items.push_back(e_copy);
+				items.push_back(std::unique_ptr<ubase>(e));
 			}
 
 			if ((insert_type == INSERT_TYPE_AFTER) || (insert_type == INSERT_TYPE_BEFORE))
@@ -111,7 +187,7 @@ namespace utm {
 				ubaselist_container::iterator iter;
 				for (iter = items.begin(); iter != items.end(); ++iter)
 				{
-					if (iter->get_id() == position_id)
+					if (iter->get()->get_id() == position_id)
 					{
 						found = true;
 						break;
@@ -136,11 +212,11 @@ namespace utm {
 
 				if (found)
 				{
-					items.insert(iter, e);
+					items.insert(iter, std::unique_ptr<ubase>(e));
 				}
 				else
 				{
-					items.push_back(e_copy);
+					items.push_back(std::unique_ptr<ubase>(e));
 				}
 			}
 
@@ -150,32 +226,46 @@ namespace utm {
 	public:
 		unsigned int add_element(const T& e, unsigned int element_id = 0)
 		{
-			return insert_element(INSERT_TYPE_TAIL, e, element_id, 0);
+			return insert_element(INSERT_TYPE_TAIL, copyInstance(e), element_id, 0);
+		}
+
+		unsigned int add_element(const ubase* e, unsigned int element_id = 0)
+		{
+			return insert_element(INSERT_TYPE_TAIL, const_cast<ubase *>(e), element_id, 0);
 		}
 
 		unsigned int insert_element_before(const T& e, unsigned int element_id, unsigned int position_id)
 		{
-			return insert_element(INSERT_TYPE_BEFORE, e, element_id, position_id);
+			return insert_element(INSERT_TYPE_BEFORE, copyInstance(e), element_id, position_id);
+		}
+
+		unsigned int insert_element_before(const ubase* e, unsigned int element_id, unsigned int position_id)
+		{
+			return insert_element(INSERT_TYPE_BEFORE, const_cast<ubase *>(e), element_id, position_id);
 		}
 
 		unsigned int insert_element_after(const T& e, unsigned int element_id, unsigned int position_id)
 		{
-			return insert_element(INSERT_TYPE_AFTER, e, element_id, position_id);
+			return insert_element(INSERT_TYPE_AFTER, copyInstance(e), element_id, position_id);
 		}
 
-		bool modify_element(const T& e)
+		unsigned int insert_element_after(const ubase* e, unsigned int element_id, unsigned int position_id)
 		{
-			if ((has_write_protection()) && (e.get_id() < WRITE_PROTECTED_ELEMENT_MAX_ID))
+			return insert_element(INSERT_TYPE_AFTER, const_cast<ubase *>(e), element_id, position_id);
+		}
+
+		bool modify_element(const ubase* e)
+		{
+			if ((has_write_protection()) && (e->get_id() < WRITE_PROTECTED_ELEMENT_MAX_ID))
 				return false;
 
 			bool retval = false;
-			ubaselist_container::iterator iter;
-
-			for (iter = items.begin(); iter != items.end(); ++iter)
+			for (auto iter = items.begin(); iter != items.end(); ++iter)
 			{
-				if (iter->get_id() == e.get_id())
+				if (iter->get()->get_id() == e->get_id())
 				{
-					*iter = e;
+					ubase* e2 = const_cast<ubase *>(e);
+					iter->reset(e2);
 					retval = true;
 					break;
 				}
@@ -189,26 +279,21 @@ namespace utm {
 			if ((has_write_protection()) && (id < WRITE_PROTECTED_ELEMENT_MAX_ID))
 				return false;
 
-			bool retval = false;
-			ubaselist_container::iterator iter;
-
-			for (iter = items.begin(); iter != items.end(); ++iter)
+			for (auto iter = items.begin(); iter != items.end(); ++iter)
 			{
-				if (iter->get_id() == id)
+				if (iter->get()->get_id() == id)
 				{
 					items.erase(iter);
-					retval = true;
-					break;
+					return true;
 				}
 			}
 
-			return retval;
+			return false;
 		}
 
 		void truncate(size_t maxitems) 
 		{
-			ubaselist_container::iterator iter;
-			for (iter = items.begin(); iter != items.end(); )
+			for (auto iter = items.begin(); iter != items.end(); )
 			{
 				if (maxitems == 0)
 				{
@@ -227,10 +312,9 @@ namespace utm {
 			int retval = 0;
 			bool found = false;
 
-			ubaselist_container::const_iterator iter;
-			for (iter = items.begin(); iter != items.end(); ++iter)
+			for (auto iter = items.begin(); iter != items.end(); ++iter)
 			{
-				if (iter->get_id() == id)
+				if (iter->get()->get_id() == id)
 				{
 					found = true;
 					break;
@@ -248,16 +332,15 @@ namespace utm {
 
 			int ret = UBASELISTORDER_ERROR;
 
-			ubaselist_container::const_iterator iter;
-			for (iter = items.begin(); iter != items.end(); ++iter)
+			for (auto iter = items.begin(); iter != items.end(); ++iter)
 			{
-				if (iter->get_id() == id)
+				if (iter->get()->get_id() == id)
 				{
 					ret = UBASELISTORDER_FIRST;
 					break;
 				};
 
-				if (iter->get_id() == id2)
+				if (iter->get()->get_id() == id2)
 				{
 					ret = UBASELISTORDER_SECOND;
 					break;
@@ -270,13 +353,11 @@ namespace utm {
 		unsigned int get_next_id() const
 		{
 			unsigned int retval = 0;
-			ubaselist_container::const_iterator iter;
-
-			for (iter = items.begin(); iter != items.end(); ++iter)
+			for (auto iter = items.begin(); iter != items.end(); ++iter)
 			{
-				if (iter->get_id() > retval)
+				if (iter->get()->get_id() > retval)
 				{
-					retval = iter->get_id();
+					retval = iter->get()->get_id();
 				};
 			};
 
@@ -289,121 +370,80 @@ namespace utm {
 		bool is_element_exist(unsigned int id) const
 		{
 			bool retval = false;
-			ubaselist_container::const_iterator iter;
-
-			for (iter = items.begin(); iter != items.end(); ++iter)
+			for (auto iter = items.begin(); iter != items.end(); ++iter)
 			{
-				if (iter->get_id() == id)
+				if (iter->get()->get_id() == id)
 				{
-					retval = true;
-					break;
+					return true;
 				};
 			};
 
-			return retval;
+			return false;
 		}
 
-		bool find_by_id(unsigned int id, T& result) const
+		ubase* findptr_by_index(unsigned int index) const
 		{
-			bool retval = false;
-			ubaselist_container::const_iterator iter;
-
-			for (iter = items.begin(); iter != items.end(); ++iter)
-			{
-				if (iter->get_id() == id)
-				{
-					result = *iter;
-					retval = true;
-					break;
-				};
-			};
-
-			return retval;
-		}
-
-		bool find_by_index(unsigned int index, T& result) const
-		{
-			bool retval = false;
-			ubaselist_container::const_iterator iter;
-
 			int i = 0;
-			for (iter = items.begin(); iter != items.end(); ++iter, i++)
+			for (auto iter = items.begin(); iter != items.end(); ++iter, i++)
 			{
 				if (i == index)
 				{
-					result = *iter;
-					retval = true;
-					break;
+					return iter->get();
 				};
 			};
 
-			return retval;
+			return NULL;
 		}
 
-		bool find_next_by_id(unsigned int id, T& result) const
+		ubase* findptr_next_by_id(unsigned int id) const
 		{
-			bool retval = false;
-			ubaselist_container::const_iterator iter;
-
-			for (iter = items.begin(); iter != items.end(); ++iter)
+			for (auto iter = items.begin(); iter != items.end(); ++iter)
 			{
-				if (iter->get_id() == id)
+				if (iter->get()->get_id() == id)
 				{
 					++iter;
 					if (iter != items.end())
 					{
-						result = *iter;
-						retval = true;
+						return iter->get();
 					}
 					break;
 				};
 			};
 
-			return retval;
+			return NULL;
 		}
 
-		T* findptr_by_id(unsigned int id)
+		ubase* findptr_by_id(unsigned int id) const
 		{
-			T* retval = NULL;
-			ubaselist_container::iterator iter;
-
-			for (iter = items.begin(); iter != items.end(); ++iter)
+			for (auto iter = items.begin(); iter != items.end(); ++iter)
 			{
-				if (iter->get_id() == id)
+				if (iter->get()->get_id() == id)
 				{
-					retval = &(*iter);
-					break;
+					return iter->get();
 				};
 			};
 
-			return retval;
+			return NULL;
 		}
 
-		bool find_by_name(const gstring& name, T& result, bool case_insensetive = false) const
+		ubase* findptr_by_name(const gstring& name, bool case_insensetive = false) const
 		{
-			bool retval = false;
-			ubaselist_container::const_iterator iter;
-
-			for (iter = items.begin(); iter != items.end(); ++iter)
+			for (auto iter = items.begin(); iter != items.end(); ++iter)
 			{
 				if (!case_insensetive)
 				{
-					if (iter->get_name() == name)
+					if (iter->get()->get_name() == name)
 					{
-						result = *iter;
-						retval = true;
-						break;
+						return iter->get();
 					};
 				}
-				else if (name.is_ci_equal((*iter).get_name()))
+				else if (name.is_ci_equal(iter->get()->get_name()))
 				{
-					result = *iter;
-					retval = true;
-					break;
+					return iter->get();
 				}
 			};
 
-			return retval;
+			return NULL;
 		}
 
 		bool move_up(unsigned int id)
@@ -413,7 +453,7 @@ namespace utm {
 
 			for (iter = items.begin(); iter != items.end(); ++iter)
 			{
-				if (iter->get_id() == id)
+				if (iter->get()->get_id() == id)
 				{
 					if (iter != items.begin())
 					{
@@ -436,7 +476,7 @@ namespace utm {
 
 			for (iter = items.begin(); iter != items.end(); ++iter)
 			{
-				if (iter->get_id() == id)
+				if (iter->get()->get_id() == id)
 				{
 					iter2 = iter;
 					++iter2;
@@ -451,7 +491,7 @@ namespace utm {
 
 			return retval;
 		}
-
+		/*
 		T* insert_and_get_inserted(T p)
 		{
 			T* lastinserted = NULL;
@@ -474,7 +514,7 @@ namespace utm {
 			T* lastinserted = insert_and_get_inserted(p);
 			return lastinserted;
 		}
-
+		*/
 		void sort_by_name(bool ascending = true)
 		{
 
@@ -482,29 +522,77 @@ namespace utm {
 	};
 
 #ifdef UTM_DEBUG
-	class testitem
+	class testitem : public ubase
 	{
 	public:
+		static int destructor_calls;
+
 		testitem() : id(0) { };
 		testitem(unsigned int _id) : id(_id) { };
-		~testitem() { };
+		~testitem() { destructor_calls++; };
+
+		const char *get_this_class_name() const { return "testitem"; };
 
 		unsigned int id;
-		unsigned int get_id() const { return id; };
-		void set_id(unsigned int _id) { id = _id; };
-	};
+		gstring name;
 
+		bool equals(const ubase* rhs) const
+		{
+			if (id != rhs->get_id()) return false;
+			if (name != rhs->get_name()) return false;
+			return true;
+		}
+
+		unsigned int get_id() const { return id; };
+		void set_id(unsigned int _id) { id = _id; name << id << "A"; };
+		const gstring& get_name() const { return name; }
+		void set_name(const gstring& _name) { name = _name; };
+
+		void xml_create() { };
+		void xml_catch_value(const char *name, const char *value) { };
+		ubase* xml_catch_subnode(const char *tag_name, const char *class_name) { return NULL; };
+	};
+	
 	class ubaselist_test : public ubaselist<testitem>
 	{
 	public:
 		ubaselist_test() { };
 		~ubaselist_test() { };
 
+		bool operator==(const ubaselist_test& rhs) const
+		{
+			return equals(&rhs);
+		}
+
 		void xml_create() { };
 		void xml_catch_value(const char *keyname, const char *keyvalue) { };
 		ubase* xml_catch_subnode(const char *tag_name, const char *class_name) { return NULL; };
 
 		
+	};
+
+	class ubaselist_main_test : public ubase
+	{
+	public:
+		ubaselist_main_test() { };
+		~ubaselist_main_test() { };
+
+		ubaselist_test test_items;
+
+		bool equals(const ubase* rhs) const
+		{
+			const ubaselist_main_test* p = dynamic_cast<const ubaselist_main_test *>(rhs);
+			return test_items == p->test_items;
+		}
+
+		bool operator==(const ubaselist_main_test& rhs) const
+		{
+			return test_items == rhs.test_items;
+		}
+
+		void xml_create() { };
+		void xml_catch_value(const char *keyname, const char *keyvalue) { };
+		ubase* xml_catch_subnode(const char *tag_name, const char *class_name) { return NULL; };
 	};
 #endif
 

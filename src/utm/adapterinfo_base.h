@@ -28,7 +28,8 @@ public:
     virtual ~adapterinfo_base();
 
     adapterinfo_base& operator=(const adapterinfo_base& rhs);
-    bool  operator==(const adapterinfo_base& rhs) const;
+    virtual bool equals(const ubase* rhs) const;
+    bool operator==(const adapterinfo_base& rhs) const;
 
     virtual const char *get_this_class_name() const { return "adapterinfo_base"; };
 

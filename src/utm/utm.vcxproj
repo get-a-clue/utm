@@ -507,6 +507,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugUTest|Win32'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugUTest|x64'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="addrtablemap_v4.cpp" />
     <ClCompile Include="addrtable_v4.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugTest|Win32'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugTest|x64'">Use</PrecompiledHeader>

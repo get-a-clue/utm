@@ -76,8 +76,6 @@ void adapterinfo::test_all()
 	return;
 }
 
-#endif
-
 BOOST_AUTO_TEST_CASE(adapterinfo_test)
 {
 	adapterinfo ai;
@@ -92,5 +90,6 @@ BOOST_AUTO_TEST_CASE(adapterinfo_test)
 	ubase *ub = (ubase *)&ai;
 	BOOST_REQUIRE_EQUAL(ub->get_this_class_name(), std::string("adapterinfo"));
 }
+#endif
 
 }

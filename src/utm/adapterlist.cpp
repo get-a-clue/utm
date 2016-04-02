@@ -33,6 +33,17 @@ void adapterlist::clear()
 	adapters.clear();
 }
 
+bool adapterlist::equals(const ubase* rhs) const
+{
+	const adapterlist* p = dynamic_cast<const adapterlist *>(rhs);
+	if (p == NULL)
+	{
+		return false;
+	}
+
+	return operator==(*p);
+}
+
 bool adapterlist::operator==(const adapterlist& rhs) const
 {
 	if (capture_mode != rhs.capture_mode)

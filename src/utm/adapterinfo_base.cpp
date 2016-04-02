@@ -48,17 +48,29 @@ adapterinfo_base& adapterinfo_base::operator=(const adapterinfo_base& rhs)
 
 bool adapterinfo_base::operator==(const adapterinfo_base& rhs) const
 {
-    if (!(name == rhs.name)) return false;
-    if (!(descr == rhs.descr)) return false;
-    if (!(mac_permanent == rhs.mac_permanent)) return false;
-    if (!(mac_current == rhs.mac_current)) return false;
-    if (!(medium == rhs.medium)) return false;
-    if (!(ipaddr_v4 == rhs.ipaddr_v4)) return false;
-    if (!(mask_v4 == rhs.mask_v4)) return false;
-    if (!(alias == rhs.alias)) return false;
-    if (!(original_index == rhs.original_index)) return false;
-    if (!(is_promiscuous == rhs.is_promiscuous)) return false;
-    if (!(is_selected == rhs.is_selected)) return false;
+    return equals(&rhs);
+}
+
+bool adapterinfo_base::equals(const ubase* rhs) const
+{
+    if (rhs == NULL)
+    {
+       return false;
+    }
+
+    const adapterinfo_base* other = dynamic_cast<const adapterinfo_base*>(rhs);
+
+    if (!(name == other->name)) return false;
+    if (!(descr == other->descr)) return false;
+    if (!(mac_permanent == other->mac_permanent)) return false;
+    if (!(mac_current == other->mac_current)) return false;
+    if (!(medium == other->medium)) return false;
+    if (!(ipaddr_v4 == other->ipaddr_v4)) return false;
+    if (!(mask_v4 == other->mask_v4)) return false;
+    if (!(alias == other->alias)) return false;
+    if (!(original_index == other->original_index)) return false;
+    if (!(is_promiscuous == other->is_promiscuous)) return false;
+    if (!(is_selected == other->is_selected)) return false;
 
     return true;
 }

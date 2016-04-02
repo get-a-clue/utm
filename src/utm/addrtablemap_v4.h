@@ -17,11 +17,10 @@ public:
 
     void AddAddrPair(unsigned int key_id, const addrip_v4& start, const addrip_v4& end)
 	{
-		addrtablemaprec_v4 t;
-		if (this->find_by_id(key_id, t))
+		addrtablemaprec_v4* t = dynamic_cast<addrtablemaprec_v4 *>(findptr_by_id(key_id));
+		if (t != NULL)
 		{
-			t.addrtable.AddAddrPair(start, end, false);
-			this->modify_element(t);
+			t->addrtable.AddAddrPair(start, end, false);
 		}
 	}
 };

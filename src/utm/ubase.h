@@ -34,10 +34,14 @@ public:
 
 	ubase(const ubase& r) { };
 	ubase& operator=(const ubase& r) { return *this; };
-
+	virtual bool equals(const ubase* rhs) const = 0;
 	virtual const char *get_this_class_name() const { return "ubase"; };
 
 public:
+	virtual unsigned int get_id() const { return 0; };
+	virtual void set_id(unsigned int id) { };
+	virtual const gstring& get_name() const { return empty_string; };
+
 	virtual void clear() { xml_catch_value_callback = NULL; xml_catch_subnode_callback = NULL; };
 	virtual void xml_create() = 0;
 	virtual void xml_catch_value(const char *name, const char *value) = 0;
@@ -123,13 +127,14 @@ protected:
 	void xml_append_node(const char* keyname, const std::list<std::string>& value);
 
 	template<typename T>
-	void xml_append_node(const char* keyname, const std::list<T>& value)
+	void xml_append_node(const char* keyname, const std::list<std::unique_ptr<T>>& value)
 	{
-		for(std::list<T>::const_iterator iter = value.begin(); iter != value.end(); ++iter)
+		for(auto iter = value.begin(); iter != value.end(); ++iter)
 		{
-			T t(*iter);
-			t.xml_create();
-			xml_append_child(t.get_first_child());
+			T* u = dynamic_cast<T *>(iter->get());
+//			T t(*u);
+			u->xml_create();
+			xml_append_child(u->get_first_child());
 		}
 	}
 
@@ -206,6 +211,7 @@ protected:
 protected:
 	static const char xml_true[];
 	static const char xml_false[];
+	static const gstring empty_string;
 };
 
 }
