@@ -38,6 +38,18 @@ $classname& $classname::operator=(const $classname& rhs)
 
 bool $classname::operator==(const $classname& rhs) const
 {
+    return equals(&rhs);
+}
+
+bool $classname::equals(const ubase* rhs) const
+{
+    if (rhs == NULL)
+    {
+       return false;
+    }
+
+    const $classname* other = dynamic_cast<const $classname*>(rhs);
+
 **equal_operator**
 
     return true;
