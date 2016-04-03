@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#ifdef UTM_DEBUG
+
 #include "rule.h"
 #include "filter2.h"
 #include "hostname.h"
@@ -55,32 +57,32 @@ void filtersetstate_test(int testcase_num)
 	int i = 0;
 	for (auto iter = fss.filterstates.items.begin(); iter != fss.filterstates.items.end(); ++iter, i++)
 	{
-		utm::filterstate fst(*iter);
+		utm::filterstate* pfst = dynamic_cast<utm::filterstate *>(iter->get());
 
-		TEST_CASE_CHECK(fst.lastreset, ureset);
+		TEST_CASE_CHECK(pfst->lastreset, ureset);
 
 		if (i == 0)
 		{
-			TEST_CASE_CHECK(fst.filter_id, unsigned int(1));
-			TEST_CASE_CHECK(fst.bytes_sent, __int64(123456));
-			TEST_CASE_CHECK(fst.bytes_recv, __int64(654321));
-			TEST_CASE_CHECK(fst.filter_name, utm::gstring("ICMP traffic - sample filter"));
+			TEST_CASE_CHECK(pfst->filter_id, unsigned int(1));
+			TEST_CASE_CHECK(pfst->bytes_sent, __int64(123456));
+			TEST_CASE_CHECK(pfst->bytes_recv, __int64(654321));
+			TEST_CASE_CHECK(pfst->filter_name, utm::gstring("ICMP traffic - sample filter"));
 		}
 
 		if (i == 1)
 		{
-			TEST_CASE_CHECK(fst.filter_id, unsigned int(2));
-			TEST_CASE_CHECK(fst.bytes_sent, __int64(234567));
-			TEST_CASE_CHECK(fst.bytes_recv, __int64(765432));
-			TEST_CASE_CHECK(fst.filter_name, utm::gstring("traffic to www.w3.org - sample filter"));
+			TEST_CASE_CHECK(pfst->filter_id, unsigned int(2));
+			TEST_CASE_CHECK(pfst->bytes_sent, __int64(234567));
+			TEST_CASE_CHECK(pfst->bytes_recv, __int64(765432));
+			TEST_CASE_CHECK(pfst->filter_name, utm::gstring("traffic to www.w3.org - sample filter"));
 		}
 
 		if (i == 2)
 		{
-			TEST_CASE_CHECK(fst.filter_id, unsigned int(5));
-			TEST_CASE_CHECK(fst.bytes_sent, __int64(5678901));
-			TEST_CASE_CHECK(fst.bytes_recv, __int64(5678902));
-			TEST_CASE_CHECK(fst.filter_name, utm::gstring("All traffic of this computer - sample filter"));
+			TEST_CASE_CHECK(pfst->filter_id, unsigned int(5));
+			TEST_CASE_CHECK(pfst->bytes_sent, __int64(5678901));
+			TEST_CASE_CHECK(pfst->bytes_recv, __int64(5678902));
+			TEST_CASE_CHECK(pfst->filter_name, utm::gstring("All traffic of this computer - sample filter"));
 		}
 	}
 
@@ -95,8 +97,6 @@ void filtersetstate_test(int testcase_num)
 
 void test()
 {
-#ifdef UTM_DEBUG
-
 	utm::pkt_queue::test_all();
 	utm::pkt_queue_filterset::test_all();
 //	utm::hostresolver::test_all();
@@ -139,7 +139,6 @@ void test()
 
 	filtersetstate_test(0);
 	filtersetstate_test(1);
-#endif
 }
 
 int _tmain(int argc, _TCHAR* argv[])
@@ -152,9 +151,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	catch(const std::exception& ex)
 	{
-		std::cout << ex.what() << std::endl;
+	std::cout << ex.what() << std::endl;
 		throw ex;
 	}
 
 	return 0;
 }
+
+#endif

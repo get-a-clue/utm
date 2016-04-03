@@ -63,32 +63,44 @@ filterset_base& filterset_base::operator=(const filterset_base& rhs)
 
 bool filterset_base::operator==(const filterset_base& rhs) const
 {
-    if (!(revision == rhs.revision)) return false;
-    if (!(filters == rhs.filters)) return false;
-    if (!(table_lat == rhs.table_lat)) return false;
-    if (!(table_mat == rhs.table_mat)) return false;
-    if (!(users == rhs.users)) return false;
-    if (!(urlfilters == rhs.urlfilters)) return false;
-    if (!(procs == rhs.procs)) return false;
-    if (!(ranges == rhs.ranges)) return false;
-    if (!(m_nUserProfileAuthMode == rhs.m_nUserProfileAuthMode)) return false;
-    if (!(m_nUserProfileStatus == rhs.m_nUserProfileStatus)) return false;
-    if (!(m_nUserProfileManageFilters == rhs.m_nUserProfileManageFilters)) return false;
-    if (!(m_nUserProfileType == rhs.m_nUserProfileType)) return false;
-    if (!(m_nUserProfileDenyDoubleLogins == rhs.m_nUserProfileDenyDoubleLogins)) return false;
-    if (!(m_bUseMiB == rhs.m_bUseMiB)) return false;
-    if (!(filterset_file == rhs.filterset_file)) return false;
-    if (!(descr == rhs.descr)) return false;
-    if (!(adodb_conn_string == rhs.adodb_conn_string)) return false;
-    if (!(m_bKeepCounters == rhs.m_bKeepCounters)) return false;
-    if (!(m_nLogCntFlushPeriod == rhs.m_nLogCntFlushPeriod)) return false;
-    if (!(m_szLogCntFolder1 == rhs.m_szLogCntFolder1)) return false;
-    if (!(m_szLogCntFolder2 == rhs.m_szLogCntFolder2)) return false;
-    if (!(m_szLogCntXSLFile1 == rhs.m_szLogCntXSLFile1)) return false;
-    if (!(m_bLogCntDbEnable == rhs.m_bLogCntDbEnable)) return false;
-    if (!(m_nLogCntDbFlushPeriod == rhs.m_nLogCntDbFlushPeriod)) return false;
-    if (!(m_szLogCntDbTable == rhs.m_szLogCntDbTable)) return false;
-    if (!(m_nLogCntDbSamples == rhs.m_nLogCntDbSamples)) return false;
+    return equals(&rhs);
+}
+
+bool filterset_base::equals(const ubase* rhs) const
+{
+    if (rhs == NULL)
+    {
+       return false;
+    }
+
+    const filterset_base* other = dynamic_cast<const filterset_base*>(rhs);
+
+    if (!(revision == other->revision)) return false;
+    if (!(filters == other->filters)) return false;
+    if (!(table_lat == other->table_lat)) return false;
+    if (!(table_mat == other->table_mat)) return false;
+    if (!(users == other->users)) return false;
+    if (!(urlfilters == other->urlfilters)) return false;
+    if (!(procs == other->procs)) return false;
+    if (!(ranges == other->ranges)) return false;
+    if (!(m_nUserProfileAuthMode == other->m_nUserProfileAuthMode)) return false;
+    if (!(m_nUserProfileStatus == other->m_nUserProfileStatus)) return false;
+    if (!(m_nUserProfileManageFilters == other->m_nUserProfileManageFilters)) return false;
+    if (!(m_nUserProfileType == other->m_nUserProfileType)) return false;
+    if (!(m_nUserProfileDenyDoubleLogins == other->m_nUserProfileDenyDoubleLogins)) return false;
+    if (!(m_bUseMiB == other->m_bUseMiB)) return false;
+    if (!(filterset_file == other->filterset_file)) return false;
+    if (!(descr == other->descr)) return false;
+    if (!(adodb_conn_string == other->adodb_conn_string)) return false;
+    if (!(m_bKeepCounters == other->m_bKeepCounters)) return false;
+    if (!(m_nLogCntFlushPeriod == other->m_nLogCntFlushPeriod)) return false;
+    if (!(m_szLogCntFolder1 == other->m_szLogCntFolder1)) return false;
+    if (!(m_szLogCntFolder2 == other->m_szLogCntFolder2)) return false;
+    if (!(m_szLogCntXSLFile1 == other->m_szLogCntXSLFile1)) return false;
+    if (!(m_bLogCntDbEnable == other->m_bLogCntDbEnable)) return false;
+    if (!(m_nLogCntDbFlushPeriod == other->m_nLogCntDbFlushPeriod)) return false;
+    if (!(m_szLogCntDbTable == other->m_szLogCntDbTable)) return false;
+    if (!(m_nLogCntDbSamples == other->m_nLogCntDbSamples)) return false;
 
     return true;
 }
@@ -128,6 +140,7 @@ void filterset_base::xml_create()
     filterset_base orig;
 
     xml_append_root( FILTERSET_XMLTAG_FILTER);
+    add_class_name();
     if (xml_has_root_attr()) {
        xmlattr_container attr;
        xml_get_root_attr(attr);

@@ -80,49 +80,61 @@ filter_base& filter_base::operator=(const filter_base& rhs)
 
 bool filter_base::operator==(const filter_base& rhs) const
 {
-    if (!(m_id == rhs.m_id)) return false;
-    if (!(m_szFilterName == rhs.m_szFilterName)) return false;
-    if (!(m_color == rhs.m_color)) return false;
-    if (!(m_bRevers == rhs.m_bRevers)) return false;
-    if (!(m_bBlocked == rhs.m_bBlocked)) return false;
-    if (!(m_bDisable == rhs.m_bDisable)) return false;
-    if (!(m_bVpn == rhs.m_bVpn)) return false;
-    if (!(m_bExcludeCntReports == rhs.m_bExcludeCntReports)) return false;
-    if (!(m_bExcludeUrlFiltering == rhs.m_bExcludeUrlFiltering)) return false;
-    if (!(m_nResetCnt == rhs.m_nResetCnt)) return false;
-    if ((memcmp(&m_nWorkHours, &rhs.m_nWorkHours, sizeof(m_nWorkHours))!=0)) return false;
-    if (!(m_nStartDay == rhs.m_nStartDay)) return false;
-    if (!(m_nEndDay == rhs.m_nEndDay)) return false;
-    if (!(m_szEmail == rhs.m_szEmail)) return false;
-    if (!(m_szComment == rhs.m_szComment)) return false;
-    if (!(m_nRewMask == rhs.m_nRewMask)) return false;
-    if (!(m_dwRewSrcIp == rhs.m_dwRewSrcIp)) return false;
-    if (!(m_dwRewDstIp == rhs.m_dwRewDstIp)) return false;
-    if (!(m_wRewSrcPort == rhs.m_wRewSrcPort)) return false;
-    if (!(m_wRewDstPort == rhs.m_wRewDstPort)) return false;
-    if (!(rules == rhs.rules)) return false;
-    if (!(m_nTrafficLimitMb == rhs.m_nTrafficLimitMb)) return false;
-    if (!(m_nTrafficLimitType == rhs.m_nTrafficLimitType)) return false;
-    if (!(m_nTrafficLimitAction == rhs.m_nTrafficLimitAction)) return false;
-    if (!(m_wTrafficLimitWarnLevel == rhs.m_wTrafficLimitWarnLevel)) return false;
-    if (!(m_wTrafficLimitFlags == rhs.m_wTrafficLimitFlags)) return false;
-    if (!(m_nPktLogDest == rhs.m_nPktLogDest)) return false;
-    if (!(m_nPktLogOpt == rhs.m_nPktLogOpt)) return false;
-    if (!(m_szPktLogFilename == rhs.m_szPktLogFilename)) return false;
-    if (!(m_szPktLogTable == rhs.m_szPktLogTable)) return false;
-    if (!(m_nPktLogSqlSyntax == rhs.m_nPktLogSqlSyntax)) return false;
-    if (!(m_nPktLogMaxColSize == rhs.m_nPktLogMaxColSize)) return false;
-    if (!(m_nPktLogAlertColUsage == rhs.m_nPktLogAlertColUsage)) return false;
-    if (!(m_nHhLogDest == rhs.m_nHhLogDest)) return false;
-    if (!(m_szHhLogFilename == rhs.m_szHhLogFilename)) return false;
-    if (!(m_szHhLogTable == rhs.m_szHhLogTable)) return false;
-    if (!(m_nMaster == rhs.m_nMaster)) return false;
-    if (!(m_nSpeed == rhs.m_nSpeed)) return false;
-    if (!(m_nSpeed2 == rhs.m_nSpeed2)) return false;
-    if (!(m_nSpeedMaster == rhs.m_nSpeedMaster)) return false;
-    if (!(m_nMasterFilterId == rhs.m_nMasterFilterId)) return false;
-    if (!(m_nMasterLevelSpeed == rhs.m_nMasterLevelSpeed)) return false;
-    if (!(m_nMasterOptions == rhs.m_nMasterOptions)) return false;
+    return equals(&rhs);
+}
+
+bool filter_base::equals(const ubase* rhs) const
+{
+    if (rhs == NULL)
+    {
+       return false;
+    }
+
+    const filter_base* other = dynamic_cast<const filter_base*>(rhs);
+
+    if (!(m_id == other->m_id)) return false;
+    if (!(m_szFilterName == other->m_szFilterName)) return false;
+    if (!(m_color == other->m_color)) return false;
+    if (!(m_bRevers == other->m_bRevers)) return false;
+    if (!(m_bBlocked == other->m_bBlocked)) return false;
+    if (!(m_bDisable == other->m_bDisable)) return false;
+    if (!(m_bVpn == other->m_bVpn)) return false;
+    if (!(m_bExcludeCntReports == other->m_bExcludeCntReports)) return false;
+    if (!(m_bExcludeUrlFiltering == other->m_bExcludeUrlFiltering)) return false;
+    if (!(m_nResetCnt == other->m_nResetCnt)) return false;
+    if ((memcmp(&m_nWorkHours, &other->m_nWorkHours, sizeof(m_nWorkHours))!=0)) return false;
+    if (!(m_nStartDay == other->m_nStartDay)) return false;
+    if (!(m_nEndDay == other->m_nEndDay)) return false;
+    if (!(m_szEmail == other->m_szEmail)) return false;
+    if (!(m_szComment == other->m_szComment)) return false;
+    if (!(m_nRewMask == other->m_nRewMask)) return false;
+    if (!(m_dwRewSrcIp == other->m_dwRewSrcIp)) return false;
+    if (!(m_dwRewDstIp == other->m_dwRewDstIp)) return false;
+    if (!(m_wRewSrcPort == other->m_wRewSrcPort)) return false;
+    if (!(m_wRewDstPort == other->m_wRewDstPort)) return false;
+    if (!(rules == other->rules)) return false;
+    if (!(m_nTrafficLimitMb == other->m_nTrafficLimitMb)) return false;
+    if (!(m_nTrafficLimitType == other->m_nTrafficLimitType)) return false;
+    if (!(m_nTrafficLimitAction == other->m_nTrafficLimitAction)) return false;
+    if (!(m_wTrafficLimitWarnLevel == other->m_wTrafficLimitWarnLevel)) return false;
+    if (!(m_wTrafficLimitFlags == other->m_wTrafficLimitFlags)) return false;
+    if (!(m_nPktLogDest == other->m_nPktLogDest)) return false;
+    if (!(m_nPktLogOpt == other->m_nPktLogOpt)) return false;
+    if (!(m_szPktLogFilename == other->m_szPktLogFilename)) return false;
+    if (!(m_szPktLogTable == other->m_szPktLogTable)) return false;
+    if (!(m_nPktLogSqlSyntax == other->m_nPktLogSqlSyntax)) return false;
+    if (!(m_nPktLogMaxColSize == other->m_nPktLogMaxColSize)) return false;
+    if (!(m_nPktLogAlertColUsage == other->m_nPktLogAlertColUsage)) return false;
+    if (!(m_nHhLogDest == other->m_nHhLogDest)) return false;
+    if (!(m_szHhLogFilename == other->m_szHhLogFilename)) return false;
+    if (!(m_szHhLogTable == other->m_szHhLogTable)) return false;
+    if (!(m_nMaster == other->m_nMaster)) return false;
+    if (!(m_nSpeed == other->m_nSpeed)) return false;
+    if (!(m_nSpeed2 == other->m_nSpeed2)) return false;
+    if (!(m_nSpeedMaster == other->m_nSpeedMaster)) return false;
+    if (!(m_nMasterFilterId == other->m_nMasterFilterId)) return false;
+    if (!(m_nMasterLevelSpeed == other->m_nMasterLevelSpeed)) return false;
+    if (!(m_nMasterOptions == other->m_nMasterOptions)) return false;
 
     return true;
 }
@@ -179,6 +191,7 @@ void filter_base::xml_create()
     filter_base orig;
 
     xml_append_root( FILTER_XMLTAG_FILTER);
+    add_class_name();
     if (xml_has_root_attr()) {
        xmlattr_container attr;
        xml_get_root_attr(attr);

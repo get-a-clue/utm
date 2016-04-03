@@ -24,15 +24,18 @@ struct counterdata {
 class trafficreport : public trafficreport_base
 {
 public:
+	static const char this_class_name[];
+
 	trafficreport();
 	~trafficreport();
 
-	ubase* xml_catch_subnode(const char *keyname);
+	const char *get_this_class_name() const { return this_class_name; };
+
+	ubase* xml_catch_subnode(const char *tag_name, const char *class_name);
 	void xml_catch_subnode_finished(const char *keyname);
 
 	void update_counters(const utime& ctm, const counterdata& cdata);
 	void update_mass_counters(const utime& ctm, const std::list<counterdata>& cdatas);
-//	const char* xml_get_stylesheet() const { return "type=\"text/xsl\" href=\"month.xsl\""; };
 
 	static bool do_refresh(const char *xmlfile, const utime& ctm, const std::list<counterdata>& cdatas);
 

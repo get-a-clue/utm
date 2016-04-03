@@ -42,11 +42,23 @@ trafficreport_filter_base& trafficreport_filter_base::operator=(const trafficrep
 
 bool trafficreport_filter_base::operator==(const trafficreport_filter_base& rhs) const
 {
-    if (!(sent == rhs.sent)) return false;
-    if (!(recv == rhs.recv)) return false;
-    if (!(name == rhs.name)) return false;
-    if (!(color == rhs.color)) return false;
-    if (!(dayticks == rhs.dayticks)) return false;
+    return equals(&rhs);
+}
+
+bool trafficreport_filter_base::equals(const ubase* rhs) const
+{
+    if (rhs == NULL)
+    {
+       return false;
+    }
+
+    const trafficreport_filter_base* other = dynamic_cast<const trafficreport_filter_base*>(rhs);
+
+    if (!(sent == other->sent)) return false;
+    if (!(recv == other->recv)) return false;
+    if (!(name == other->name)) return false;
+    if (!(color == other->color)) return false;
+    if (!(dayticks == other->dayticks)) return false;
 
     return true;
 }
@@ -65,6 +77,7 @@ void trafficreport_filter_base::xml_create()
     trafficreport_filter_base orig;
 
     xml_append_root( TR_FILTER_XMLTAG_ROOT);
+    add_class_name();
     if (xml_has_root_attr()) {
        xmlattr_container attr;
        xml_get_root_attr(attr);

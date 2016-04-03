@@ -48,17 +48,29 @@ fsuser_base& fsuser_base::operator=(const fsuser_base& rhs)
 
 bool fsuser_base::operator==(const fsuser_base& rhs) const
 {
-    if (!(m_uid == rhs.m_uid)) return false;
-    if (!(m_szName == rhs.m_szName)) return false;
-    if (!(m_szDescr == rhs.m_szDescr)) return false;
-    if (!(m_szPasswd == rhs.m_szPasswd)) return false;
-    if (!(m_nAuthMode == rhs.m_nAuthMode)) return false;
-    if (!(m_nStatus == rhs.m_nStatus)) return false;
-    if (!(m_nExpireDt == rhs.m_nExpireDt)) return false;
-    if (!(m_nManageFilters == rhs.m_nManageFilters)) return false;
-    if (!(m_nType == rhs.m_nType)) return false;
-    if (!(m_nDenyDoubleLogins == rhs.m_nDenyDoubleLogins)) return false;
-    if (!(fids == rhs.fids)) return false;
+    return equals(&rhs);
+}
+
+bool fsuser_base::equals(const ubase* rhs) const
+{
+    if (rhs == NULL)
+    {
+       return false;
+    }
+
+    const fsuser_base* other = dynamic_cast<const fsuser_base*>(rhs);
+
+    if (!(m_uid == other->m_uid)) return false;
+    if (!(m_szName == other->m_szName)) return false;
+    if (!(m_szDescr == other->m_szDescr)) return false;
+    if (!(m_szPasswd == other->m_szPasswd)) return false;
+    if (!(m_nAuthMode == other->m_nAuthMode)) return false;
+    if (!(m_nStatus == other->m_nStatus)) return false;
+    if (!(m_nExpireDt == other->m_nExpireDt)) return false;
+    if (!(m_nManageFilters == other->m_nManageFilters)) return false;
+    if (!(m_nType == other->m_nType)) return false;
+    if (!(m_nDenyDoubleLogins == other->m_nDenyDoubleLogins)) return false;
+    if (!(fids == other->fids)) return false;
 
     return true;
 }
@@ -83,6 +95,7 @@ void fsuser_base::xml_create()
     fsuser_base orig;
 
     xml_append_root( FSUSER_XMLTAG_ROOT);
+    add_class_name();
     if (xml_has_root_attr()) {
        xmlattr_container attr;
        xml_get_root_attr(attr);

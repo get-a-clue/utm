@@ -41,10 +41,22 @@ filtersetstate_base& filtersetstate_base::operator=(const filtersetstate_base& r
 
 bool filtersetstate_base::operator==(const filtersetstate_base& rhs) const
 {
-    if (!(comment == rhs.comment)) return false;
-    if (!(filtersetfile == rhs.filtersetfile)) return false;
-    if (!(filterstates == rhs.filterstates)) return false;
-    if (!(lastmodified == rhs.lastmodified)) return false;
+    return equals(&rhs);
+}
+
+bool filtersetstate_base::equals(const ubase* rhs) const
+{
+    if (rhs == NULL)
+    {
+       return false;
+    }
+
+    const filtersetstate_base* other = dynamic_cast<const filtersetstate_base*>(rhs);
+
+    if (!(comment == other->comment)) return false;
+    if (!(filtersetfile == other->filtersetfile)) return false;
+    if (!(filterstates == other->filterstates)) return false;
+    if (!(lastmodified == other->lastmodified)) return false;
 
     return true;
 }
@@ -62,6 +74,7 @@ void filtersetstate_base::xml_create()
     filtersetstate_base orig;
 
     xml_append_root( FILTERSETSTATE_XMLTAG_TRAFFICCOUNTERS);
+    add_class_name();
     if (xml_has_root_attr()) {
        xmlattr_container attr;
        xml_get_root_attr(attr);

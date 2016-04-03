@@ -39,8 +39,20 @@ trafficreport_hourtick_base& trafficreport_hourtick_base::operator=(const traffi
 
 bool trafficreport_hourtick_base::operator==(const trafficreport_hourtick_base& rhs) const
 {
-    if (!(sent == rhs.sent)) return false;
-    if (!(recv == rhs.recv)) return false;
+    return equals(&rhs);
+}
+
+bool trafficreport_hourtick_base::equals(const ubase* rhs) const
+{
+    if (rhs == NULL)
+    {
+       return false;
+    }
+
+    const trafficreport_hourtick_base* other = dynamic_cast<const trafficreport_hourtick_base*>(rhs);
+
+    if (!(sent == other->sent)) return false;
+    if (!(recv == other->recv)) return false;
 
     return true;
 }
@@ -56,6 +68,7 @@ void trafficreport_hourtick_base::xml_create()
     trafficreport_hourtick_base orig;
 
     xml_append_root( TR_HOURTICK_XMLTAG_ROOT);
+    add_class_name();
     if (xml_has_root_attr()) {
        xmlattr_container attr;
        xml_get_root_attr(attr);

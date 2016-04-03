@@ -42,11 +42,23 @@ monitor_detail_record_base& monitor_detail_record_base::operator=(const monitor_
 
 bool monitor_detail_record_base::operator==(const monitor_detail_record_base& rhs) const
 {
-    if (!(id == rhs.id)) return false;
-    if (!(flags == rhs.flags)) return false;
-    if (!(ip == rhs.ip)) return false;
-    if (!(mac == rhs.mac)) return false;
-    if (!(comment == rhs.comment)) return false;
+    return equals(&rhs);
+}
+
+bool monitor_detail_record_base::equals(const ubase* rhs) const
+{
+    if (rhs == NULL)
+    {
+       return false;
+    }
+
+    const monitor_detail_record_base* other = dynamic_cast<const monitor_detail_record_base*>(rhs);
+
+    if (!(id == other->id)) return false;
+    if (!(flags == other->flags)) return false;
+    if (!(ip == other->ip)) return false;
+    if (!(mac == other->mac)) return false;
+    if (!(comment == other->comment)) return false;
 
     return true;
 }
@@ -65,6 +77,7 @@ void monitor_detail_record_base::xml_create()
     monitor_detail_record_base orig;
 
     xml_append_root( MONDETREC_XMLTAG_ROOT);
+    add_class_name();
     if (xml_has_root_attr()) {
        xmlattr_container attr;
        xml_get_root_attr(attr);

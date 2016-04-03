@@ -15,7 +15,7 @@ define: MIN_PINGATTEMPTS 2
 define: MIN_POLLINTERVAL 2
 define: MAX_POLLINTERVAL 15
 xmlroot: MONRANGE_XMLTAG_ROOT
-typedef: std::list<utm::monitor_detail_record> mdr_container
+typedef: std::list<std::unique_ptr<utm::ubase>> mdr_container
 virtual: const mdr_container& get_details() const { return details.items; }
 virtual: void parse_details_string(const char* p) { }
 member: unsigned int (0) id "Id"

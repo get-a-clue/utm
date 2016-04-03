@@ -9,9 +9,8 @@ class procnicknamelist : public ubaselist<procnickname>
 {
 public:
 	procnicknamelist(void);
+	procnicknamelist(const procnicknamelist& rhs) { operator=(rhs); };
 	~procnicknamelist(void);
-
-	bool operator==(const procnicknamelist& rhs) const;
 
 	bool has_write_protection() const { return true; };
 	bool find_by_pathexe(const gstring& _pathexe, procnickname& result) const;
@@ -19,7 +18,7 @@ public:
 	void clear();
     void xml_create();
 	void xml_catch_value(const char *keyname, const char *keyvalue) { };
-	ubase* xml_catch_subnode(const char *keyname);
+	ubase* xml_catch_subnode(const char *tag_name, const char *class_name);
 	void xml_catch_subnode_finished(const char *keyname);
 };
 

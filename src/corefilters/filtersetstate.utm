@@ -1,8 +1,8 @@
 include: <string> <list> <utime.h> <filterstate.h> <filterstatelist.h>
 define: FILTERSETSTATE_XMLTAG_TRAFFICCOUNTERS "TrafficCounters"
 xmlroot: FILTERSETSTATE_XMLTAG_TRAFFICCOUNTERS
-typedef: std::list<utm::filterstate> filterstate_container
-virtual: filterstate_container get_filterstates() { return filterstates.items; };
+typedef: std::list<std::unique_ptr<utm::ubase>> filterstate_container
+virtual: filterstate_container& get_filterstates() { return filterstates.items; };
 virtual: void parse_filterstate_string(const char *filterstate_string) { }
 member: gstring (.clear()) comment "Comment"
 member: gstring (.clear()) filtersetfile "FiltersetFile"

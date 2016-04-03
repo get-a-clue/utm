@@ -14,7 +14,7 @@ public:
 	monitor_range(void);
 	~monitor_range(void);
 
-	ubase* xml_catch_subnode(const char *keyname);
+	ubase* xml_catch_subnode(const char *tag_name, const char *class_name);
 
 	void set_id(unsigned int id) { this->id = id; };
 	unsigned int get_id() const { return id; };

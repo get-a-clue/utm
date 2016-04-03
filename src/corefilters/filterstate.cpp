@@ -3,6 +3,8 @@
 
 namespace utm {
 
+const char filterstate::this_class_name[] = "filterstate";
+
 filterstate::filterstate(void)
 {
 }

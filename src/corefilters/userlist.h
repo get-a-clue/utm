@@ -19,16 +19,15 @@ public:
 
 public:
 	userlist(void);
+	userlist(const userlist& rhs) { operator=(rhs); };
 	~userlist(void);
-
-	bool operator==(const userlist& rhs) const;
 
 	void authenticate_user(const std::string& username, const std::string& userpass, fsuser& founduser);
 
     void clear();
     void xml_create();
     void xml_catch_value(const char *keyname, const char *keyvalue);
-	ubase* xml_catch_subnode(const char *keyname);
+	ubase* xml_catch_subnode(const char *tag_name, const char *class_name);
 
 #ifdef UTM_DEBUG
 	static int test_get_testcases_number() { return 1; };

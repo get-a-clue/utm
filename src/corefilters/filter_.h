@@ -28,7 +28,7 @@ public:
 
     std::string get_workhours_str() const;
     void parse_workhours_string(const char *workhours_string);
-    ubase* xml_catch_subnode(const char *name);
+    ubase* xml_catch_subnode(const char *tag_name, const char *class_name);
 
 	int GetSpeed() { return m_nSpeed; };
 	void SetSpeed(int nSpeed) { m_nSpeed = nSpeed; }; 

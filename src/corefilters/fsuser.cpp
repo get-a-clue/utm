@@ -3,6 +3,8 @@
 
 namespace utm {
 
+const char fsuser::this_class_name[] = "fsuser";
+
 fsuser::fsuser(void)
 {
 }

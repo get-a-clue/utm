@@ -47,16 +47,28 @@ filteragent_base& filteragent_base::operator=(const filteragent_base& rhs)
 
 bool filteragent_base::operator==(const filteragent_base& rhs) const
 {
-    if (!(filter_id == rhs.filter_id)) return false;
-    if (!(filter_name == rhs.filter_name)) return false;
-    if (!(disabled == rhs.disabled)) return false;
-    if (!(speed == rhs.speed)) return false;
-    if (!(traffic_limit_mb == rhs.traffic_limit_mb)) return false;
-    if (!(traffic_limit_type == rhs.traffic_limit_type)) return false;
-    if (!(bytes_sent == rhs.bytes_sent)) return false;
-    if (!(speed_array_sent == rhs.speed_array_sent)) return false;
-    if (!(bytes_recv == rhs.bytes_recv)) return false;
-    if (!(speed_array_recv == rhs.speed_array_recv)) return false;
+    return equals(&rhs);
+}
+
+bool filteragent_base::equals(const ubase* rhs) const
+{
+    if (rhs == NULL)
+    {
+       return false;
+    }
+
+    const filteragent_base* other = dynamic_cast<const filteragent_base*>(rhs);
+
+    if (!(filter_id == other->filter_id)) return false;
+    if (!(filter_name == other->filter_name)) return false;
+    if (!(disabled == other->disabled)) return false;
+    if (!(speed == other->speed)) return false;
+    if (!(traffic_limit_mb == other->traffic_limit_mb)) return false;
+    if (!(traffic_limit_type == other->traffic_limit_type)) return false;
+    if (!(bytes_sent == other->bytes_sent)) return false;
+    if (!(speed_array_sent == other->speed_array_sent)) return false;
+    if (!(bytes_recv == other->bytes_recv)) return false;
+    if (!(speed_array_recv == other->speed_array_recv)) return false;
 
     return true;
 }
@@ -80,6 +92,7 @@ void filteragent_base::xml_create()
     filteragent_base orig;
 
     xml_append_root( FILTERAGENT_XMLTAG_FILTERAGENT);
+    add_class_name();
     if (xml_has_root_attr()) {
        xmlattr_container attr;
        xml_get_root_attr(attr);

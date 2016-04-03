@@ -28,6 +28,17 @@ sms_queue::~sms_queue(void)
 {
 }
 
+bool sms_queue::equals(const ubase* rhs) const
+{
+	if (rhs == NULL)
+	{
+		return false;
+	}
+
+	const sms_queue* p = dynamic_cast<const sms_queue*>(rhs);
+	return operator==(*p);
+}
+
 bool sms_queue::operator==(const sms_queue& rhs) const
 {
 	return items == rhs.items;
@@ -260,7 +271,7 @@ void sms_queue::xml_create()
 	}
 }
 
-ubase* sms_queue::xml_catch_subnode(const char *keyname)
+ubase* sms_queue::xml_catch_subnode(const char *keyname, const char *class_name)
 {
 	if (strcmp(keyname, SMS_XMLTAG_ROOT) == 0)
 	{

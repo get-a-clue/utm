@@ -46,15 +46,27 @@ urlfilter_base& urlfilter_base::operator=(const urlfilter_base& rhs)
 
 bool urlfilter_base::operator==(const urlfilter_base& rhs) const
 {
-    if (!(ufid == rhs.ufid)) return false;
-    if (!(name == rhs.name)) return false;
-    if (!(file == rhs.file)) return false;
-    if (!(is_disabled == rhs.is_disabled)) return false;
-    if (!(is_any_filter == rhs.is_any_filter)) return false;
-    if (!(addr_part == rhs.addr_part)) return false;
-    if (!(ext_file == rhs.ext_file)) return false;
-    if (!(fids == rhs.fids)) return false;
-    if (!(urlrules == rhs.urlrules)) return false;
+    return equals(&rhs);
+}
+
+bool urlfilter_base::equals(const ubase* rhs) const
+{
+    if (rhs == NULL)
+    {
+       return false;
+    }
+
+    const urlfilter_base* other = dynamic_cast<const urlfilter_base*>(rhs);
+
+    if (!(ufid == other->ufid)) return false;
+    if (!(name == other->name)) return false;
+    if (!(file == other->file)) return false;
+    if (!(is_disabled == other->is_disabled)) return false;
+    if (!(is_any_filter == other->is_any_filter)) return false;
+    if (!(addr_part == other->addr_part)) return false;
+    if (!(ext_file == other->ext_file)) return false;
+    if (!(fids == other->fids)) return false;
+    if (!(urlrules == other->urlrules)) return false;
 
     return true;
 }
@@ -77,6 +89,7 @@ void urlfilter_base::xml_create()
     urlfilter_base orig;
 
     xml_append_root( URLFILTER_XMLTAG_ROOT);
+    add_class_name();
     if (xml_has_root_attr()) {
        xmlattr_container attr;
        xml_get_root_attr(attr);

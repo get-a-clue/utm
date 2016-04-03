@@ -20,6 +20,8 @@ public:
 	urlfilter(void);
 	~urlfilter(void);
 
+	const char *get_this_class_name() const { return this_class_name; };
+
 	void set_id(unsigned int id) { ufid = id; };
 	unsigned int get_id() const { return ufid; };
 	const gstring& get_name() const { return name; };

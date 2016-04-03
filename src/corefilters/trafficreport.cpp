@@ -1,7 +1,11 @@
 #include "stdafx.h"
 #include "trafficreport.h"
 
+#include <filter2.h>
+
 namespace utm {
+
+const char trafficreport::this_class_name[] = "trafficreport";
 
 trafficreport::trafficreport()
 {
@@ -12,17 +16,16 @@ trafficreport::~trafficreport()
 {
 }
 
-ubase* trafficreport::xml_catch_subnode(const char *keyname)
+ubase* trafficreport::xml_catch_subnode(const char *keyname, const char *class_name)
 {
 	ubase *u = NULL;
 
 	if (strcmp(keyname, TR_FILTER_XMLTAG_ROOT) == 0)
 	{
-		u = (ubase *)filters.get_temp_item();
-		return u;
+		u = filters.init_and_get_temp_item(new trafficreport_filter());
 	}
 
-	return NULL;
+	return u;
 };
 
 void trafficreport::xml_catch_subnode_finished(const char *keyname)
@@ -30,7 +33,6 @@ void trafficreport::xml_catch_subnode_finished(const char *keyname)
 	if (strcmp(keyname, TR_FILTER_XMLTAG_ROOT) == 0)
 	{
 		filters.commit_temp_item();
-		return;
 	}
 }
 
@@ -39,9 +41,10 @@ void trafficreport::update_counters(const utime& ctm, const counterdata& cdata)
 	bool found = false;
 	for (auto iter = filters.items.begin(); iter != filters.items.end(); ++iter)
 	{
-		if (iter->get_id() == cdata.filterid)
+		trafficreport_filter* ptf = dynamic_cast<trafficreport_filter *>(iter->get());
+		if (ptf->get_id() == cdata.filterid)
 		{
-			iter->update_counters(ctm, cdata.sent, cdata.recv, cdata.filtername);
+			ptf->update_counters(ctm, cdata.sent, cdata.recv, cdata.filtername);
 			found = true;
 			break;
 		}
@@ -103,8 +106,8 @@ void trafficreport::test_all()
 	f.sent = 123456;
 	f.recv = 654321;
 
-	trafficreport_daytick dtick = trafficreport_daytick::test_get_daytick();
-	f.dayticks.items.push_back(dtick);
+	trafficreport_daytick* dtick = new trafficreport_daytick(trafficreport_daytick::test_get_daytick());
+	f.dayticks.items.push_back(std::unique_ptr<ubase>(dtick));
 
 	tr.filters.add_element(f);
 

@@ -34,7 +34,7 @@ void pkt_queue_filterset::init(const filterset& fs, size_t packetbuf_size)
 	idvector_container ids;
 	for (auto iter = fs.filters.items.begin(); iter != fs.filters.items.end(); ++iter)
 	{
-		ids.push_back(iter->m_id);
+		ids.push_back(iter->get()->get_id());
 	}
 
 	if (filterids == ids)
@@ -52,7 +52,7 @@ void pkt_queue_filterset::init(const filterset& fs, size_t packetbuf_size)
 		size_t lastpos = ppq->size() - 1;
 		pkt_queue_filter& refpqf = ppq->at(lastpos);
 
-		unsigned int filterid = iter->m_id;
+		unsigned int filterid = iter->get()->get_id();
 
 		bool found = false;
 		if (pq.get() != NULL)

@@ -29,19 +29,18 @@ void filtersetcons::fill_from_filterset(const filterset& fs, unsigned int seqnum
 
 	for (auto iter = fs.filters.items.begin(); iter != fs.filters.items.end(); ++iter)
 	{
-		unsigned short *diff = new unsigned short[diff_size*2];
+		std::unique_ptr<unsigned short> diff(new unsigned short[diff_size * 2]);
+		filter2* pf = dynamic_cast<filter2 *>(iter->get());
 
-		iter->select_diffspeed(diff_size, start_diffindex, diff, diff + diff_size);
+		pf->select_diffspeed(diff_size, start_diffindex, diff.get(), diff.get() + diff_size);
 
-		filtercons fc;
-		fc.filter_id = iter->get_id();
-		fc.bytes_sent = iter->cnt_sent.get_cnt();
-		fc.bytes_recv = iter->cnt_recv.get_cnt();
-		fc.speed_array.set(reinterpret_cast<unsigned char*>(diff), diff_size*2*sizeof(unsigned short));
+		filtercons* fc = new filtercons();
+		fc->filter_id = pf->get_id();
+		fc->bytes_sent = pf->cnt_sent.get_cnt();
+		fc->bytes_recv = pf->cnt_recv.get_cnt();
+		fc->speed_array.set(reinterpret_cast<unsigned char*>(diff.get()), diff_size*2*sizeof(unsigned short));
 
-		filtercons_s.items.push_back(fc);
-
-		delete[] diff;
+		filtercons_s.add_element(fc);
 	}
 }
 
@@ -66,41 +65,42 @@ void filtersetcons::apply_to_filterset(filterset& fs)
 
 	for (auto iter = filtercons_s.items.begin(); iter != filtercons_s.items.end(); ++iter)
 	{
-		unsigned int filter_id = iter->filter_id;
-		if ((plain_mode) && (filter_iter != fs.filters.items.end()) && (filter_iter->get_id() == filter_id))
+		filtercons* fc = dynamic_cast<filtercons *>(iter->get());
+
+		unsigned int filter_id = fc->filter_id;
+		if ((plain_mode) && (filter_iter != fs.filters.items.end()) && (filter_iter->get()->get_id() == filter_id))
 		{
-			pf = &(*filter_iter);
+			pf = dynamic_cast<filter2 *>(filter_iter->get());
 			++filter_iter;
 		}
 		else
 		{
 			plain_mode = false;
-			pf = fs.filters.findptr_by_id(filter_id);
+			pf = dynamic_cast<filter2 *>(fs.filters.findptr_by_id(filter_id));
 			if (pf == NULL)
 				continue;
 		}
 
-		pf->cnt_recv.set_cnt(iter->bytes_recv);
-		pf->cnt_sent.set_cnt(iter->bytes_sent);
-		unsigned int points = iter->speed_array.size() / sizeof(unsigned short);
-		unsigned short* diff_sent = reinterpret_cast<unsigned short*>(iter->speed_array.get());
-		unsigned short* diff_recv = reinterpret_cast<unsigned short*>(iter->speed_array.get());
+		pf->cnt_recv.set_cnt(fc->bytes_recv);
+		pf->cnt_sent.set_cnt(fc->bytes_sent);
+		unsigned int points = fc->speed_array.size() / sizeof(unsigned short);
+		unsigned short* diff_sent = reinterpret_cast<unsigned short*>(fc->speed_array.get());
+		unsigned short* diff_recv = reinterpret_cast<unsigned short*>(fc->speed_array.get());
 		diff_recv += points / 2;
 		pf->apply_diffspeed(points / 2, next_point, diff_sent, diff_recv);
 	}
 }
 
-ubase* filtersetcons::xml_catch_subnode(const char *keyname)
+ubase* filtersetcons::xml_catch_subnode(const char *keyname, const char *class_name)
 {
 	ubase *u = NULL;
 
 	if (strcmp(keyname, "F") == 0)
 	{
-		u = (ubase *)filtercons_s.get_temp_item();
-		return u;
+		u = filtercons_s.init_and_get_temp_item(new filtercons());
 	}
 
-	return NULL;
+	return u;
 }
 
 void filtersetcons::xml_catch_subnode_finished(const char *keyname)
@@ -108,7 +108,6 @@ void filtersetcons::xml_catch_subnode_finished(const char *keyname)
 	if (strcmp(keyname, "F") == 0)
 	{
 		filtercons_s.commit_temp_item();
-		return;
 	}
 }
 

@@ -12,9 +12,14 @@ namespace utm {
 class fsuser : public fsuser_base
 {
 public:
+	static const char this_class_name[];
+
+public:
 	fsuser(void);
 	fsuser(const gstring& _username);
 	~fsuser(void);
+
+	const char *get_this_class_name() const { return this_class_name; };
 
 	bool is_user_expired(const utime& now) const;
 	bool is_user_enabled(const utime& now) const;

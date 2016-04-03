@@ -172,7 +172,7 @@ void rule_descr::get_addr_default_descr(const addrtablemap_v4* mat, const userli
 			if (mat != NULL)
 			{
 				addrtablemap_v4 *m = const_cast<addrtablemap_v4 *>(mat);
-				utm::addrtablemaprec<utm::addrtable_v4>* at = m->findptr_by_id(atkey);
+				utm::addrtablemaprec<utm::addrtable_v4>* at = dynamic_cast<utm::addrtablemaprec<utm::addrtable_v4> *>(m->findptr_by_id(atkey));
 				if (at != NULL)
 				{
 					descr << STRLSTR("AddrGrp");
@@ -185,7 +185,7 @@ void rule_descr::get_addr_default_descr(const addrtablemap_v4* mat, const userli
 			if (mat != NULL)
 			{
 				addrtablemap_v4 *m = const_cast<addrtablemap_v4 *>(mat);
-				utm::addrtablemaprec<utm::addrtable_v4>* at = m->findptr_by_id(atkey);
+				utm::addrtablemaprec<utm::addrtable_v4>* at = dynamic_cast<utm::addrtablemaprec<utm::addrtable_v4> *>(m->findptr_by_id(atkey));
 				if (at != NULL)
 				{
 					descr << STRLSTR("NotAddrGrp");
@@ -220,10 +220,11 @@ void rule_descr::get_procname_default_descr(const procnicknamelist* procs, unsig
 
 	for (auto iter = procs->items.begin(); iter != procs->items.end(); ++iter)
 	{
-		if (procnick == iter->get_id())
+		procnickname* pnn = dynamic_cast<procnickname *>(iter->get());
+		if (procnick == pnn->get_id())
 		{
 			descr << STRLSTR("Local process");
-			descr << _U(" \"") << iter->get_name() << _U("\"");
+			descr << _U(" \"") << pnn->get_name() << _U("\"");
 			break;
 		}
 	}
@@ -237,7 +238,8 @@ void rule_descr::get_user_default_descr(bool is_user_remote, const userlist* uli
 
 	for (auto iter = ulist->items.begin(); iter != ulist->items.end(); ++iter)
 	{
-		if (uid == iter->get_id())
+		fsuser* pu = dynamic_cast<fsuser *>(iter->get());
+		if (uid == pu->get_id())
 		{
 			if (is_user_remote)
 			{
@@ -248,7 +250,7 @@ void rule_descr::get_user_default_descr(bool is_user_remote, const userlist* uli
 				descr << STRLSTR("Local user (process owner)");
 			}
 
-			descr << _U(" \"") << iter->get_name() << _U("\"");
+			descr << _U(" \"") << pu->get_name() << _U("\"");
 			break;
 		}
 	}

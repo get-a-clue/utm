@@ -3,6 +3,8 @@
 
 namespace utm {
 
+const char procnickname::this_class_name[] = "procnickname";
+
 procnickname::procnickname(void)
 {
 }

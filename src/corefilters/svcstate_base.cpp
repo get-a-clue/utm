@@ -68,37 +68,49 @@ svcstate_base& svcstate_base::operator=(const svcstate_base& rhs)
 
 bool svcstate_base::operator==(const svcstate_base& rhs) const
 {
-    if (!(max_demo_filters == rhs.max_demo_filters)) return false;
-    if (!(max_filters == rhs.max_filters)) return false;
-    if (!(ver_major == rhs.ver_major)) return false;
-    if (!(ver_minor == rhs.ver_minor)) return false;
-    if (!(ver_build == rhs.ver_build)) return false;
-    if (!(adapters_selected == rhs.adapters_selected)) return false;
-    if (!(startup_time == rhs.startup_time)) return false;
-    if (!(uptime_seconds == rhs.uptime_seconds)) return false;
-    if (!(current_time == rhs.current_time)) return false;
-    if ((memcmp(&current_tm, &rhs.current_tm, sizeof(current_tm))!=0)) return false;
-    if (!(total_bytes_captured == rhs.total_bytes_captured)) return false;
-    if (!(total_bytes_captured_prev == rhs.total_bytes_captured_prev)) return false;
-    if (!(total_bytes_speed == rhs.total_bytes_speed)) return false;
-    if (!(total_packets_captured == rhs.total_packets_captured)) return false;
-    if (!(total_packets_captured_prev == rhs.total_packets_captured_prev)) return false;
-    if (!(total_packets_speed == rhs.total_packets_speed)) return false;
-    if (!(total_netflow_packets_captured == rhs.total_netflow_packets_captured)) return false;
-    if (!(CaptureStatus == rhs.CaptureStatus)) return false;
-    if (!(license_type == rhs.license_type)) return false;
-    if (!(reg_name == rhs.reg_name)) return false;
-    if (!(hardware_id == rhs.hardware_id)) return false;
-    if (!(expiration_year == rhs.expiration_year)) return false;
-    if (!(expiration_month == rhs.expiration_month)) return false;
-    if (!(expiration_day == rhs.expiration_day)) return false;
-    if (!(trial_days_total == rhs.trial_days_total)) return false;
-    if (!(trial_days_left == rhs.trial_days_left)) return false;
-    if (!(times_after_flush_db == rhs.times_after_flush_db)) return false;
-    if (!(times_after_flush_xml == rhs.times_after_flush_xml)) return false;
-    if (!(times_after_flush_pktlog == rhs.times_after_flush_pktlog)) return false;
-    if (!(revision == rhs.revision)) return false;
-    if (!(fsname == rhs.fsname)) return false;
+    return equals(&rhs);
+}
+
+bool svcstate_base::equals(const ubase* rhs) const
+{
+    if (rhs == NULL)
+    {
+       return false;
+    }
+
+    const svcstate_base* other = dynamic_cast<const svcstate_base*>(rhs);
+
+    if (!(max_demo_filters == other->max_demo_filters)) return false;
+    if (!(max_filters == other->max_filters)) return false;
+    if (!(ver_major == other->ver_major)) return false;
+    if (!(ver_minor == other->ver_minor)) return false;
+    if (!(ver_build == other->ver_build)) return false;
+    if (!(adapters_selected == other->adapters_selected)) return false;
+    if (!(startup_time == other->startup_time)) return false;
+    if (!(uptime_seconds == other->uptime_seconds)) return false;
+    if (!(current_time == other->current_time)) return false;
+    if ((memcmp(&current_tm, &other->current_tm, sizeof(current_tm))!=0)) return false;
+    if (!(total_bytes_captured == other->total_bytes_captured)) return false;
+    if (!(total_bytes_captured_prev == other->total_bytes_captured_prev)) return false;
+    if (!(total_bytes_speed == other->total_bytes_speed)) return false;
+    if (!(total_packets_captured == other->total_packets_captured)) return false;
+    if (!(total_packets_captured_prev == other->total_packets_captured_prev)) return false;
+    if (!(total_packets_speed == other->total_packets_speed)) return false;
+    if (!(total_netflow_packets_captured == other->total_netflow_packets_captured)) return false;
+    if (!(CaptureStatus == other->CaptureStatus)) return false;
+    if (!(license_type == other->license_type)) return false;
+    if (!(reg_name == other->reg_name)) return false;
+    if (!(hardware_id == other->hardware_id)) return false;
+    if (!(expiration_year == other->expiration_year)) return false;
+    if (!(expiration_month == other->expiration_month)) return false;
+    if (!(expiration_day == other->expiration_day)) return false;
+    if (!(trial_days_total == other->trial_days_total)) return false;
+    if (!(trial_days_left == other->trial_days_left)) return false;
+    if (!(times_after_flush_db == other->times_after_flush_db)) return false;
+    if (!(times_after_flush_xml == other->times_after_flush_xml)) return false;
+    if (!(times_after_flush_pktlog == other->times_after_flush_pktlog)) return false;
+    if (!(revision == other->revision)) return false;
+    if (!(fsname == other->fsname)) return false;
 
     return true;
 }
@@ -143,6 +155,7 @@ void svcstate_base::xml_create()
     svcstate_base orig;
 
     xml_append_root( SVCSTATE_XMLTAG_ROOT);
+    add_class_name();
     if (xml_has_root_attr()) {
        xmlattr_container attr;
        xml_get_root_attr(attr);

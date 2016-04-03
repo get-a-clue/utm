@@ -63,11 +63,8 @@ unsigned int trafficreport_hourtick::utime2id(const utime& uti)
 	unsigned int m = static_cast<unsigned int>(uti.get_month());
 	unsigned int d = static_cast<unsigned int>(uti.get_day());
 	unsigned int ho = static_cast<unsigned int>((uti.get_hours() / 2) * 2);
-//	unsigned int mi = static_cast<unsigned int>(uti.get_minutes());
 
-	unsigned int id = /*mi + */(ho * 100) + (d * 10000) + (m * 1000000) + (y * 100000000);
-
-	return id;
+	return (ho * 100) + (d * 10000) + (m * 1000000) + (y * 100000000);
 }
 
 void trafficreport_hourtick::id2utime(unsigned int idts, utime& ut)

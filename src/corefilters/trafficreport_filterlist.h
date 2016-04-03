@@ -12,13 +12,12 @@ class trafficreport_filterlist : public ubaselist<trafficreport_filter>
 {
 public:
 	trafficreport_filterlist();
+	trafficreport_filterlist(const trafficreport_filterlist& rhs) { operator=(rhs); };
 	~trafficreport_filterlist();
-
-	bool operator==(const trafficreport_filterlist& rhs) const;
 
 	void xml_create();
 	void xml_catch_value(const char *keyname, const char *keyvalue) { };
-	ubase* xml_catch_subnode(const char *keyname);
+	ubase* xml_catch_subnode(const char *tag_name, const char *class_name);
 };
 
 }

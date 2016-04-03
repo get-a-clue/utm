@@ -11,8 +11,13 @@ namespace utm {
 class filterstate :	public filterstate_base
 {
 public:
+	static const char this_class_name[];
+
+public:
 	filterstate(void);
 	~filterstate(void);
+
+	const char *get_this_class_name() const { return this_class_name; };
 
 	void set_id(unsigned int id) { filter_id = id; };
 	unsigned int get_id() const { return filter_id; };

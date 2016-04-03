@@ -71,22 +71,14 @@ void filter::parse_workhours_string(const char *workhours_string)
 	sscanf_s(workhours_string, "%x,%x,%x,%x,%x,%x,%x", &m_nWorkHours[0], &m_nWorkHours[1], &m_nWorkHours[2], &m_nWorkHours[3], &m_nWorkHours[4], &m_nWorkHours[5], &m_nWorkHours[6]);
 }
 
-ubase* filter::xml_catch_subnode(const char *keyname)
+ubase* filter::xml_catch_subnode(const char *keyname, const char *class_name)
 {
 	ubase *u = NULL;
 
 	if (strcmp(keyname, RULE_XMLTAG_RULE) == 0)
 	{
-		rule r;
-		rules.add_element(r);
-
-		rule_container::reverse_iterator riter = rules.items.rbegin();
-		if (riter != rules.items.rend())
-		{
-			rule_container::iterator iter = --riter.base();
-			rule* lastrule = &(*iter);
-			u = (ubase *)lastrule;
-		}
+		u = dynamic_cast<ubase *>(new rule());
+		rules.add_element(u);
 	}
 
 	return u;

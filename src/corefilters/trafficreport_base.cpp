@@ -38,7 +38,19 @@ trafficreport_base& trafficreport_base::operator=(const trafficreport_base& rhs)
 
 bool trafficreport_base::operator==(const trafficreport_base& rhs) const
 {
-    if (!(filters == rhs.filters)) return false;
+    return equals(&rhs);
+}
+
+bool trafficreport_base::equals(const ubase* rhs) const
+{
+    if (rhs == NULL)
+    {
+       return false;
+    }
+
+    const trafficreport_base* other = dynamic_cast<const trafficreport_base*>(rhs);
+
+    if (!(filters == other->filters)) return false;
 
     return true;
 }
@@ -53,6 +65,7 @@ void trafficreport_base::xml_create()
     trafficreport_base orig;
 
     xml_append_root( TR_TRAFFICREPORT_XMLTAG_ROOT);
+    add_class_name();
     if (xml_has_root_attr()) {
        xmlattr_container attr;
        xml_get_root_attr(attr);

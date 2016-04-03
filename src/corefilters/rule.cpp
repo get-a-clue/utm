@@ -5,6 +5,8 @@
 
 namespace utm {
 
+const char rule::this_class_name[] = "rule";
+
 rule::rule(void)
 {
 }

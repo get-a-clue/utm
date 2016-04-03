@@ -31,7 +31,7 @@
 
 namespace utm {
 
-typedef  std::list<utm::monitor_detail_record> mdr_container;
+typedef  std::list<std::unique_ptr<utm::ubase>> mdr_container;
 
 class monitor_range_base : public ubase
 {
@@ -45,7 +45,10 @@ public:
     virtual ~monitor_range_base();
 
     monitor_range_base& operator=(const monitor_range_base& rhs);
-    bool  operator==(const monitor_range_base& rhs) const;
+    virtual bool equals(const ubase* rhs) const;
+    bool operator==(const monitor_range_base& rhs) const;
+
+    virtual const char *get_this_class_name() const { return "monitor_range_base"; };
 
 virtual  const mdr_container& get_details() const { return details.items; };
 virtual  void parse_details_string(const char* p) { };
@@ -76,7 +79,7 @@ public:
     void clear();
     void xml_create();
     void xml_catch_value(const char *keyname, const char *keyvalue);
-    virtual ubase* xml_catch_subnode(const char *name) { return NULL; };
+    virtual ubase* xml_catch_subnode(const char *tag_name, const char *class_name) { return NULL; };
 
 
 

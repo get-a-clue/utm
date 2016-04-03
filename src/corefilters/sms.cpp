@@ -5,6 +5,9 @@
 
 namespace utm {
 
+const char sms::this_class_name[] = "sms";
+
+
 sms::sms(void)
 {
 }

@@ -11,11 +11,6 @@ procnicknamelist::~procnicknamelist(void)
 {
 }
 
-bool procnicknamelist::operator==(const procnicknamelist& rhs) const
-{
-	return items == rhs.items;
-}
-
 bool procnicknamelist::find_by_pathexe(const gstring& _pathexe, procnickname& result) const
 {
 	bool retval = false;
@@ -23,9 +18,10 @@ bool procnicknamelist::find_by_pathexe(const gstring& _pathexe, procnickname& re
 
 	for (iter = items.begin(); iter != items.end(); ++iter)
 	{
-		if ((*iter).pathexe.is_ci_equal(_pathexe))
+		procnickname* procname = dynamic_cast<procnickname *>(iter->get());
+		if (procname->pathexe.is_ci_equal(_pathexe))
 		{
-			result = *iter;
+			result = *procname;
 			retval = true;
 			break;
 		};
@@ -39,15 +35,15 @@ void procnicknamelist::clear()
 {
 	items.clear();
 
-	procnickname p1;
-	p1.set_id(2);
-	p1.nickname.assign("SYSTEM");
-	items.push_back(p1);
+	procnickname* p1 = new procnickname();
+	p1->set_id(2);
+	p1->nickname.assign("SYSTEM");
+	add_element(p1);
 
-	procnickname p2;
-	p2.set_id(3);
-	p2.nickname.assign("SVCHOST");
-	items.push_back(p2);
+	procnickname* p2 = new procnickname();
+	p2->set_id(3);
+	p2->nickname.assign("SVCHOST");
+	add_element(p2);
 }
 
 void procnicknamelist::xml_create()
@@ -56,13 +52,13 @@ void procnicknamelist::xml_create()
     xml_append_node(PROCNICKNAME_XMLTAG_ROOT, items);
 }
 
-ubase* procnicknamelist::xml_catch_subnode(const char *keyname)
+ubase* procnicknamelist::xml_catch_subnode(const char *keyname, const char *class_name)
 {
 	ubase *u = NULL;
 
 	if (strcmp(keyname, PROCNICKNAME_XMLTAG_ROOT) == 0)
 	{
-		u = (ubase *)get_temp_item();
+		u = init_and_get_temp_item(new procnickname());
 	}
 
 	return u;

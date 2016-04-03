@@ -26,9 +26,14 @@ namespace utm {
 class rule : public rule_base
 {
 public:
+	static const char this_class_name[];
+
+public:
 	rule(void);
 	rule(int src_type, const char* src_ip, const char* src_mask, int dst_type, const char* dst_ip, const char* dst_mask);
 	virtual ~rule(void);
+
+	const char *get_this_class_name() const { return this_class_name; };
 
 	void set_id(unsigned int id) { this->id = id; };
 	unsigned int get_id() const { return id; };

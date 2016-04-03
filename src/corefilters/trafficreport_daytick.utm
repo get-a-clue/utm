@@ -1,6 +1,6 @@
 include: <ubase.h> <gstring.h> "trafficreport_hourticklist.h"
-typedef: std::list<utm::trafficreport_hourtick> trafficreport_hourtick_container
-virtual: trafficreport_hourtick_container get_hourticks() { return hourticks.items; }
+typedef: std::list<std::unique_ptr<utm::ubase>> trafficreport_hourtick_container
+virtual: trafficreport_hourtick_container& get_hourticks() { return hourticks.items; }
 virtual: void parse_hourticks_string(const char *hourtick_string) { }
 define: TR_DAYTICK_XMLTAG_ROOT "Day"
 xmlroot: TR_DAYTICK_XMLTAG_ROOT

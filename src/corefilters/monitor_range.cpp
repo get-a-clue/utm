@@ -12,13 +12,13 @@ monitor_range::~monitor_range(void)
 {
 }
 
-ubase* monitor_range::xml_catch_subnode(const char *keyname)
+ubase* monitor_range::xml_catch_subnode(const char *keyname, const char *class_name)
 {
 	ubase *u = NULL;
 
 	if (strcmp(keyname, MONDETREC_XMLTAG_ROOT) == 0)
 	{
-		return details.xml_catch_subnode(keyname);
+		return details.xml_catch_subnode(keyname, NULL);
 	}
 
 	return u;
@@ -66,9 +66,10 @@ monitor_detail_record* monitor_range::find_detail_by_mac(const addrmac& mac)
 	{
 		for (auto iter = details.items.begin(); iter != details.items.end(); ++iter)
 		{
-			if (iter->mac == mac)
+			monitor_detail_record* mdr = dynamic_cast<monitor_detail_record *>(iter->get());
+			if (mdr->mac == mac)
 			{
-				return &(*iter);
+				return mdr;
 			}
 		}
 	}
@@ -82,9 +83,10 @@ monitor_detail_record* monitor_range::find_detail_by_ip(const addrip_v4& ip)
 	{
 		for (auto iter = details.items.begin(); iter != details.items.end(); ++iter)
 		{
-			if (iter->ip == ip)
+			monitor_detail_record* mdr = dynamic_cast<monitor_detail_record *>(iter->get());
+			if (mdr->ip == ip)
 			{
-				return &(*iter);
+				return mdr;
 			}
 		}
 	}

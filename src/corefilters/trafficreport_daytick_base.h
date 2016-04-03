@@ -14,7 +14,7 @@
 
 namespace utm {
 
-typedef  std::list<utm::trafficreport_hourtick> trafficreport_hourtick_container;
+typedef  std::list<std::unique_ptr<utm::ubase>> trafficreport_hourtick_container;
 
 class trafficreport_daytick_base : public ubase
 {
@@ -28,9 +28,12 @@ public:
     virtual ~trafficreport_daytick_base();
 
     trafficreport_daytick_base& operator=(const trafficreport_daytick_base& rhs);
-    bool  operator==(const trafficreport_daytick_base& rhs) const;
+    virtual bool equals(const ubase* rhs) const;
+    bool operator==(const trafficreport_daytick_base& rhs) const;
 
-virtual  trafficreport_hourtick_container get_hourticks() { return hourticks.items; };
+    virtual const char *get_this_class_name() const { return "trafficreport_daytick_base"; };
+
+virtual  trafficreport_hourtick_container& get_hourticks() { return hourticks.items; };
 virtual  void parse_hourticks_string(const char *hourtick_string) { };
 
 public:
@@ -43,7 +46,7 @@ public:
     void clear();
     void xml_create();
     void xml_catch_value(const char *keyname, const char *keyvalue);
-    virtual ubase* xml_catch_subnode(const char *name) { return NULL; };
+    virtual ubase* xml_catch_subnode(const char *tag_name, const char *class_name) { return NULL; };
 
 
 

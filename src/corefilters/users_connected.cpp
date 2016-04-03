@@ -28,6 +28,17 @@ users_connected& users_connected::operator=(const users_connected& rhs)
 	return *this;
 }
 
+bool users_connected::equals(const ubase* rhs) const
+{
+	const users_connected* p = dynamic_cast<const users_connected *>(rhs);
+	if (p == NULL)
+	{
+		return false;
+	}
+
+	return operator==(*p);
+}
+
 bool users_connected::operator==(const users_connected& rhs) const
 {
 	boost::mutex::scoped_lock lock(guard);

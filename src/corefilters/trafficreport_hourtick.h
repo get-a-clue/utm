@@ -2,12 +2,12 @@
 #define UTM_TRAFFICREPORT_HOURTICK_H
 
 #pragma once
+#include <utm.h>
+
+#include <utime.h>
 #include "trafficreport_hourtick_base.h"
 
 #include <string>
-#include <stdio.h>
-
-#include <utime.h>
 
 namespace utm {
 
@@ -16,6 +16,8 @@ class trafficreport_hourtick : public trafficreport_hourtick_base
 public:
 	trafficreport_hourtick();
 	~trafficreport_hourtick();
+
+	virtual const char *get_this_class_name() const { return "trafficreport_hourtick"; };
 
 	bool xml_has_root_attr() const;
 	void xml_get_root_attr(xmlattr_container& attr);

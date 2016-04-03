@@ -3,6 +3,8 @@
 
 namespace utm {
 
+const char trafficreport_filter::this_class_name[] = "trafficreport_filter";
+
 trafficreport_filter::trafficreport_filter()
 {
 }
@@ -16,13 +18,13 @@ bool trafficreport_filter::xml_has_root_attr() const
 	return true;
 }
 
-ubase* trafficreport_filter::xml_catch_subnode(const char *keyname)
+ubase* trafficreport_filter::xml_catch_subnode(const char *keyname, const char *class_name)
 {
 	ubase *u = NULL;
 
 	if (strcmp(keyname, TR_DAYTICK_XMLTAG_ROOT) == 0)
 	{
-		u = (ubase *)dayticks.get_temp_item();
+		u = dayticks.init_and_get_temp_item(new trafficreport_daytick());
 		return u;
 	}
 
@@ -34,7 +36,6 @@ void trafficreport_filter::xml_catch_subnode_finished(const char *keyname)
 	if (strcmp(keyname, TR_DAYTICK_XMLTAG_ROOT) == 0)
 	{
 		dayticks.commit_temp_item();
-		return;
 	}
 }
 
@@ -74,10 +75,11 @@ void trafficreport_filter::update_counters(const utime& ctm, __int64 sent, __int
 	bool found = false;
 	for (auto iter = dayticks.items.begin(); iter != dayticks.items.end(); ++iter)
 	{
-		unsigned int ts_day = iter->get_id();
+		unsigned int ts_day = iter->get()->get_id();
 		if (cts_day == ts_day)
 		{
-			iter->update_counters(ctm, sent, recv);
+			trafficreport_daytick *tr = dynamic_cast<trafficreport_daytick *>(iter->get());
+			tr->update_counters(ctm, sent, recv);
 			found = true;
 			break;
 		}
@@ -99,17 +101,17 @@ void trafficreport_filter::test_all()
 {
 	trafficreport_daytick trd = trafficreport_daytick::test_get_daytick();
 
-	trafficreport_filter trf;
-	trf.set_id(1);
-	trf.name.assign("Test filter name");
-	trf.color = 255;
-	trf.sent = 1001;
-	trf.recv = 2002;
-	trf.dayticks.items.push_back(trd);
+	trafficreport_filter* trf = new trafficreport_filter();
+	trf->set_id(1);
+	trf->name.assign("Test filter name");
+	trf->color = 255;
+	trf->sent = 1001;
+	trf->recv = 2002;
+	trf->dayticks.add_element(trd);
 
 	std::string x;
-	trf.xml_create();
-	trf.xml_get_string(x);
+	trf->xml_create();
+	trf->xml_get_string(x);
 
 	return;
 }

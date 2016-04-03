@@ -29,7 +29,10 @@ public:
     virtual ~svcstate_base();
 
     svcstate_base& operator=(const svcstate_base& rhs);
-    bool  operator==(const svcstate_base& rhs) const;
+    virtual bool equals(const ubase* rhs) const;
+    bool operator==(const svcstate_base& rhs) const;
+
+    virtual const char *get_this_class_name() const { return "svcstate_base"; };
 
 virtual  std::string get_currenttm_str() const { return std::string(""); };
 virtual  void parse_currenttm_string(const char *currenttm_string) { };
@@ -72,7 +75,7 @@ public:
     void clear();
     void xml_create();
     void xml_catch_value(const char *keyname, const char *keyvalue);
-    virtual ubase* xml_catch_subnode(const char *name) { return NULL; };
+    virtual ubase* xml_catch_subnode(const char *tag_name, const char *class_name) { return NULL; };
 
 
 

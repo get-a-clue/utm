@@ -56,25 +56,37 @@ monitor_range_base& monitor_range_base::operator=(const monitor_range_base& rhs)
 
 bool monitor_range_base::operator==(const monitor_range_base& rhs) const
 {
-    if (!(id == rhs.id)) return false;
-    if (!(attempts == rhs.attempts)) return false;
-    if (!(poll_interval == rhs.poll_interval)) return false;
-    if (!(active == rhs.active)) return false;
-    if (!(location == rhs.location)) return false;
-    if (!(rangetype == rhs.rangetype)) return false;
-    if (!(no_macaddr == rhs.no_macaddr)) return false;
-    if (!(no_macvend == rhs.no_macvend)) return false;
-    if (!(reverse_lookup == rhs.reverse_lookup)) return false;
-    if (!(dnsserver == rhs.dnsserver)) return false;
-    if (!(comment == rhs.comment)) return false;
-    if (!(table == rhs.table)) return false;
-    if (!(start_addr == rhs.start_addr)) return false;
-    if (!(end_addr == rhs.end_addr)) return false;
-    if (!(color0 == rhs.color0)) return false;
-    if (!(color1 == rhs.color1)) return false;
-    if (!(color2 == rhs.color2)) return false;
-    if (!(color3 == rhs.color3)) return false;
-    if (!(details == rhs.details)) return false;
+    return equals(&rhs);
+}
+
+bool monitor_range_base::equals(const ubase* rhs) const
+{
+    if (rhs == NULL)
+    {
+       return false;
+    }
+
+    const monitor_range_base* other = dynamic_cast<const monitor_range_base*>(rhs);
+
+    if (!(id == other->id)) return false;
+    if (!(attempts == other->attempts)) return false;
+    if (!(poll_interval == other->poll_interval)) return false;
+    if (!(active == other->active)) return false;
+    if (!(location == other->location)) return false;
+    if (!(rangetype == other->rangetype)) return false;
+    if (!(no_macaddr == other->no_macaddr)) return false;
+    if (!(no_macvend == other->no_macvend)) return false;
+    if (!(reverse_lookup == other->reverse_lookup)) return false;
+    if (!(dnsserver == other->dnsserver)) return false;
+    if (!(comment == other->comment)) return false;
+    if (!(table == other->table)) return false;
+    if (!(start_addr == other->start_addr)) return false;
+    if (!(end_addr == other->end_addr)) return false;
+    if (!(color0 == other->color0)) return false;
+    if (!(color1 == other->color1)) return false;
+    if (!(color2 == other->color2)) return false;
+    if (!(color3 == other->color3)) return false;
+    if (!(details == other->details)) return false;
 
     return true;
 }
@@ -107,6 +119,7 @@ void monitor_range_base::xml_create()
     monitor_range_base orig;
 
     xml_append_root( MONRANGE_XMLTAG_ROOT);
+    add_class_name();
     if (xml_has_root_attr()) {
        xmlattr_container attr;
        xml_get_root_attr(attr);

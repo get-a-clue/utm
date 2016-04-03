@@ -235,12 +235,11 @@ void filter2::match_filter(const match_filter_input& data, match_filter_result& 
 
 	const unsigned char* cond_mac_data;
 	unsigned int isrc_ip, isrc_mask, idst_ip, idst_mask;
-	utm::rule* prule;
 
 	rule_container::iterator iter;
 	for (iter = rules.items.begin(); iter != rules.items.end(); ++iter)
 	{
-        prule = &(*iter);
+		rule* prule = dynamic_cast<rule *>(iter->get());
 
 		isrc_ip = prule->src_ip.m_addr;
 		isrc_mask = prule->src_mask.m_addr;
@@ -267,7 +266,7 @@ void filter2::match_filter(const match_filter_input& data, match_filter_result& 
 
 			if ((prule->src_type == RULE_ADDRGRP) || (prule->src_type == RULE_ADDRGRP_NO))
 			{
-				src_at = data.mat->findptr_by_id(prule->src_atkey);
+				src_at = dynamic_cast<utm::addrtablemaprec<utm::addrtable_v4> *>(data.mat->findptr_by_id(prule->src_atkey));
 //				src_at_prule = data.mat->addrtables.find(prule->src_atkey);
 //				if (src_at_prule != data.mat->addrtables.end())
 //					src_at_found = true;
@@ -275,7 +274,7 @@ void filter2::match_filter(const match_filter_input& data, match_filter_result& 
 
 			if ((prule->dst_type == RULE_ADDRGRP) || (prule->dst_type == RULE_ADDRGRP_NO))
 			{
-				dst_at = data.mat->findptr_by_id(prule->dst_atkey);
+				dst_at = dynamic_cast<utm::addrtablemaprec<utm::addrtable_v4> *>(data.mat->findptr_by_id(prule->dst_atkey));
 //				dst_at_prule = data.mat->addrtables.find(prule->dst_atkey);
 //				if (dst_at_prule != data.mat->addrtables.end())
 //					dst_at_found = true;
@@ -1213,8 +1212,8 @@ void filter2::test_match_filter()
 		TEST_CASE_CHECK(f1.cnt_sent.get_cnt(), __int64(300));
 		TEST_CASE_CHECK(f1.cnt_recv.get_cnt(), __int64(120));
 
-		addrtablemaprec_v4 amr;
-		amr.set_id(11);
+		addrtablemaprec_v4* amr = new addrtablemaprec_v4();
+		amr->set_id(11);
 		addrmap.add_element(amr);
 		addrmap.AddAddrPair(11, addrip_v4("192.168.1.1"), addrip_v4("192.168.1.2"));
 

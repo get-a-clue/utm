@@ -14,11 +14,9 @@ public:
 	filterconslist();
 	~filterconslist();
 
-	bool operator==(const filterconslist& rhs) const;
-
 	void xml_create();
 	void xml_catch_value(const char *keyname, const char *keyvalue) { };
-	ubase* xml_catch_subnode(const char *keyname);
+	ubase* xml_catch_subnode(const char *tag_name, const char *class_name);
 };
 
 }

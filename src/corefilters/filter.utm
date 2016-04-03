@@ -36,7 +36,7 @@ define: CHECKADDR_MYNET_DST 32
 define: TRAFFICLIMIT_BLOCK 0
 define: TRAFFICLIMIT_SPEED2 1
 xmlroot: FILTER_XMLTAG_FILTER
-typedef: std::list<utm::rule> rule_container
+typedef: std::list<std::unique_ptr<utm::ubase>> rule_container
 virtual: rule_container& get_ruleset() { return rules.items; }
 virtual: std::string get_workhours_str() const { return std::string(""); }
 virtual: void parse_rule_string(const char *rule_string) { }

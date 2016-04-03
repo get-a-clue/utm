@@ -43,12 +43,24 @@ filterstate_base& filterstate_base::operator=(const filterstate_base& rhs)
 
 bool filterstate_base::operator==(const filterstate_base& rhs) const
 {
-    if (!(filter_id == rhs.filter_id)) return false;
-    if (!(filter_name == rhs.filter_name)) return false;
-    if (!(bytes_sent == rhs.bytes_sent)) return false;
-    if (!(bytes_recv == rhs.bytes_recv)) return false;
-    if (!(limflags == rhs.limflags)) return false;
-    if (!(lastreset == rhs.lastreset)) return false;
+    return equals(&rhs);
+}
+
+bool filterstate_base::equals(const ubase* rhs) const
+{
+    if (rhs == NULL)
+    {
+       return false;
+    }
+
+    const filterstate_base* other = dynamic_cast<const filterstate_base*>(rhs);
+
+    if (!(filter_id == other->filter_id)) return false;
+    if (!(filter_name == other->filter_name)) return false;
+    if (!(bytes_sent == other->bytes_sent)) return false;
+    if (!(bytes_recv == other->bytes_recv)) return false;
+    if (!(limflags == other->limflags)) return false;
+    if (!(lastreset == other->lastreset)) return false;
 
     return true;
 }
@@ -68,6 +80,7 @@ void filterstate_base::xml_create()
     filterstate_base orig;
 
     xml_append_root( FILTERSTATE_XMLTAG_FILTER);
+    add_class_name();
     if (xml_has_root_attr()) {
        xmlattr_container attr;
        xml_get_root_attr(attr);

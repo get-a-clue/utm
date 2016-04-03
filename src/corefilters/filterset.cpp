@@ -24,10 +24,11 @@ void filterset::copy_counters(const filterset& fs)
 
 	for (auto iter = filters.items.begin(); iter != filters.items.end(); ++iter)
 	{
-		filter2 f;
-		if (fs.filters.find_by_id(iter->get_id(), f))
+		filter2* pf_src = dynamic_cast<filter2 *>(iter->get());
+		filter2* pf_dst = dynamic_cast<filter2 *>(fs.filters.findptr_by_id(pf_src->get_id()));
+		if (pf_dst != NULL)
 		{
-			iter->copy_filter_counters(f);
+			pf_src->copy_filter_counters(*pf_dst);
 		}
 	}
 }
@@ -36,7 +37,8 @@ void filterset::reset_all_counters()
 {
 	for (auto iter = filters.items.begin(); iter != filters.items.end(); ++iter)
 	{
-		iter->reset_filter_counters(true);
+		filter2* pf = dynamic_cast<filter2 *>(iter->get());
+		pf->reset_filter_counters(true);
 	}
 }
 
@@ -48,9 +50,10 @@ void filterset::reset_on_schedule(bool reset_history, std::string& filterids)
 	idlist zeroed_filterids;
 	for (auto iter = filters.items.begin(); iter != filters.items.end(); ++iter)
 	{
-		if (iter->reset_on_schedule(stimeset, reset_history))
+		filter2* pf = dynamic_cast<filter2 *>(iter->get());
+		if (pf->reset_on_schedule(stimeset, reset_history))
 		{
-			zeroed_filterids.ids.push_back(iter->m_id);
+			zeroed_filterids.ids.push_back(pf->get_id());
 		}
 	}
 	filterids = zeroed_filterids.to_string();
@@ -61,10 +64,12 @@ void filterset::prepare_proc_usage()
 	is_proc_used = false;
 	for (auto iter = filters.items.begin(); iter != filters.items.end(); ++iter)
 	{
-		for (auto riter = iter->rules.items.begin(); riter != iter->rules.items.end(); ++riter)
+		filter2* pf = dynamic_cast<filter2 *>(iter->get());
+		for (auto riter = pf->rules.items.begin(); riter != pf->rules.items.end(); ++riter)
 		{
-			if ((riter->src_type == RULE_PROCNAME) || (riter->src_type == RULE_PROCUSER) ||
-				(riter->dst_type == RULE_PROCNAME) || (riter->dst_type == RULE_PROCUSER))
+			rule* pr = dynamic_cast<rule *>(riter->get());
+			if ((pr->src_type == RULE_PROCNAME) || (pr->src_type == RULE_PROCUSER) ||
+				(pr->dst_type == RULE_PROCNAME) || (pr->dst_type == RULE_PROCUSER))
 			{
 				is_proc_used = true;
 				break;
@@ -81,7 +86,8 @@ void filterset::prepare_shaper_usage()
 	is_shaper_used = false;
 	for (auto iter = filters.items.begin(); iter != filters.items.end(); ++iter)
 	{
-		if (iter->get_actual_speed() > 0)
+		filter2* pf = dynamic_cast<filter2 *>(iter->get());
+		if (pf->get_actual_speed() > 0)
 		{
 			is_shaper_used = true;
 			break;
@@ -93,14 +99,16 @@ bool filterset::is_addrtable_used(unsigned int atkey) const
 {
 	for (auto iter = filters.items.begin(); iter != filters.items.end(); ++iter)
 	{
-		for (auto iru = iter->rules.items.begin(); iru != iter->rules.items.end(); ++iru)
+		filter2* pf = dynamic_cast<filter2 *>(iter->get());
+		for (auto iru = pf->rules.items.begin(); iru != pf->rules.items.end(); ++iru)
 		{
-			if (((*iru).src_type == RULE_ADDRGRP) && ((*iru).src_atkey == atkey))
+			rule* pr = dynamic_cast<rule *>(iru->get());
+			if ((pr->src_type == RULE_ADDRGRP) && (pr->src_atkey == atkey))
 			{
 				return true;
 			};
 
-			if (((*iru).dst_type == RULE_ADDRGRP) && ((*iru).dst_atkey == atkey))
+			if ((pr->dst_type == RULE_ADDRGRP) && (pr->dst_atkey == atkey))
 			{
 				return true;
 			};
@@ -120,17 +128,18 @@ void filterset::process_traffic_limit_flags(const gstring& flagfolder)
 
 	for (auto iter = filters.items.begin(); iter != filters.items.end(); ++iter)
 	{
-		flag_traffic_limit = iter->is_traffic_limit_exceeded();
-		flag_traffic_warn = iter->is_traffic_limitwarn_exceeded();
+		filter2* pf = dynamic_cast<filter2 *>(iter->get());
+		flag_traffic_limit = pf->is_traffic_limit_exceeded();
+		flag_traffic_warn = pf->is_traffic_limitwarn_exceeded();
 
 		if (!flag_traffic_limit)
 		{
 			// Clear flag 
-			iter->m_wTrafficLimitFlags &= 0xFFFE;
+			pf->m_wTrafficLimitFlags &= 0xFFFE;
 		}
 		else
 		{
-			if (iter->m_wTrafficLimitFlags & 0x0001)
+			if (pf->m_wTrafficLimitFlags & 0x0001)
 			{
 				// Flag is already created.
 				// Do nothing.
@@ -139,18 +148,18 @@ void filterset::process_traffic_limit_flags(const gstring& flagfolder)
 			{
 				// Create flag
 
-				std::string s = std::string("limit_") + boost::lexical_cast<std::string>(iter->get_id());
+				std::string s = std::string("limit_") + boost::lexical_cast<std::string>(pf->get_id());
 				utm::gstring flagfile = ufs::make_full_filepath(flagfolder, utm::gstring(s));
 
 				std::fstream f;
 				f.open(flagfile.c_str(), std::fstream::out);
 				if (f)
 				{
-					f << nowstr << " " << iter->cnt_sent.get_cnt() << "/" << iter->cnt_recv.get_cnt();
+					f << nowstr << " " << pf->cnt_sent.get_cnt() << "/" << pf->cnt_recv.get_cnt();
 					f.close();
 				}
 
-				iter->m_wTrafficLimitFlags |= 0x0001;
+				pf->m_wTrafficLimitFlags |= 0x0001;
 			};
 		}
 
@@ -158,11 +167,11 @@ void filterset::process_traffic_limit_flags(const gstring& flagfolder)
 		{
 			// Clear flag
 
-			iter->m_wTrafficLimitFlags &= 0xFFFD;
+			pf->m_wTrafficLimitFlags &= 0xFFFD;
 		}
 		else
 		{
-			if (iter->m_wTrafficLimitFlags & 0x0002)
+			if (pf->m_wTrafficLimitFlags & 0x0002)
 			{
 				// Flag is already created.
 				// Do nothing.
@@ -171,18 +180,18 @@ void filterset::process_traffic_limit_flags(const gstring& flagfolder)
 			{
 				// Create flag
 
-				std::string s = std::string("warn_") + boost::lexical_cast<std::string>(iter->get_id());
+				std::string s = std::string("warn_") + boost::lexical_cast<std::string>(pf->get_id());
 				utm::gstring flagfile = ufs::make_full_filepath(flagfolder, utm::gstring(s));
 
 				std::fstream f;
 				f.open(flagfile.c_str(), std::fstream::out);
 				if (f)
 				{
-					f << nowstr << " " << iter->cnt_sent.get_cnt() << "/" << iter->cnt_recv.get_cnt();
+					f << nowstr << " " << pf->cnt_sent.get_cnt() << "/" << pf->cnt_recv.get_cnt();
 					f.close();
 				}
 
-				iter->m_wTrafficLimitFlags |= 0x0002;
+				pf->m_wTrafficLimitFlags |= 0x0002;
 			};					
 		}
 	}
@@ -192,9 +201,10 @@ void filterset::select_users_by_filter_id(unsigned int filter_id, std::map<unsig
 {
 	for (auto uiter = users.items.begin(); uiter != users.items.end(); ++uiter)
 	{
-		if (uiter->fids.ids.end() != uiter->fids.ids.find(filter_id))
+		fsuser* pu = dynamic_cast<fsuser *>(uiter->get());
+		if (pu->fids.ids.end() != pu->fids.ids.find(filter_id))
 		{
-			selected_users.insert(std::make_pair(uiter->get_id(), uiter->get_name()));
+			selected_users.insert(std::make_pair(pu->get_id(), pu->get_name()));
 		}
 	}
 }
@@ -219,12 +229,13 @@ void filterset::make_user_agentinfo_as_xml(const utime& cutime, const fsuser& us
 
 		for (auto iter = filters.items.begin(); iter != filters.items.end(); ++iter)
 		{
+			filter2* pf = dynamic_cast<filter2 *>(iter->get());
 			found = false;
 			finish = false;
 
 			if (user.m_nType == USER_ACCESS_SPECIFIED_FILTERS)
 			{
-				found = user.fids.check_id(iter->get_id());
+				found = user.fids.check_id(pf->get_id());
 				if (found)
 				{
 					idcount++;
@@ -240,7 +251,7 @@ void filterset::make_user_agentinfo_as_xml(const utime& cutime, const fsuser& us
 			{
 				std::string xml;
 				utm::filteragent fa;
-				fa.create(total_points, next_point, 10, *iter, xml);
+				fa.create(total_points, next_point, 10, *pf, xml);
 				res << xml;
 			}
 
@@ -287,46 +298,43 @@ void filterset::parse_lat_string(const char *lat_string)
 	table_lat.AddAddrPair(addr_begin, addr_end, false);
 }
 
-ubase* filterset::xml_catch_subnode(const char *keyname)
+ubase* filterset::xml_catch_subnode(const char *keyname, const char *class_name)
 {
 	ubase *u = NULL;
 
 	if (strcmp(keyname, FILTER_XMLTAG_FILTER) == 0)
 	{
-		u = (ubase *)filters.get_temp_item();
+		u = filters.init_and_get_temp_item(new filter2());
 		return u;
 	}
 
 	if (strcmp(keyname, ADDRTABLEMAP_XMLTAG_MAT) == 0)
 	{
-		u = (ubase *)table_mat.get_temp_item();
+		u = table_mat.init_and_get_temp_item(new addrtablemaprec<addrtable_v4>());
 		return u;
-//		temp_matrec.clear();
-//		u = (ubase *)&temp_matrec;
-//		return u;
 	}
 
 	if (strcmp(keyname, FSUSER_XMLTAG_ROOT) == 0)
 	{
-		u = (ubase *)users.get_temp_item();
+		u = users.init_and_get_temp_item(new fsuser());
 		return u;
 	}
 
 	if (strcmp(keyname, URLFILTER_XMLTAG_ROOT) == 0)
 	{
-		u = (ubase *)urlfilters.get_temp_item();
+		u = urlfilters.init_and_get_temp_item(new urlfilter());
 		return u;
 	}
 
 	if (strcmp(keyname, PROCNICKNAME_XMLTAG_ROOT) == 0)
 	{
-		u = (ubase *)procs.get_temp_item();
+		u = procs.init_and_get_temp_item(new procnickname());
 		return u;
 	}
 
 	if (strcmp(keyname, MONRANGE_XMLTAG_ROOT) == 0)
 	{
-		u = (ubase *)ranges.get_temp_item();
+		u = ranges.init_and_get_temp_item(new monitor_range());
 		return u;
 	}
 
@@ -347,11 +355,6 @@ void filterset::xml_catch_subnode_finished(const char *keyname)
 	{
 		table_mat.commit_temp_item();
 		return;
-
-//		if (temp_matrec.key != 0)
-//			table_mat.add_addresstable(temp_matrec.addrtable, temp_matrec.key);
-//
-//		temp_matrec.clear();
 	}
 
 	if (strcmp(keyname, FSUSER_XMLTAG_ROOT) == 0)

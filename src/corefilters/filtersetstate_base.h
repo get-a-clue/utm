@@ -16,7 +16,7 @@
 
 namespace utm {
 
-typedef  std::list<utm::filterstate> filterstate_container;
+typedef  std::list<std::unique_ptr<utm::ubase>> filterstate_container;
 
 class filtersetstate_base : public ubase
 {
@@ -30,9 +30,12 @@ public:
     virtual ~filtersetstate_base();
 
     filtersetstate_base& operator=(const filtersetstate_base& rhs);
-    bool  operator==(const filtersetstate_base& rhs) const;
+    virtual bool equals(const ubase* rhs) const;
+    bool operator==(const filtersetstate_base& rhs) const;
 
-virtual  filterstate_container get_filterstates() { return filterstates.items; };;
+    virtual const char *get_this_class_name() const { return "filtersetstate_base"; };
+
+virtual  filterstate_container& get_filterstates() { return filterstates.items; };;
 virtual  void parse_filterstate_string(const char *filterstate_string) { };
 
 public:
@@ -46,7 +49,7 @@ public:
     void clear();
     void xml_create();
     void xml_catch_value(const char *keyname, const char *keyvalue);
-    virtual ubase* xml_catch_subnode(const char *name) { return NULL; };
+    virtual ubase* xml_catch_subnode(const char *tag_name, const char *class_name) { return NULL; };
 
 
 

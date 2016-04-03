@@ -45,14 +45,26 @@ sms_base& sms_base::operator=(const sms_base& rhs)
 
 bool sms_base::operator==(const sms_base& rhs) const
 {
-    if (!(sender_uid == rhs.sender_uid)) return false;
-    if (!(sender_name == rhs.sender_name)) return false;
-    if (!(recp_uid == rhs.recp_uid)) return false;
-    if (!(recp_name == rhs.recp_name)) return false;
-    if (!(time_creation == rhs.time_creation)) return false;
-    if (!(time_expire == rhs.time_expire)) return false;
-    if (!(msg_text == rhs.msg_text)) return false;
-    if (!(msg_id == rhs.msg_id)) return false;
+    return equals(&rhs);
+}
+
+bool sms_base::equals(const ubase* rhs) const
+{
+    if (rhs == NULL)
+    {
+       return false;
+    }
+
+    const sms_base* other = dynamic_cast<const sms_base*>(rhs);
+
+    if (!(sender_uid == other->sender_uid)) return false;
+    if (!(sender_name == other->sender_name)) return false;
+    if (!(recp_uid == other->recp_uid)) return false;
+    if (!(recp_name == other->recp_name)) return false;
+    if (!(time_creation == other->time_creation)) return false;
+    if (!(time_expire == other->time_expire)) return false;
+    if (!(msg_text == other->msg_text)) return false;
+    if (!(msg_id == other->msg_id)) return false;
 
     return true;
 }
@@ -74,6 +86,7 @@ void sms_base::xml_create()
     sms_base orig;
 
     xml_append_root( SMS_XMLTAG_ROOT);
+    add_class_name();
     if (xml_has_root_attr()) {
        xmlattr_container attr;
        xml_get_root_attr(attr);

@@ -47,7 +47,7 @@ private:
 	bool is_shaper_used;
 
 public:
-	ubase* xml_catch_subnode(const char *name);
+	ubase* xml_catch_subnode(const char *tag_name, const char *class_name);
 	void xml_catch_subnode_finished(const char *name);
 
 public:

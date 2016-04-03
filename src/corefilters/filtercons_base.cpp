@@ -41,10 +41,22 @@ filtercons_base& filtercons_base::operator=(const filtercons_base& rhs)
 
 bool filtercons_base::operator==(const filtercons_base& rhs) const
 {
-    if (!(filter_id == rhs.filter_id)) return false;
-    if (!(bytes_sent == rhs.bytes_sent)) return false;
-    if (!(bytes_recv == rhs.bytes_recv)) return false;
-    if (!(speed_array == rhs.speed_array)) return false;
+    return equals(&rhs);
+}
+
+bool filtercons_base::equals(const ubase* rhs) const
+{
+    if (rhs == NULL)
+    {
+       return false;
+    }
+
+    const filtercons_base* other = dynamic_cast<const filtercons_base*>(rhs);
+
+    if (!(filter_id == other->filter_id)) return false;
+    if (!(bytes_sent == other->bytes_sent)) return false;
+    if (!(bytes_recv == other->bytes_recv)) return false;
+    if (!(speed_array == other->speed_array)) return false;
 
     return true;
 }
@@ -62,6 +74,7 @@ void filtercons_base::xml_create()
     filtercons_base orig;
 
     xml_append_root( FILTERCONS_XMLTAG_FILTERCONS);
+    add_class_name();
     if (xml_has_root_attr()) {
        xmlattr_container attr;
        xml_get_root_attr(attr);

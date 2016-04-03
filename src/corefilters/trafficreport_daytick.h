@@ -14,7 +14,9 @@ public:
 	trafficreport_daytick();
 	~trafficreport_daytick();
 
-	ubase* xml_catch_subnode(const char *keyname);
+	virtual const char *get_this_class_name() const { return "trafficreport_daytick"; };
+
+	ubase* xml_catch_subnode(const char *tag_name, const char *class_name);
 	void xml_catch_subnode_finished(const char *keyname);
 	void xml_catch_subnode_attribute(const char *attrname, const char* attrvalue);
 	void xml_catch_rootnode_attribute(const char *attrname, const char* attrvalue);

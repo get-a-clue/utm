@@ -19,8 +19,7 @@ typedef std::list<utm::addrip_v4> addr4s_container;
 
 namespace utm {
 
-class users_connected :
-	public ubase
+class users_connected : public ubase
 {
 public:
     static const char this_class_name[];
@@ -36,6 +35,7 @@ private:
 	users_connected& operator=(const users_connected& rhs);
 
 public:
+	bool equals(const ubase* rhs) const;
 	bool  operator==(const users_connected& rhs) const;
 	void copy_from_safe(const users_connected& source);
 	void copy_to_safe(users_connected& destination) const;
@@ -50,7 +50,7 @@ public:
     void clear();
     void xml_create();
     void xml_catch_value(const char *keyname, const char *keyvalue);
-    virtual ubase* xml_catch_subnode(const char *name) { return NULL; };
+    virtual ubase* xml_catch_subnode(const char *tag_name, const char *class_name) { return NULL; };
 
 protected:
 	mutable boost::mutex guard;

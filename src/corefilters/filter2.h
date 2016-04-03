@@ -43,6 +43,8 @@ public:
 	filter2(void);
 	virtual ~filter2(void);
 
+	const char *get_this_class_name() const { return this_class_name; };
+
 	void copy_filter_counters(const filter2& f);
 	void reset_filter_counters(bool reset_history);
 	bool reset_on_schedule(const standard_timeset& stimeset, bool reset_history);

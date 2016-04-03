@@ -16,8 +16,13 @@ namespace utm {
 class sms : public sms_base
 {
 public:
+	static const char this_class_name[];
+
+public:
 	sms(void);
 	~sms(void);
+
+	const char *get_this_class_name() const { return this_class_name; };
 
 	void generate_msg_id();
 };

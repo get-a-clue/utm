@@ -28,7 +28,8 @@ public:
 	sms_queue(const sms_queue& rhs);
 	virtual ~sms_queue(void);
 
-    bool  operator==(const sms_queue& rhs) const;
+	bool equals(const ubase* rhs) const;
+	bool  operator==(const sms_queue& rhs) const;
 
 	mutable boost::mutex guard;
 	sms_container items;
@@ -59,7 +60,7 @@ public:
 	void clear();
     void xml_create();
 	void xml_catch_value(const char *keyname, const char *keyvalue) { };
-    virtual ubase* xml_catch_subnode(const char *name);
+    virtual ubase* xml_catch_subnode(const char *tag_name, const char *class_name);
 
 #ifdef UTM_DEBUG
 public:

@@ -1,6 +1,6 @@
 include: <ubase.h> <gstring.h> "trafficreport_filterlist.h"
-typedef: std::list<utm::trafficreport_filter> trafficreport_filter_container
-virtual: trafficreport_filter_container get_filters() { return filters.items; }
+typedef: std::list<std::unique_ptr<utm::ubase>> trafficreport_filter_container
+virtual: trafficreport_filter_container& get_filters() { return filters.items; }
 virtual: void parse_filter_string(const char *filter_string) { }
 define: TR_TRAFFICREPORT_XMLTAG_ROOT "TrafficReport"
 xmlroot: TR_TRAFFICREPORT_XMLTAG_ROOT

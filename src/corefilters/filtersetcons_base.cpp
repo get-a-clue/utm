@@ -49,18 +49,30 @@ filtersetcons_base& filtersetcons_base::operator=(const filtersetcons_base& rhs)
 
 bool filtersetcons_base::operator==(const filtersetcons_base& rhs) const
 {
-    if (!(total_bytes_captured == rhs.total_bytes_captured)) return false;
-    if (!(total_bytes_speed == rhs.total_bytes_speed)) return false;
-    if (!(total_packets_captured == rhs.total_packets_captured)) return false;
-    if (!(total_packets_speed == rhs.total_packets_speed)) return false;
-    if (!(total_netflow_packets_captured == rhs.total_netflow_packets_captured)) return false;
-    if (!(total_points == rhs.total_points)) return false;
-    if (!(next_seqnum == rhs.next_seqnum)) return false;
-    if (!(diff_size == rhs.diff_size)) return false;
-    if (!(start_diffindex == rhs.start_diffindex)) return false;
-    if (!(diff_seqnum == rhs.diff_seqnum)) return false;
-    if (!(diff_time == rhs.diff_time)) return false;
-    if (!(filtercons_s == rhs.filtercons_s)) return false;
+    return equals(&rhs);
+}
+
+bool filtersetcons_base::equals(const ubase* rhs) const
+{
+    if (rhs == NULL)
+    {
+       return false;
+    }
+
+    const filtersetcons_base* other = dynamic_cast<const filtersetcons_base*>(rhs);
+
+    if (!(total_bytes_captured == other->total_bytes_captured)) return false;
+    if (!(total_bytes_speed == other->total_bytes_speed)) return false;
+    if (!(total_packets_captured == other->total_packets_captured)) return false;
+    if (!(total_packets_speed == other->total_packets_speed)) return false;
+    if (!(total_netflow_packets_captured == other->total_netflow_packets_captured)) return false;
+    if (!(total_points == other->total_points)) return false;
+    if (!(next_seqnum == other->next_seqnum)) return false;
+    if (!(diff_size == other->diff_size)) return false;
+    if (!(start_diffindex == other->start_diffindex)) return false;
+    if (!(diff_seqnum == other->diff_seqnum)) return false;
+    if (!(diff_time == other->diff_time)) return false;
+    if (!(filtercons_s == other->filtercons_s)) return false;
 
     return true;
 }
@@ -86,6 +98,7 @@ void filtersetcons_base::xml_create()
     filtersetcons_base orig;
 
     xml_append_root( FILTERSETCONS_XMLTAG_TRAFFICCONS);
+    add_class_name();
     if (xml_has_root_attr()) {
        xmlattr_container attr;
        xml_get_root_attr(attr);

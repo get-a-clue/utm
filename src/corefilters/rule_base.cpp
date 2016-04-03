@@ -78,47 +78,59 @@ rule_base& rule_base::operator=(const rule_base& rhs)
 
 bool rule_base::operator==(const rule_base& rhs) const
 {
-    if (!(id == rhs.id)) return false;
-    if (!(mirrored == rhs.mirrored)) return false;
-    if (!(descr == rhs.descr)) return false;
-    if (!(action == rhs.action)) return false;
-    if (!(rwr_fwd == rhs.rwr_fwd)) return false;
-    if (!(proto == rhs.proto)) return false;
-    if (!(nicalias == rhs.nicalias)) return false;
-    if (!(pkt_options == rhs.pkt_options)) return false;
-    if (!(condition_type == rhs.condition_type)) return false;
-    if (!(condition_limit == rhs.condition_limit)) return false;
-    if (!(cond_mac_type == rhs.cond_mac_type)) return false;
-    if (!(cond_mac_data == rhs.cond_mac_data)) return false;
-    if (!(prevfilter_type == rhs.prevfilter_type)) return false;
-    if (!(natuse == rhs.natuse)) return false;
-    if (!(wday == rhs.wday)) return false;
-    if (!(time_from == rhs.time_from)) return false;
-    if (!(time_to == rhs.time_to)) return false;
-    if (!(src_type == rhs.src_type)) return false;
-    if (!(src_ip == rhs.src_ip)) return false;
-    if (!(src_mask == rhs.src_mask)) return false;
-    if (!(src_addr_type == rhs.src_addr_type)) return false;
-    if (!(src_port_type == rhs.src_port_type)) return false;
-    if (!(src_port == rhs.src_port)) return false;
-    if (!(src_port_to == rhs.src_port_to)) return false;
-    if (!(src_atkey == rhs.src_atkey)) return false;
-    if (!(src_uid == rhs.src_uid)) return false;
-    if (!(src_procnick == rhs.src_procnick)) return false;
-    if (!(src_mac == rhs.src_mac)) return false;
-    if (!(src_host == rhs.src_host)) return false;
-    if (!(dst_type == rhs.dst_type)) return false;
-    if (!(dst_ip == rhs.dst_ip)) return false;
-    if (!(dst_mask == rhs.dst_mask)) return false;
-    if (!(dst_addr_type == rhs.dst_addr_type)) return false;
-    if (!(dst_port_type == rhs.dst_port_type)) return false;
-    if (!(dst_port == rhs.dst_port)) return false;
-    if (!(dst_port_to == rhs.dst_port_to)) return false;
-    if (!(dst_atkey == rhs.dst_atkey)) return false;
-    if (!(dst_uid == rhs.dst_uid)) return false;
-    if (!(dst_procnick == rhs.dst_procnick)) return false;
-    if (!(dst_mac == rhs.dst_mac)) return false;
-    if (!(dst_host == rhs.dst_host)) return false;
+    return equals(&rhs);
+}
+
+bool rule_base::equals(const ubase* rhs) const
+{
+    if (rhs == NULL)
+    {
+       return false;
+    }
+
+    const rule_base* other = dynamic_cast<const rule_base*>(rhs);
+
+    if (!(id == other->id)) return false;
+    if (!(mirrored == other->mirrored)) return false;
+    if (!(descr == other->descr)) return false;
+    if (!(action == other->action)) return false;
+    if (!(rwr_fwd == other->rwr_fwd)) return false;
+    if (!(proto == other->proto)) return false;
+    if (!(nicalias == other->nicalias)) return false;
+    if (!(pkt_options == other->pkt_options)) return false;
+    if (!(condition_type == other->condition_type)) return false;
+    if (!(condition_limit == other->condition_limit)) return false;
+    if (!(cond_mac_type == other->cond_mac_type)) return false;
+    if (!(cond_mac_data == other->cond_mac_data)) return false;
+    if (!(prevfilter_type == other->prevfilter_type)) return false;
+    if (!(natuse == other->natuse)) return false;
+    if (!(wday == other->wday)) return false;
+    if (!(time_from == other->time_from)) return false;
+    if (!(time_to == other->time_to)) return false;
+    if (!(src_type == other->src_type)) return false;
+    if (!(src_ip == other->src_ip)) return false;
+    if (!(src_mask == other->src_mask)) return false;
+    if (!(src_addr_type == other->src_addr_type)) return false;
+    if (!(src_port_type == other->src_port_type)) return false;
+    if (!(src_port == other->src_port)) return false;
+    if (!(src_port_to == other->src_port_to)) return false;
+    if (!(src_atkey == other->src_atkey)) return false;
+    if (!(src_uid == other->src_uid)) return false;
+    if (!(src_procnick == other->src_procnick)) return false;
+    if (!(src_mac == other->src_mac)) return false;
+    if (!(src_host == other->src_host)) return false;
+    if (!(dst_type == other->dst_type)) return false;
+    if (!(dst_ip == other->dst_ip)) return false;
+    if (!(dst_mask == other->dst_mask)) return false;
+    if (!(dst_addr_type == other->dst_addr_type)) return false;
+    if (!(dst_port_type == other->dst_port_type)) return false;
+    if (!(dst_port == other->dst_port)) return false;
+    if (!(dst_port_to == other->dst_port_to)) return false;
+    if (!(dst_atkey == other->dst_atkey)) return false;
+    if (!(dst_uid == other->dst_uid)) return false;
+    if (!(dst_procnick == other->dst_procnick)) return false;
+    if (!(dst_mac == other->dst_mac)) return false;
+    if (!(dst_host == other->dst_host)) return false;
 
     return true;
 }
@@ -173,6 +185,7 @@ void rule_base::xml_create()
     rule_base orig;
 
     xml_append_root( RULE_XMLTAG_RULE);
+    add_class_name();
     if (xml_has_root_attr()) {
        xmlattr_container attr;
        xml_get_root_attr(attr);

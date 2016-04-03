@@ -8,12 +8,16 @@
 
 namespace utm {
 
-class filtercons :
-	public filtercons_base
+class filtercons : public filtercons_base
 {
+public:
+	static const char this_class_name[];
+
 public:
 	filtercons();
 	~filtercons();
+
+	const char *get_this_class_name() const { return this_class_name; };
 
 	unsigned int get_id() const { return filter_id; };
 	void set_id(unsigned int id) { filter_id = id; };

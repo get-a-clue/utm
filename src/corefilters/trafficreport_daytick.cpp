@@ -19,17 +19,16 @@ bool trafficreport_daytick::xml_has_root_attr() const
 	return true;
 }
 
-ubase* trafficreport_daytick::xml_catch_subnode(const char *keyname)
+ubase* trafficreport_daytick::xml_catch_subnode(const char *keyname, const char *class_name)
 { 
 	ubase *u = NULL;
 
 	if (strcmp(keyname, TR_HOURTICK_XMLTAG_ROOT) == 0)
 	{
-		u = (ubase *)hourticks.get_temp_item();
-		return u;
+		u = hourticks.init_and_get_temp_item(new trafficreport_hourtick());
 	}
 
-	return NULL;
+	return u;
 };
 
 void trafficreport_daytick::xml_catch_subnode_finished(const char *keyname)
@@ -37,7 +36,6 @@ void trafficreport_daytick::xml_catch_subnode_finished(const char *keyname)
 	if (strcmp(keyname, TR_HOURTICK_XMLTAG_ROOT) == 0)
 	{
 		hourticks.commit_temp_item();
-		return;
 	}
 }
 
@@ -134,11 +132,12 @@ void trafficreport_daytick::update_counters(const utime& ctm, __int64 sent, __in
 	bool found = false;
 	for (auto iter = hourticks.items.begin(); iter != hourticks.items.end(); ++iter)
 	{
-		unsigned int ts_hour = iter->get_id();
+		trafficreport_hourtick* trht = dynamic_cast<trafficreport_hourtick *>(iter->get());
+		unsigned int ts_hour = trht->get_id();
 		if (cts_hour == ts_hour)
 		{
-			iter->sent += sent;
-			iter->recv += recv;
+			trht->sent += sent;
+			trht->recv += recv;
 			found = true;
 			break;
 		}
@@ -179,25 +178,26 @@ void trafficreport_daytick::test_all()
 		int i = 0;
 		for (auto iter = trd2.hourticks.items.begin(); iter != trd2.hourticks.items.end(); ++iter)
 		{
+			trafficreport_hourtick* trht = dynamic_cast<trafficreport_hourtick *>(iter->get());
 			if (i == 0)
 			{
-				TEST_CASE_CHECK(iter->sent, __int64(10));
-				TEST_CASE_CHECK(iter->recv, __int64(20));
-				TEST_CASE_CHECK(iter->ut.to_string(utime::format_sql), std::string("2014-01-31 00:00:00"));
+				TEST_CASE_CHECK(trht->sent, __int64(10));
+				TEST_CASE_CHECK(trht->recv, __int64(20));
+				TEST_CASE_CHECK(trht->ut.to_string(utime::format_sql), std::string("2014-01-31 00:00:00"));
 			}
 
 			if (i == 1)
 			{
-				TEST_CASE_CHECK(iter->sent, __int64(10));
-				TEST_CASE_CHECK(iter->recv, __int64(20));
-				TEST_CASE_CHECK(iter->ut.to_string(utime::format_sql), std::string("2014-01-31 02:00:00"));
+				TEST_CASE_CHECK(trht->sent, __int64(10));
+				TEST_CASE_CHECK(trht->recv, __int64(20));
+				TEST_CASE_CHECK(trht->ut.to_string(utime::format_sql), std::string("2014-01-31 02:00:00"));
 			}
 
 			if (i == 2)
 			{
-				TEST_CASE_CHECK(iter->sent, __int64(80));
-				TEST_CASE_CHECK(iter->recv, __int64(160));
-				TEST_CASE_CHECK(iter->ut.to_string(utime::format_sql), std::string("2014-01-31 04:00:00"));
+				TEST_CASE_CHECK(trht->sent, __int64(80));
+				TEST_CASE_CHECK(trht->recv, __int64(160));
+				TEST_CASE_CHECK(trht->ut.to_string(utime::format_sql), std::string("2014-01-31 04:00:00"));
 			}
 
 			i++;
@@ -216,25 +216,26 @@ void trafficreport_daytick::test_all()
 		int i = 0;
 		for (auto iter = trd2.hourticks.items.begin(); iter != trd2.hourticks.items.end(); ++iter)
 		{
+			trafficreport_hourtick* trht = dynamic_cast<trafficreport_hourtick *>(iter->get());
 			if (i == 0)
 			{
-				TEST_CASE_CHECK(iter->sent, __int64(10));
-				TEST_CASE_CHECK(iter->recv, __int64(20));
-				TEST_CASE_CHECK(iter->ut.to_string(utime::format_sql), std::string("2014-01-31 00:00:00"));
+				TEST_CASE_CHECK(trht->sent, __int64(10));
+				TEST_CASE_CHECK(trht->recv, __int64(20));
+				TEST_CASE_CHECK(trht->ut.to_string(utime::format_sql), std::string("2014-01-31 00:00:00"));
 			}
 
 			if (i == 1)
 			{
-				TEST_CASE_CHECK(iter->sent, __int64(10));
-				TEST_CASE_CHECK(iter->recv, __int64(20));
-				TEST_CASE_CHECK(iter->ut.to_string(utime::format_sql), std::string("2014-01-31 02:00:00"));
+				TEST_CASE_CHECK(trht->sent, __int64(10));
+				TEST_CASE_CHECK(trht->recv, __int64(20));
+				TEST_CASE_CHECK(trht->ut.to_string(utime::format_sql), std::string("2014-01-31 02:00:00"));
 			}
 
 			if (i == 2)
 			{
-				TEST_CASE_CHECK(iter->sent, __int64(91));
-				TEST_CASE_CHECK(iter->recv, __int64(182));
-				TEST_CASE_CHECK(iter->ut.to_string(utime::format_sql), std::string("2014-01-31 04:00:00"));
+				TEST_CASE_CHECK(trht->sent, __int64(91));
+				TEST_CASE_CHECK(trht->recv, __int64(182));
+				TEST_CASE_CHECK(trht->ut.to_string(utime::format_sql), std::string("2014-01-31 04:00:00"));
 			}
 
 			i++;
@@ -253,32 +254,33 @@ void trafficreport_daytick::test_all()
 		int i = 0;
 		for (auto iter = trd2.hourticks.items.begin(); iter != trd2.hourticks.items.end(); ++iter)
 		{
+			trafficreport_hourtick* trht = dynamic_cast<trafficreport_hourtick *>(iter->get());
 			if (i == 0)
 			{
-				TEST_CASE_CHECK(iter->sent, __int64(10));
-				TEST_CASE_CHECK(iter->recv, __int64(20));
-				TEST_CASE_CHECK(iter->ut.to_string(utime::format_sql), std::string("2014-01-31 00:00:00"));
+				TEST_CASE_CHECK(trht->sent, __int64(10));
+				TEST_CASE_CHECK(trht->recv, __int64(20));
+				TEST_CASE_CHECK(trht->ut.to_string(utime::format_sql), std::string("2014-01-31 00:00:00"));
 			}
 
 			if (i == 1)
 			{
-				TEST_CASE_CHECK(iter->sent, __int64(10));
-				TEST_CASE_CHECK(iter->recv, __int64(20));
-				TEST_CASE_CHECK(iter->ut.to_string(utime::format_sql), std::string("2014-01-31 02:00:00"));
+				TEST_CASE_CHECK(trht->sent, __int64(10));
+				TEST_CASE_CHECK(trht->recv, __int64(20));
+				TEST_CASE_CHECK(trht->ut.to_string(utime::format_sql), std::string("2014-01-31 02:00:00"));
 			}
 
 			if (i == 2)
 			{
-				TEST_CASE_CHECK(iter->sent, __int64(91));
-				TEST_CASE_CHECK(iter->recv, __int64(182));
-				TEST_CASE_CHECK(iter->ut.to_string(utime::format_sql), std::string("2014-01-31 04:00:00"));
+				TEST_CASE_CHECK(trht->sent, __int64(91));
+				TEST_CASE_CHECK(trht->recv, __int64(182));
+				TEST_CASE_CHECK(trht->ut.to_string(utime::format_sql), std::string("2014-01-31 04:00:00"));
 			}
 
 			if (i == 3)
 			{
-				TEST_CASE_CHECK(iter->sent, __int64(33));
-				TEST_CASE_CHECK(iter->recv, __int64(44));
-				TEST_CASE_CHECK(iter->ut.to_string(utime::format_sql), std::string("2014-01-31 06:00:00"));
+				TEST_CASE_CHECK(trht->sent, __int64(33));
+				TEST_CASE_CHECK(trht->recv, __int64(44));
+				TEST_CASE_CHECK(trht->ut.to_string(utime::format_sql), std::string("2014-01-31 06:00:00"));
 			}
 
 			i++;

@@ -14,11 +14,6 @@ urlfilterlist::~urlfilterlist(void)
 {
 }
 
-bool urlfilterlist::operator==(const urlfilterlist& rhs) const
-{
-	return items == rhs.items;
-}
-
 void urlfilterlist::clear()
 {
 	ubaselist::clear();
@@ -35,14 +30,14 @@ void urlfilterlist::xml_catch_value(const char *keyname, const char *keyvalue)
 	return;
 }
 
-ubase* urlfilterlist::xml_catch_subnode(const char *keyname)
+ubase* urlfilterlist::xml_catch_subnode(const char *keyname, const char *class_name)
 {
 	ubase *u = NULL;
 
 	if (strcmp(keyname, URLFILTERLIST_XMLTAG_URLFILTER) == 0)
 	{
-		urlfilter* r = insert_and_get_inserted();
-		u = dynamic_cast<ubase *>(r);
+		u = dynamic_cast<urlfilter*>(new urlfilter());
+		add_element(u);
 	}
 
 	return u;

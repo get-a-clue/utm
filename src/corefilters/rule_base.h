@@ -31,7 +31,10 @@ public:
     virtual ~rule_base();
 
     rule_base& operator=(const rule_base& rhs);
-    bool  operator==(const rule_base& rhs) const;
+    virtual bool equals(const ubase* rhs) const;
+    bool operator==(const rule_base& rhs) const;
+
+    virtual const char *get_this_class_name() const { return "rule_base"; };
 
 virtual  const char* get_src_host_str() const { return src_host.get_host(); };
 virtual  const char* get_dst_host_str() const { return dst_host.get_host(); };
@@ -86,7 +89,7 @@ public:
     void clear();
     void xml_create();
     void xml_catch_value(const char *keyname, const char *keyvalue);
-    virtual ubase* xml_catch_subnode(const char *name) { return NULL; };
+    virtual ubase* xml_catch_subnode(const char *tag_name, const char *class_name) { return NULL; };
 
 
 

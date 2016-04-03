@@ -1,8 +1,8 @@
 include: <string> <list> <utime.h> <blob.h> <filtercons.h> <filterconslist.h>
 define: FILTERSETCONS_XMLTAG_TRAFFICCONS "TrafficConsole"
 xmlroot: FILTERSETCONS_XMLTAG_TRAFFICCONS
-typedef: std::list<utm::filtercons> filtercons_container
-virtual: filtercons_container get_filtercons() { return filtercons_s.items; };
+typedef: std::list<std::unique_ptr<utm::ubase>> filtercons_container
+virtual: filtercons_container& get_filtercons() { return filtercons_s.items; };
 virtual: void parse_filtercons_string(const char *filtercons_string) { }
 member: __int64 (0) total_bytes_captured "TB"
 member: unsigned int (0) total_bytes_speed "TBS"

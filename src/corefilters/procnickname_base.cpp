@@ -40,9 +40,21 @@ procnickname_base& procnickname_base::operator=(const procnickname_base& rhs)
 
 bool procnickname_base::operator==(const procnickname_base& rhs) const
 {
-    if (!(nid == rhs.nid)) return false;
-    if (!(nickname == rhs.nickname)) return false;
-    if (!(pathexe == rhs.pathexe)) return false;
+    return equals(&rhs);
+}
+
+bool procnickname_base::equals(const ubase* rhs) const
+{
+    if (rhs == NULL)
+    {
+       return false;
+    }
+
+    const procnickname_base* other = dynamic_cast<const procnickname_base*>(rhs);
+
+    if (!(nid == other->nid)) return false;
+    if (!(nickname == other->nickname)) return false;
+    if (!(pathexe == other->pathexe)) return false;
 
     return true;
 }
@@ -59,6 +71,7 @@ void procnickname_base::xml_create()
     procnickname_base orig;
 
     xml_append_root( PROCNICKNAME_XMLTAG_ROOT);
+    add_class_name();
     if (xml_has_root_attr()) {
        xmlattr_container attr;
        xml_get_root_attr(attr);
