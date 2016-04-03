@@ -75,24 +75,11 @@ void ubase::xml_parse_allnodes(pugi::xml_node& node)
 	if (!node)
 		return;
 
-	const char* keyname;
-	const char* keyvalue;
-	bool is_keyvalue_empty;
-
 	while (node)
 	{
-		keyname = node.name();
-		keyvalue = node.text().get();
-
-		is_keyvalue_empty = false;
-
-		if (keyvalue == NULL)
-			is_keyvalue_empty = true;
-		else
-		{
-			if (*keyvalue == 0)
-				is_keyvalue_empty = true;
-		}
+		const char* keyname = node.name();
+		const char* keyvalue = node.text().get();
+		bool is_keyvalue_empty = ((keyvalue == NULL) || (*keyvalue == 0));
 
 		if (is_keyvalue_empty)
 		{
@@ -108,7 +95,6 @@ void ubase::xml_parse_allnodes(pugi::xml_node& node)
 					if ((attr_name != NULL) && (attr_value != NULL) && (strcmp(attr_name, "CN") == 0))
 					{
 						class_name.assign(attr_value);
-						break;
 					}
 					else
 					{

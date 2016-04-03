@@ -11,6 +11,13 @@ namespace utm {
 
 BOOST_AUTO_TEST_CASE(addrtablemap_v4_test_all)
 {
+	addrtablemap_v4 map_v4_0;
+	addrtablemaprec_v4* rec_v4_0 = new addrtablemaprec_v4();
+	rec_v4_0->set_id(1);
+	map_v4_0.add_element(rec_v4_0);
+	map_v4_0.AddAddrPair(1, "192.168.0.1", "192.168.0.255");
+	map_v4_0.AddAddrPair(1, "192.168.1.1", "192.168.1.255");
+
 	addrtablemap_v4 map_v4;
 	BOOST_REQUIRE_EQUAL(0, map_v4.size());
 
@@ -18,8 +25,9 @@ BOOST_AUTO_TEST_CASE(addrtablemap_v4_test_all)
 	rec_v4->set_id(1);
 	rec_v4->addrtable.AddAddrPair("192.168.0.1", "192.168.0.255", true);
 	rec_v4->addrtable.AddAddrPair("192.168.1.1", "192.168.1.255", true);
-
 	map_v4.add_element(rec_v4);
+
+	BOOST_REQUIRE_EQUAL(true, map_v4 == map_v4_0);
 
 	BOOST_REQUIRE_EQUAL(1, map_v4.size());
 	addrtablemaprec_v4* rec2_v4 = dynamic_cast<addrtablemaprec_v4 *>(map_v4.findptr_by_id(1));
@@ -41,6 +49,13 @@ BOOST_AUTO_TEST_CASE(addrtablemap_v4_test_all)
 	std::string xml;
 	map_v4.xml_create();
 	map_v4.xml_get_string(xml, true);
+
+	addrtablemap_v4 map_v4_2;
+	map_v4_2.xml_parse(xml.c_str());
+	BOOST_REQUIRE_EQUAL(1, map_v4_2.size());
+
+	BOOST_REQUIRE_EQUAL(true, map_v4 == map_v4_2);
+
 
 	return;
 }

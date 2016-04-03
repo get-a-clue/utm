@@ -144,17 +144,11 @@ public:
 };
 
 template<class T>
-//class addrtablemaplist : public ubaselist<addrtablemaprec<T>>
 class addrtablemaplist : public ubaselist<addrtablemaprec<T>>
 {
 public:
 	addrtablemaplist() { };
 	virtual ~addrtablemaplist() { };
-
-	bool operator==(const addrtablemaplist& rhs) const
-	{
-		return items == rhs.items;
-	}
 
 	virtual const char *get_this_class_name() const { return "addrtablemaplist"; };
 
