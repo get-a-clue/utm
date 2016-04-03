@@ -174,7 +174,10 @@ public:
 		if (strcmp(keyname, ADDRTABLEMAP_XMLTAG_MAT) == 0)
 		{
 			u = dynamic_cast<addrtablemaprec<T> *>(new addrtablemaprec<T>());
-			add_element(u);
+			if (u != NULL)
+			{
+				add_element(u);
+			}
 		}
 
 		return u;

@@ -492,30 +492,7 @@ namespace utm {
 
 			return retval;
 		}
-		/*
-		T* insert_and_get_inserted(T p)
-		{
-			T* lastinserted = NULL;
 
-			items.push_back(p);
-
-			std::list<T>::reverse_iterator riter = items.rbegin();
-			if (riter != items.rend())
-			{
-				std::list<T>::iterator iter = --riter.base();
-				lastinserted = &(*iter);
-			}
-
-			return lastinserted;
-		}
-
-		T* insert_and_get_inserted()
-		{
-			T p;
-			T* lastinserted = insert_and_get_inserted(p);
-			return lastinserted;
-		}
-		*/
 		void sort_by_name(bool ascending = true)
 		{
 
@@ -583,6 +560,10 @@ namespace utm {
 		bool equals(const ubase* rhs) const
 		{
 			const ubaselist_main_test* p = dynamic_cast<const ubaselist_main_test *>(rhs);
+			if (p == NULL)
+			{
+				return false;			
+			}
 			return test_items == p->test_items;
 		}
 

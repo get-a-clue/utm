@@ -132,9 +132,11 @@ protected:
 		for(auto iter = value.begin(); iter != value.end(); ++iter)
 		{
 			T* u = dynamic_cast<T *>(iter->get());
-//			T t(*u);
-			u->xml_create();
-			xml_append_child(u->get_first_child());
+			if (u != NULL)
+			{
+				u->xml_create();
+				xml_append_child(u->get_first_child());
+			}
 		}
 	}
 
