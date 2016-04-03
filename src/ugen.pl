@@ -143,11 +143,11 @@ sub generate_uclass {
 
         my $is_array = 0;
         my $clearmembername = $member{'membername'};
-        my $equal = "    if (!(".$member{'membername'}." == rhs.".$member{'membername'}.")) return false;";
+        my $equal = "    if (!(".$member{'membername'}." == other->".$member{'membername'}.")) return false;";
         if (($member{'membername'} =~ /([_\w\d]+)\[/) || ($member{'defaultvalue'} =~ /memset/)) {
           $is_array = 1;
           $clearmembername = $1 if ($member{'membername'} =~ /([_\w\d]+)\[/);
-          $equal =  "    if ((memcmp(&".$clearmembername.", &rhs.".$clearmembername.", sizeof(".$clearmembername."))!=0)) return false;";
+          $equal =  "    if ((memcmp(&".$clearmembername.", &other->".$clearmembername.", sizeof(".$clearmembername."))!=0)) return false;";
         }
 	
 	my $tmp1 = $parser{'equal_operator'};
