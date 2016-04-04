@@ -31,6 +31,19 @@ void monitor_minidump::clear()
 	hostdata.clear();
 }
 
+bool monitor_minidump::equals(const ubase* rhs) const
+{
+	const monitor_minidump *mm = dynamic_cast<const monitor_minidump *>(rhs);
+
+	if (mm == NULL)
+	{
+		return false;
+	}
+
+	return operator==(*mm);
+}
+
+
 bool monitor_minidump::operator==(const monitor_minidump& rhs) const
 {
 	if (!(dumpdata == rhs.dumpdata))
@@ -161,6 +174,8 @@ void monitor_minidump::from_string_hostdata(const char* hoststr, monitor_ip2host
 	}
 }
 
+#ifdef UTM_DEBUG
+
 void monitor_minidump::test_fillparams(int test_num)
 {
 	clear();
@@ -256,5 +271,7 @@ void monitor_minidump::test_all()
 
 	return;
 }
+
+#endif
 
 }

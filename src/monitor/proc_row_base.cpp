@@ -47,16 +47,28 @@ proc_row_base& proc_row_base::operator=(const proc_row_base& rhs)
 
 bool proc_row_base::operator==(const proc_row_base& rhs) const
 {
-    if (!(id == rhs.id)) return false;
-    if (!(pid == rhs.pid)) return false;
-    if (!(nick_id == rhs.nick_id)) return false;
-    if (!(bytes_sent == rhs.bytes_sent)) return false;
-    if (!(bytes_recv == rhs.bytes_recv)) return false;
-    if (!(speed_sent == rhs.speed_sent)) return false;
-    if (!(speed_recv == rhs.speed_recv)) return false;
-    if (!(last_activity == rhs.last_activity)) return false;
-    if (!(exename == rhs.exename)) return false;
-    if (!(username == rhs.username)) return false;
+    return equals(&rhs);
+}
+
+bool proc_row_base::equals(const ubase* rhs) const
+{
+    if (rhs == NULL)
+    {
+       return false;
+    }
+
+    const proc_row_base* other = dynamic_cast<const proc_row_base*>(rhs);
+
+    if (!(id == other->id)) return false;
+    if (!(pid == other->pid)) return false;
+    if (!(nick_id == other->nick_id)) return false;
+    if (!(bytes_sent == other->bytes_sent)) return false;
+    if (!(bytes_recv == other->bytes_recv)) return false;
+    if (!(speed_sent == other->speed_sent)) return false;
+    if (!(speed_recv == other->speed_recv)) return false;
+    if (!(last_activity == other->last_activity)) return false;
+    if (!(exename == other->exename)) return false;
+    if (!(username == other->username)) return false;
 
     return true;
 }
@@ -80,6 +92,7 @@ void proc_row_base::xml_create()
     proc_row_base orig;
 
     xml_append_root( PROCROW_XMLTAG_PROCROW);
+    add_class_name();
     if (xml_has_root_attr()) {
        xmlattr_container attr;
        xml_get_root_attr(attr);

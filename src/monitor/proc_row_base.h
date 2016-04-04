@@ -28,7 +28,10 @@ public:
     virtual ~proc_row_base();
 
     proc_row_base& operator=(const proc_row_base& rhs);
-    bool  operator==(const proc_row_base& rhs) const;
+    virtual bool equals(const ubase* rhs) const;
+    bool operator==(const proc_row_base& rhs) const;
+
+    virtual const char *get_this_class_name() const { return "proc_row_base"; };
 
 
 
@@ -49,7 +52,7 @@ public:
     void clear();
     void xml_create();
     void xml_catch_value(const char *keyname, const char *keyvalue);
-    virtual ubase* xml_catch_subnode(const char *name) { return NULL; };
+    virtual ubase* xml_catch_subnode(const char *tag_name, const char *class_name) { return NULL; };
 
 
 

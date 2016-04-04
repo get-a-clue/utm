@@ -18,15 +18,13 @@ public:
 	proc_row_list();
 	~proc_row_list();
 
-	bool operator==(const proc_row_list& rhs) const;
-
 	void create_from_proc_list(const proc_list& plist, std::string& xml, bool include_xml_declaration = true);
 	void update_proc_list(proc_list& plist);
 
 	void clear();
 	void xml_create();
 	void xml_catch_value(const char *keyname, const char *keyvalue) { };
-	ubase* xml_catch_subnode(const char *keyname);
+	ubase* xml_catch_subnode(const char *tag_name, const char *classname);
 };
 
 }

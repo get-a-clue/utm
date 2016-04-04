@@ -264,9 +264,15 @@ void proc_list::refresh(const procnicknamelist& procnicks, const userlist& users
 								pi2->username = std::unique_ptr<gstring>(new gstring(gusername));
 							}
 
-							utm::fsuser result_user;
-							if (users.find_by_name(gusername, result_user, true))
-								pi->filterset_uid = result_user.get_id();
+							ubase* u = users.findptr_by_name(gusername, true);
+							if (u != NULL)
+							{
+								utm::fsuser *user = dynamic_cast<utm::fsuser *>(u);
+								if (user != NULL)
+								{
+									pi->filterset_uid = user->get_id();
+								}
+							}
 						}
 					}
 

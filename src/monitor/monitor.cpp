@@ -37,9 +37,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	test_monitor_minidump.test_all();
 
 	utm::monitor_total::test_all();
-/*
-	utm::monitor_pinger::test_all();
-*/
+
+//	utm::monitor_pinger2::test_all();
+
 /*
 	while(1)
 	{

@@ -74,21 +74,22 @@ void monitor_total::init_from_ranges(const monitor_range_list& ra)
 	host2resolve.clear();
 
 	unsigned int i = 0;
-	monitor_range_container::iterator iter_range;
-	for (iter_range = ranges.items.begin(); iter_range != ranges.items.end(); ++iter_range)
+	for (auto iter_range = ranges.items.begin(); iter_range != ranges.items.end(); ++iter_range)
 	{
-		if (!(iter_range->active))
+		monitor_range* mr = dynamic_cast<monitor_range *>(iter_range->get());
+
+		if (!(mr->active))
 			continue;
 
-		unsigned int start_addr = iter_range->start_addr.m_addr;
-		unsigned int end_addr = iter_range->end_addr.m_addr;
+		unsigned int start_addr = mr->start_addr.m_addr;
+		unsigned int end_addr = mr->end_addr.m_addr;
 
 		for (unsigned int u = start_addr; u <= end_addr; u++, i++)
 		{
 			monitor_result r;
 
 			r.id = i;
-			r.range_id = iter_range->id;
+			r.range_id = mr->id;
 			r.addr = addrip_v4(u);
 
 			for (monitor_result_container::iterator iter_prev = prev_results.begin(); iter_prev != prev_results.end(); ++iter_prev)
@@ -104,14 +105,15 @@ void monitor_total::init_from_ranges(const monitor_range_list& ra)
 				}
 			}
 
-			mdr_container::iterator iter_detal;
-			monitor_detail_list& dli = iter_range->details;
-			for (iter_detal = dli.items.begin(); iter_detal != dli.items.end(); ++iter_detal)
+			monitor_detail_list& dli = mr->details;
+			for (auto iter_detal = dli.items.begin(); iter_detal != dli.items.end(); ++iter_detal)
 			{
-				if (iter_detal->ip.m_addr == u)
+				monitor_detail_record *md = dynamic_cast<monitor_detail_record *>(iter_detal->get());
+
+				if (md->ip.m_addr == u)
 				{
-					r.descr = iter_detal->comment;
-					r.flags = iter_detal->flags;
+					r.descr = md->comment;
+					r.flags = md->flags;
 
 					break;
 				}
@@ -120,21 +122,21 @@ void monitor_total::init_from_ranges(const monitor_range_list& ra)
 			results.push_back(r);
 			results_index.insert(std::make_pair(addrip_v4(u), i));
 
-			if (iter_range->reverse_lookup)
+			if (mr->reverse_lookup)
 			{
 				dnsserver4addr da;
 				da.addr = r.addr;
-				da.dns = iter_range->dnsserver;
+				da.dns = mr->dnsserver;
 				host2resolve.push_back(da);
 			}
 		}
 
-		mdr_container::iterator iter_comment;
-		for (iter_comment = iter_range->details.items.begin(); iter_comment != iter_range->details.items.end(); ++iter_comment)
+		for (auto iter_comment = mr->details.items.begin(); iter_comment != mr->details.items.end(); ++iter_comment)
 		{
-			if ((iter_comment->ip.is_zero()) && (!iter_comment->mac.is_zero()) && (!iter_comment->comment.empty()))
+			monitor_detail_record *md = dynamic_cast<monitor_detail_record *>(iter_comment->get());
+			if ((md->ip.is_zero()) && (!md->mac.is_zero()) && (!md->comment.empty()))
 			{
-				maccomments.insert(std::make_pair(iter_comment->mac, iter_comment->comment));
+				maccomments.insert(std::make_pair(md->mac, md->comment));
 			}
 		}
 	}
@@ -364,9 +366,15 @@ void monitor_total::analyze(const macvendors& mv)
 		unsigned int rangetype = 0;
 		if (mrange.id != iter->range_id)
 		{
-			if (ranges.find_by_id(iter->range_id, mrange))
+			ubase *u = ranges.findptr_by_id(iter->range_id);
+			if (u != NULL)
 			{
-				rangetype = mrange.rangetype;
+				monitor_range* mr = dynamic_cast<monitor_range *>(u);
+				if (mr != NULL)
+				{
+					rangetype = mr->rangetype;
+					mrange = *mr;
+				}
 			}
 		}
 		else

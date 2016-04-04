@@ -58,27 +58,39 @@ monitor_result_base& monitor_result_base::operator=(const monitor_result_base& r
 
 bool monitor_result_base::operator==(const monitor_result_base& rhs) const
 {
-    if (!(id == rhs.id)) return false;
-    if (!(range_id == rhs.range_id)) return false;
-    if (!(action_type == rhs.action_type)) return false;
-    if (!(status == rhs.status)) return false;
-    if (!(last_status_change == rhs.last_status_change)) return false;
-    if (!(last_ping_reply == rhs.last_ping_reply)) return false;
-    if (!(curr_serial_request_count == rhs.curr_serial_request_count)) return false;
-    if (!(curr_serial_reply_count == rhs.curr_serial_reply_count)) return false;
-    if (!(last_serial_request_count == rhs.last_serial_request_count)) return false;
-    if (!(last_serial_reply_count == rhs.last_serial_reply_count)) return false;
-    if (!(total_ping_request_count == rhs.total_ping_request_count)) return false;
-    if (!(total_ping_reply_count == rhs.total_ping_reply_count)) return false;
-    if (!(serial == rhs.serial)) return false;
-    if (!(serial_attempts == rhs.serial_attempts)) return false;
-    if (!(curr_tick_request == rhs.curr_tick_request)) return false;
-    if (!(curr_tick_reply == rhs.curr_tick_reply)) return false;
-    if (!(addr == rhs.addr)) return false;
-    if (!(mac == rhs.mac)) return false;
-    if (!(flags == rhs.flags)) return false;
-    if (!(hostname == rhs.hostname)) return false;
-    if (!(descr == rhs.descr)) return false;
+    return equals(&rhs);
+}
+
+bool monitor_result_base::equals(const ubase* rhs) const
+{
+    if (rhs == NULL)
+    {
+       return false;
+    }
+
+    const monitor_result_base* other = dynamic_cast<const monitor_result_base*>(rhs);
+
+    if (!(id == other->id)) return false;
+    if (!(range_id == other->range_id)) return false;
+    if (!(action_type == other->action_type)) return false;
+    if (!(status == other->status)) return false;
+    if (!(last_status_change == other->last_status_change)) return false;
+    if (!(last_ping_reply == other->last_ping_reply)) return false;
+    if (!(curr_serial_request_count == other->curr_serial_request_count)) return false;
+    if (!(curr_serial_reply_count == other->curr_serial_reply_count)) return false;
+    if (!(last_serial_request_count == other->last_serial_request_count)) return false;
+    if (!(last_serial_reply_count == other->last_serial_reply_count)) return false;
+    if (!(total_ping_request_count == other->total_ping_request_count)) return false;
+    if (!(total_ping_reply_count == other->total_ping_reply_count)) return false;
+    if (!(serial == other->serial)) return false;
+    if (!(serial_attempts == other->serial_attempts)) return false;
+    if (!(curr_tick_request == other->curr_tick_request)) return false;
+    if (!(curr_tick_reply == other->curr_tick_reply)) return false;
+    if (!(addr == other->addr)) return false;
+    if (!(mac == other->mac)) return false;
+    if (!(flags == other->flags)) return false;
+    if (!(hostname == other->hostname)) return false;
+    if (!(descr == other->descr)) return false;
 
     return true;
 }
@@ -113,6 +125,7 @@ void monitor_result_base::xml_create()
     monitor_result_base orig;
 
     xml_append_root( MONITORRESULT_XMLTAG_MONITORRESULT);
+    add_class_name();
     if (xml_has_root_attr()) {
        xmlattr_container attr;
        xml_get_root_attr(attr);
