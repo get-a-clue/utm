@@ -13,14 +13,12 @@ public:
 	dhcpleaselist(void);
 	~dhcpleaselist(void);
 
-	bool operator==(const dhcpleaselist& rhs) const;
-
 	bool has_write_protection() const { return false; };
 
 	void clear();
     void xml_create();
 	void xml_catch_value(const char *keyname, const char *keyvalue) { };
-	ubase* xml_catch_subnode(const char *keyname);
+	ubase* xml_catch_subnode(const char *tag_name, const char* classname);
 	void xml_catch_subnode_finished(const char *keyname);
 };
 

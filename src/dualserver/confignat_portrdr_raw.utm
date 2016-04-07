@@ -1,4 +1,4 @@
-#template: utemplate_noxml
+template: utemplate_noxml
 define: CONFIGNAT_XMLTAG_PORTRDR "PortRdr"
 xmlroot: CONFIGNAT_XMLTAG_PORTRDR
 member: int (0) proto "Proto"

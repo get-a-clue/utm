@@ -64,6 +64,7 @@ public:
 	~configdhcp(void);
 
 	configdhcp& operator=(const configdhcp& rhs);
+	bool equals(const ubase* rhs) const;
 	bool operator ==(const configdhcp& rhs) const;
 	mutable boost::mutex guard_threadsafe_rw;
 
@@ -87,7 +88,7 @@ public:
 	void clear();
 	void xml_create();
 	void xml_catch_value(const char *keyname, const char *keyvalue);
-	ubase* xml_catch_subnode(const char *name) { return NULL; };
+	ubase* xml_catch_subnode(const char *tag_name, const char *classname) { return NULL; };
 
     static void threadsafe_copyobj(bool lock_src, const configdhcp& src, configdhcp& dst);
 
@@ -104,9 +105,11 @@ private:
 	void prepare_range_for_dualserver(std::string& dhcprange);
 	void prepare_options_for_dualserver(std::string& dhcpoptions);
 
+#ifdef UTM_DEBUG
 public:
 	static int test_get_testcases_number() { return 4; };
 	void test_fillparams(int test_num);
+#endif
 };
 
 }

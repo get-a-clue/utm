@@ -52,6 +52,18 @@ configdhcp& configdhcp::operator=(const configdhcp& rhs)
 	return *this;
 }
 
+bool configdhcp::equals(const ubase* rhs) const
+{
+	const configdhcp* p = dynamic_cast<const configdhcp*>(rhs);
+	if (p == NULL)
+	{
+		return false;
+	}
+
+	return operator==(*p);
+}
+
+
 bool configdhcp::operator==(const configdhcp& rhs) const
 {
 	if (enabled != rhs.enabled)
@@ -484,6 +496,8 @@ void configdhcp::statrecords_to_xml(std::string& xml)
 
 #endif
 
+#ifdef UTM_DEBUG
+
 void configdhcp::test_fillparams(int test_num)
 {
 	clear();
@@ -523,5 +537,7 @@ void configdhcp::test_fillparams(int test_num)
 
 	return;
 }
+
+#endif
 
 }

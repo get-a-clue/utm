@@ -42,11 +42,23 @@ singledhcplease_base& singledhcplease_base::operator=(const singledhcplease_base
 
 bool singledhcplease_base::operator==(const singledhcplease_base& rhs) const
 {
-    if (!(id == rhs.id)) return false;
-    if (!(mac == rhs.mac)) return false;
-    if (!(ipaddr == rhs.ipaddr)) return false;
-    if (!(leasetime == rhs.leasetime)) return false;
-    if (!(hostname == rhs.hostname)) return false;
+    return equals(&rhs);
+}
+
+bool singledhcplease_base::equals(const ubase* rhs) const
+{
+    if (rhs == NULL)
+    {
+       return false;
+    }
+
+    const singledhcplease_base* other = dynamic_cast<const singledhcplease_base*>(rhs);
+
+    if (!(id == other->id)) return false;
+    if (!(mac == other->mac)) return false;
+    if (!(ipaddr == other->ipaddr)) return false;
+    if (!(leasetime == other->leasetime)) return false;
+    if (!(hostname == other->hostname)) return false;
 
     return true;
 }
@@ -65,6 +77,7 @@ void singledhcplease_base::xml_create()
     singledhcplease_base orig;
 
     xml_append_root( SINGLEDHCPLEASE_XMLTAG_ROOT);
+    add_class_name();
     if (xml_has_root_attr()) {
        xmlattr_container attr;
        xml_get_root_attr(attr);

@@ -32,8 +32,13 @@ namespace utm {
 class confignat : public confignat_base
 {
 public:
+	static const char this_class_name[];
+
+public:
 	confignat(void);
 	~confignat(void);
+
+	const char *get_this_class_name() const { return this_class_name; };
 
 	std::vector<std::string> create_portrdr_string() const;
 	void parse_portrdr_string(const char *portrdr_string);

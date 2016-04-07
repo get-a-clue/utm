@@ -481,6 +481,7 @@
     <ClCompile Include="confignat_base.cpp" />
     <ClCompile Include="confignat_portrdr.cpp" />
     <ClCompile Include="confignat_portrdr_base.cpp" />
+    <ClCompile Include="confignat_portrdr_raw_base.cpp" />
     <ClCompile Include="dhcpleaselist.cpp" />
     <ClCompile Include="DnsWildRecord.cpp" />
     <ClCompile Include="DualServer.cpp" />
@@ -513,6 +514,7 @@
     <ClInclude Include="confignat_base.h" />
     <ClInclude Include="confignat_portrdr.h" />
     <ClInclude Include="confignat_portrdr_base.h" />
+    <ClInclude Include="confignat_portrdr_raw_base.h" />
     <ClInclude Include="dhcpleaselist.h" />
     <ClInclude Include="DnsWildRecord.h" />
     <ClInclude Include="DualServer.h" />

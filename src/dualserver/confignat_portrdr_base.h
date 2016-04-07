@@ -6,11 +6,6 @@
 #pragma once
 #include <utm.h>
 
-#ifdef UTM_WIN
-#include <Windows.h>
-#include <tchar.h>
-#endif
-
 
 
 #define  CONFIGNAT_XMLTAG_PORTRDR "PortRdr"
@@ -19,7 +14,7 @@ namespace utm {
 
 
 
-class confignat_portrdr_base
+class confignat_portrdr_base : public ubase
 {
 public:
     static const char this_class_name[];
@@ -27,10 +22,14 @@ public:
 public:
     confignat_portrdr_base();
     confignat_portrdr_base(const confignat_portrdr_base& rhs);
+    confignat_portrdr_base(const confignat_portrdr_base& rhs, bool make_threadsafe_copyobj);
     virtual ~confignat_portrdr_base();
 
     confignat_portrdr_base& operator=(const confignat_portrdr_base& rhs);
-    bool  operator==(const confignat_portrdr_base& rhs) const;
+    virtual bool equals(const ubase* rhs) const;
+    bool operator==(const confignat_portrdr_base& rhs) const;
+
+    virtual const char *get_this_class_name() const { return "confignat_portrdr_base"; };
 
 
 
@@ -40,7 +39,20 @@ public:
     unsigned short remote_port;
     unsigned long remote_ip;
 
+
+public:
     void clear();
+    void xml_create();
+    void xml_catch_value(const char *keyname, const char *keyvalue);
+    virtual ubase* xml_catch_subnode(const char *tag_name, const char *class_name) { return NULL; };
+
+
+
+#ifdef UTM_WIN
+
+    virtual LONG SaveToRegistry(const TCHAR* pRegistryPath, const HKEY hk = HKEY_LOCAL_MACHINE);
+    virtual LONG ReadFromRegistry(const TCHAR* pRegistryPath, const HKEY hk = HKEY_LOCAL_MACHINE);
+#endif // UTM_WIN
 };
 
 }

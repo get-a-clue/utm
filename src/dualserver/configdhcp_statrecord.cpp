@@ -23,6 +23,17 @@ void configdhcp_statrecord::clear()
 	comment.clear();
 }
 
+bool configdhcp_statrecord::equals(const ubase* rhs) const
+{
+	const configdhcp_statrecord* p = dynamic_cast<const configdhcp_statrecord *>(rhs);
+	if (p == NULL)
+	{
+		return false;
+	}
+
+	return operator==(*p);
+}
+
 bool configdhcp_statrecord::operator==(const configdhcp_statrecord& rhs) const
 {
 	if (ip != rhs.ip)

@@ -39,8 +39,20 @@ configfwd_base& configfwd_base::operator=(const configfwd_base& rhs)
 
 bool configfwd_base::operator==(const configfwd_base& rhs) const
 {
-    if (!(fwd_port == rhs.fwd_port)) return false;
-    if (!(fwd_ip == rhs.fwd_ip)) return false;
+    return equals(&rhs);
+}
+
+bool configfwd_base::equals(const ubase* rhs) const
+{
+    if (rhs == NULL)
+    {
+       return false;
+    }
+
+    const configfwd_base* other = dynamic_cast<const configfwd_base*>(rhs);
+
+    if (!(fwd_port == other->fwd_port)) return false;
+    if (!(fwd_ip == other->fwd_ip)) return false;
 
     return true;
 }
@@ -56,6 +68,7 @@ void configfwd_base::xml_create()
     configfwd_base orig;
 
     xml_append_root( CONFIGFWD_XMLTAG_FWD);
+    add_class_name();
     if (xml_has_root_attr()) {
        xmlattr_container attr;
        xml_get_root_attr(attr);

@@ -41,10 +41,22 @@ configdns_base& configdns_base::operator=(const configdns_base& rhs)
 
 bool configdns_base::operator==(const configdns_base& rhs) const
 {
-    if (!(enabled == rhs.enabled)) return false;
-    if (!(fwd_server1 == rhs.fwd_server1)) return false;
-    if (!(fwd_server2 == rhs.fwd_server2)) return false;
-    if (!(allowedhosts == rhs.allowedhosts)) return false;
+    return equals(&rhs);
+}
+
+bool configdns_base::equals(const ubase* rhs) const
+{
+    if (rhs == NULL)
+    {
+       return false;
+    }
+
+    const configdns_base* other = dynamic_cast<const configdns_base*>(rhs);
+
+    if (!(enabled == other->enabled)) return false;
+    if (!(fwd_server1 == other->fwd_server1)) return false;
+    if (!(fwd_server2 == other->fwd_server2)) return false;
+    if (!(allowedhosts == other->allowedhosts)) return false;
 
     return true;
 }
@@ -62,6 +74,7 @@ void configdns_base::xml_create()
     configdns_base orig;
 
     xml_append_root( CONFIGDNS_XMLTAG_DNS);
+    add_class_name();
     if (xml_has_root_attr()) {
        xmlattr_container attr;
        xml_get_root_attr(attr);

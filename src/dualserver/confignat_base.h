@@ -29,7 +29,10 @@ public:
     virtual ~confignat_base();
 
     confignat_base& operator=(const confignat_base& rhs);
-    bool  operator==(const confignat_base& rhs) const;
+    virtual bool equals(const ubase* rhs) const;
+    bool operator==(const confignat_base& rhs) const;
+
+    virtual const char *get_this_class_name() const { return "confignat_base"; };
 
 virtual  std::vector<std::string> create_portrdr_string() const { return std::vector<std::string>(); };
 virtual  void parse_portrdr_string(const char *portrdr_string) { };
@@ -46,7 +49,7 @@ public:
     void clear();
     void xml_create();
     void xml_catch_value(const char *keyname, const char *keyvalue);
-    virtual ubase* xml_catch_subnode(const char *name) { return NULL; };
+    virtual ubase* xml_catch_subnode(const char *tag_name, const char *class_name) { return NULL; };
 
     static void threadsafe_copyobj(bool lock_src, const confignat_base& src, confignat_base& dst);
 

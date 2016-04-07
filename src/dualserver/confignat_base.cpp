@@ -42,11 +42,23 @@ confignat_base& confignat_base::operator=(const confignat_base& rhs)
 
 bool confignat_base::operator==(const confignat_base& rhs) const
 {
-    if (!(enabled == rhs.enabled)) return false;
-    if (!(exclude_first_filter == rhs.exclude_first_filter)) return false;
-    if (!(auto_public == rhs.auto_public)) return false;
-    if (!(public_ip == rhs.public_ip)) return false;
-    if (!(portrdr == rhs.portrdr)) return false;
+    return equals(&rhs);
+}
+
+bool confignat_base::equals(const ubase* rhs) const
+{
+    if (rhs == NULL)
+    {
+       return false;
+    }
+
+    const confignat_base* other = dynamic_cast<const confignat_base*>(rhs);
+
+    if (!(enabled == other->enabled)) return false;
+    if (!(exclude_first_filter == other->exclude_first_filter)) return false;
+    if (!(auto_public == other->auto_public)) return false;
+    if (!(public_ip == other->public_ip)) return false;
+    if (!(portrdr == other->portrdr)) return false;
 
     return true;
 }
@@ -65,6 +77,7 @@ void confignat_base::xml_create()
     confignat_base orig;
 
     xml_append_root( CONFIGDNS_XMLTAG_NAT);
+    add_class_name();
     if (xml_has_root_attr()) {
        xmlattr_container attr;
        xml_get_root_attr(attr);

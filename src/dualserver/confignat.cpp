@@ -10,7 +10,11 @@
 #include <gstring.h>
 #endif
 
+#include "confignat_portrdr_raw_base.h"
+
 namespace utm {
+
+const char confignat::this_class_name[] = "confignat";
 
 confignat::confignat(void)
 {
@@ -18,6 +22,7 @@ confignat::confignat(void)
 
 confignat::~confignat(void)
 {
+	portrdr.clear();
 }
 
 std::vector<std::string> confignat::create_portrdr_string() const
@@ -61,44 +66,6 @@ void confignat::parse_portrdr_string(const char *portrdr_string)
 	}
 }
 
-/*
-void confignat::xml_catch_value(const char *keyname, const char *keyvalue)
-{
-	std::string tmp;
-
-	while(1)
-	{
-		if (xml_check_value(keyname, CONFIGNAT_XMLTAG_ENABLED, keyvalue, enabled)) break;
-		if (xml_check_value(keyname, CONFIGNAT_XMLTAG_EXCLUDEFIRST, keyvalue, exclude_first_filter)) break;
-		if (xml_check_value(keyname, CONFIGNAT_XMLTAG_AUTOPUBLIC, keyvalue, auto_public)) break;
-		if (xml_check_value(keyname, CONFIGNAT_XMLTAG_PUBLICIP, keyvalue, public_ip)) break;
-
-		if (xml_check_value(keyname, CONFIGNAT_XMLTAG_PORTRDR, keyvalue, tmp))
-		{
-			std::vector<std::string> fields;
-
-			stringtools::split(fields, tmp.c_str(), ',');
-			if (fields.size() == 4)
-			{
-				confignat_portrdr_base rdr;
-
-				rdr.proto = atoi(fields[0].c_str());
-				rdr.public_port = static_cast<unsigned short>(atoi(fields[1].c_str()));
-
-				addrip_v4 adr(fields[2].c_str());
-				rdr.remote_ip = adr.m_addr;
-
-				rdr.remote_port = static_cast<unsigned short>(atoi(fields[3].c_str()));
-
-				portrdr.push_back(rdr);
-			}
-			break;
-		};
-
-		break;
-	}
-}
-*/
 #ifdef UTM_WIN
 LONG confignat::ReadFromRegistry(const TCHAR *pRegistryPath, const HKEY hkey)
 {
@@ -129,15 +96,21 @@ LONG confignat::ReadFromRegistry(const TCHAR *pRegistryPath, const HKEY hkey)
 		{
 			if (pdata != NULL)
 			{
-				DWORD elesize = sizeof(confignat_portrdr);
+				DWORD elesize = sizeof(confignat_portrdr_raw_base);
 				if ((datasize % elesize) == 0)
 				{
 					DWORD items = datasize / elesize;
 					for (UINT i = 0; i < items; i++)
 					{
 						LPBYTE p = pdata + (i * elesize);
+						confignat_portrdr_raw_base pr_raw;
+						memcpy(&pr_raw, p, sizeof(confignat_portrdr_raw_base));
+
 						confignat_portrdr pr;
-						memcpy(&pr, p, sizeof(confignat_portrdr));
+						pr.proto = pr_raw.proto;
+						pr.public_port = pr_raw.public_port;
+						pr.remote_port = pr_raw.remote_port;
+						pr.remote_ip = pr_raw.remote_ip;
 						portrdr.push_back(pr);
 					}
 				}
@@ -184,9 +157,19 @@ LONG confignat::SaveToRegistry(const TCHAR *pRegistryPath, const HKEY hkey)
 
 		if (portrdr.size() > 0)
 		{
-			BYTE* rawdata = (BYTE *)&(*(portrdr.begin()));
-			DWORD datasize = portrdr.size() * sizeof(confignat_portrdr);
-			res = RegSetValueEx(hk, _T(CONFIGNAT_REGISTRYKEY_PORTRDR), 0, REG_BINARY, (LPBYTE)rawdata, datasize);
+			DWORD datasize = portrdr.size() * sizeof(confignat_portrdr_raw_base);
+			confignat_portrdr_raw_base* praw = (confignat_portrdr_raw_base *)malloc(datasize);
+			confignat_portrdr_raw_base* p = praw;
+
+			for (auto iter = portrdr.begin(); iter != portrdr.end(); ++iter, p++)
+			{
+				p->proto = iter->proto;
+				p->public_port = iter->public_port;
+				p->remote_port = iter->remote_port;
+				p->remote_ip = iter->remote_ip;
+			}
+
+			res = RegSetValueEx(hk, _T(CONFIGNAT_REGISTRYKEY_PORTRDR), 0, REG_BINARY, (BYTE *)praw, datasize);
 		}
 		else
 			res = ::RegDeleteValue(hk, _T(CONFIGNAT_REGISTRYKEY_PORTRDR));
@@ -223,6 +206,8 @@ void confignat::test_fillparams(int test_num)
 
 	portrdr.push_back(r1);
 	portrdr.push_back(r2);
+
+	return;
 }
 #endif
 

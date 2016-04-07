@@ -20,6 +20,7 @@ public:
 	configdhcp_statrecord(void);
 	~configdhcp_statrecord(void);
 
+	bool equals(const ubase* rhs) const;
 	bool operator ==(const configdhcp_statrecord& rhs) const;
 
 	addrip_v4 ip;
@@ -29,7 +30,7 @@ public:
 	void clear();
 	void xml_create();
 	void xml_catch_value(const char *keyname, const char *keyvalue);
-	ubase* xml_catch_subnode(const char *name) { return NULL; };
+	ubase* xml_catch_subnode(const char *tag_name, const char* classname) { return NULL; };
 };
 
 }
