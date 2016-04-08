@@ -21,6 +21,17 @@ configproxy::~configproxy(void)
 {
 }
 
+bool configproxy::equals(const ubase* rhs) const
+{
+	const configproxy* p = dynamic_cast<const configproxy*>(rhs);
+	if (p == NULL)
+	{
+		return false;
+	}
+
+	return operator==(*p);
+}
+
 configproxy& configproxy::operator=(const configproxy &rhs)
 {
 	enabled = rhs.enabled;
@@ -297,7 +308,7 @@ void configproxy::xml_catch_value(const char *keyname, const char *keyvalue)
 	}
 }
 
-ubase* configproxy::xml_catch_subnode(const char *keyname)
+ubase* configproxy::xml_catch_subnode(const char *keyname, const char *classname)
 {
 	if (strcmp(keyname, CONFIGPROXY_XMLTAG_CONDITEM) == 0)
 	{
@@ -308,6 +319,7 @@ ubase* configproxy::xml_catch_subnode(const char *keyname)
 
 	if (strcmp(keyname, PROXYRULE_XMLTAG) == 0)
 	{
+		ubase *p = dynamic_cast<ubase *>(new proxyrule());
 		return insert_element_and_get_lastptr(rules);
 	}
 

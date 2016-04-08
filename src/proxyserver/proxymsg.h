@@ -93,6 +93,7 @@ public:
 		lang_rus = 1
 	};
 
+	bool equals(const ubase* rhs) const;
 	bool operator==(const proxymsg& rhs) const;
 
 	virtual int get_lang() const { return lang_eng; };
@@ -111,7 +112,7 @@ public:
 	void clear();
 	void xml_create();
 	void xml_catch_value(const char *keyname, const char *keyvalue);
-	ubase* xml_catch_subnode(const char *name) { return NULL; };
+	ubase* xml_catch_subnode(const char *tag_name, const char *classname) { return NULL; };
 
 #ifdef UTM_DEBUG
 	static int test_get_testcases_number() { return 1; };

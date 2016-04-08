@@ -48,6 +48,17 @@ proxymsg::~proxymsg(void)
 {
 }
 
+bool proxymsg::equals(const ubase* rhs) const
+{
+	const proxymsg *p = dynamic_cast<const proxymsg*>(rhs);
+	if (p == NULL)
+	{
+		return false;
+	}
+
+	return operator==(*p);
+}
+
 bool proxymsg::operator==(const proxymsg& rhs) const
 {
 	if (messages.size() != rhs.messages.size())

@@ -19,6 +19,9 @@ public:
 	squidrecord();
 	~squidrecord();
 
+	bool equals(const ubase* rhs) const;
+	bool operator==(const squidrecord& rhs) const;
+
 	// Squid native format
 	// Timestamp Elapsed Client Action/Code Size Method URI Ident Hierarchy/From Content
 
@@ -40,7 +43,7 @@ public:
 	void clear() { };
 	void xml_create() { };
 	void xml_catch_value(const char *keyname, const char *keyvalue) { };
-	ubase* xml_catch_subnode(const char *name) { return NULL; };
+	ubase* xml_catch_subnode(const char *tag_name, const char *classname) { return NULL; };
 };
 
 }

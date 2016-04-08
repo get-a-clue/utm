@@ -58,7 +58,10 @@ public:
 	proxyrule(void);
 	~proxyrule(void);
 
+	const char *get_this_class_name() const { return this_class_name; };
+
 	void copy_properties(const proxyrule& rhs);
+	bool equals(const ubase* rhs) const;
 	bool operator ==(const proxyrule& rhs) const;
 
 	bool enabled;
@@ -75,7 +78,7 @@ public:
 	void clear();
 	void xml_create();
 	void xml_catch_value(const char *keyname, const char *keyvalue);
-	ubase* xml_catch_subnode(const char *name);
+	ubase* xml_catch_subnode(const char *tag_name, const char *classname);
 
 	int process_request(proxyrequest_params *params) const;
 	void create_description(std::string& descr) const;

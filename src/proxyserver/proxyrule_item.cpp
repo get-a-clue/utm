@@ -48,6 +48,17 @@ proxyrule_item& proxyrule_item::operator=(const proxyrule_item& rhs)
 	return *this;
 }
 
+bool proxyrule_item::equals(const ubase* rhs) const
+{
+	const proxyrule_item* p = dynamic_cast<const proxyrule_item*>(rhs);
+	if (p == NULL)
+	{
+		return false;
+	}
+
+	return operator==(*p);
+}
+
 bool proxyrule_item::operator ==(const proxyrule_item& rhs) const
 {
 	if (invert != rhs.invert)

@@ -37,6 +37,17 @@ void proxyrule::copy_properties(const proxyrule& rhs)
 	prepare_rulename();
 }
 
+bool proxyrule::equals(const ubase* rhs) const
+{
+	const proxyrule *p = dynamic_cast<const proxyrule*>(rhs);
+	if (p == NULL)
+	{
+		return false;
+	}
+
+	return operator==(*p);
+}
+
 bool proxyrule::operator ==(const proxyrule& rhs) const
 {
 	if (enabled != rhs.enabled)
@@ -109,7 +120,7 @@ void proxyrule::xml_catch_value(const char *keyname, const char *keyvalue)
 	}
 }
 
-ubase* proxyrule::xml_catch_subnode(const char *keyname)
+ubase* proxyrule::xml_catch_subnode(const char *keyname, const char *classname)
 {
 	if (strcmp(keyname, PROXYRULEITEM_XMLTAG) == 0)
 	{

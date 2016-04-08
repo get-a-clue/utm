@@ -32,8 +32,11 @@ public:
 	proxyrule_item(const char* _condname, bool _invert, const std::shared_ptr<conditem>& _ci);
 	~proxyrule_item(void);
 
+	const char *get_this_class_name() const { return this_class_name; };
+
 	void copy_properties(const proxyrule_item& rhs);
 	proxyrule_item& operator=(const proxyrule_item& rhs);
+	bool equals(const ubase* rhs) const;
 	bool operator ==(const proxyrule_item& rhs) const;
 
 	bool invert;
@@ -45,7 +48,7 @@ public:
 	void clear();
 	void xml_create();
 	void xml_catch_value(const char *keyname, const char *keyvalue);
-	ubase* xml_catch_subnode(const char *name) { return NULL; };
+	ubase* xml_catch_subnode(const char *tag_name, const char *classname) { return NULL; };
 
 	bool check(proxyrequest_params *params) const;
 };

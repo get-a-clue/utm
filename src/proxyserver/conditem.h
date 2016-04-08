@@ -31,9 +31,11 @@ namespace utm {
 class conditem : public ubase
 {
 public:
-	static size_t instances_created;
 	static const char this_class_name[];
-	virtual const char* get_this_class_name() const { return conditem::this_class_name; };
+
+public:
+	static size_t instances_created;
+	virtual const char* get_this_class_name() const { return this_class_name; };
 
 	enum condtypes 
 	{ 
@@ -72,7 +74,8 @@ public:
 	void copy_my_properties(const conditem& rhs);
 	virtual void copy_properties(const conditem& rhs);
 
-	bool operator ==(const conditem& rhs) const;
+	bool equals(const ubase* rhs) const;
+	bool operator==(const conditem& rhs) const;
 
 	static conditem* create(const conditem& preconfigured_conditem);
 	static conditem* create(condtypes ctype);
@@ -93,7 +96,7 @@ public:
 	void clear();
 	void xml_create();
 	void xml_catch_value(const char *keyname, const char *keyvalue);
-	ubase* xml_catch_subnode(const char *name) { return NULL; };
+	ubase* xml_catch_subnode(const char *tag_name, const char *classname) { return NULL; };
 };
 
 }

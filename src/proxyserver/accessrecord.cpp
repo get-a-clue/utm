@@ -3,13 +3,30 @@
 
 namespace utm {
 
+const char accessrecord::this_class_name[] = "accessrecord";
+
 accessrecord::accessrecord(void)
 {
 }
 
-
 accessrecord::~accessrecord(void)
 {
+}
+
+bool accessrecord::equals(const ubase* rhs) const
+{
+	const accessrecord* p = dynamic_cast<const accessrecord*>(rhs);
+	if (p == NULL)
+	{
+		return false;
+	}
+
+	return operator==(*p);
+}
+
+bool accessrecord::operator==(const accessrecord& rhs) const
+{
+	return false;
 }
 
 std::string accessrecord::to_string(bool make_localization)

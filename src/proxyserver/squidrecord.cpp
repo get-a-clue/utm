@@ -16,6 +16,35 @@ squidrecord::~squidrecord(void)
 {
 }
 
+bool squidrecord::equals(const ubase* rhs) const
+{
+	const squidrecord* p = dynamic_cast<const squidrecord*>(rhs);
+	if (p == NULL)
+	{
+		return false;
+	}
+
+	return operator==(*p);
+}
+
+bool squidrecord::operator==(const squidrecord& rhs) const
+{
+	if (!(timestamp == rhs.timestamp)) return false;
+	if (!(elapsed == rhs.elapsed)) return false;
+	if (client != rhs.client) return false;
+	if (action != rhs.action) return false;
+	if (code != rhs.code) return false;
+	if (size != rhs.size) return false;
+	if (method != rhs.method) return false;
+	if (uri != rhs.uri) return false;
+	if (ident != rhs.ident) return false;
+	if (hierarchy != rhs.hierarchy) return false;
+	if (from != rhs.from) return false;
+	if (content != rhs.content) return false;
+
+	return true;
+}
+
 std::string squidrecord::to_string(bool make_localization)
 {
 	std::ostringstream os;

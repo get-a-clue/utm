@@ -98,6 +98,7 @@ public:
 	~configproxy(void);
 
 	configproxy& operator=(const configproxy &rhs);
+	bool equals(const ubase* rhs) const;
 	bool operator ==(const configproxy& rhs) const;
 
 	bool enabled;
@@ -137,7 +138,7 @@ public:
 	void clear();
 	void xml_create();
 	void xml_catch_value(const char *keyname, const char *keyvalue);
-	ubase* xml_catch_subnode(const char *name);
+	ubase* xml_catch_subnode(const char *tag_name, const char *classname);
 	void xml_catch_subnode_finished(const char *name);
 
 	void get_denyresponse(proxymsg::msgtypes msgtype, const char *browserlang, const char *requestedsite, const char *proxyrulename, std::string& denycontent, std::string& denyresponsecode);	

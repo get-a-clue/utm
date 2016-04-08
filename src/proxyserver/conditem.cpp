@@ -52,7 +52,18 @@ void conditem::copy_properties(const conditem& rhs)
 	copy_my_properties(rhs);
 }
 
-bool conditem::operator ==(const conditem& rhs) const
+bool conditem::equals(const ubase* rhs) const
+{
+	const conditem* p = dynamic_cast<const conditem*>(rhs);
+	if (p == NULL)
+	{
+		return false;
+	}
+
+	return operator==(*p);
+}
+
+bool conditem::operator==(const conditem& rhs) const
 {
 	if (get_conditem_type() != rhs.get_conditem_type())
 		return false;
