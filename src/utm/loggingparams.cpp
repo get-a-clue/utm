@@ -129,6 +129,22 @@ loggingparams::~loggingparams()
 
 }
 
+bool loggingparams::equals(const ubase* rhs) const
+{
+	const loggingparams* p = dynamic_cast<const loggingparams*>(rhs);
+	if (p == NULL)
+	{
+		return false;
+	}
+
+	return operator==(*p);
+}
+
+bool loggingparams::operator==(const loggingparams& rhs) const
+{
+	return loggingparamsbase::operator==(rhs);
+}
+
 void loggingparams::xml_create()
 {
 	xml_append_root(LOGGINGPARAMS_XMLTAG_PARAMS);

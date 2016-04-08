@@ -69,6 +69,9 @@ public:
 	loggingparams(void);
 	~loggingparams(void);
 
+	bool equals(const ubase* rhs) const;
+	bool operator==(const loggingparams& rhs) const;
+
 	virtual const char *get_this_class_name() const { return this_class_name; };
 
 	void clear() { loggingparamsbase::clear(); };
