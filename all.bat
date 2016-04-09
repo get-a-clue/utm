@@ -1,6 +1,6 @@
 set BOOST_INCLUDE=c:\install\boost
 set BOOST_LIB=c:\install\boost\stage\lib
-set SolutionDir=s:\home\utmwork\src\
+set SolutionDir=s:\home\utmwork2\src\
 Setlocal EnableDelayedExpansion
 
 mkdir c:\tmp
@@ -36,6 +36,13 @@ FOR %%A IN (Debug DebugU DebugTest DebugUTest Release ReleaseU) DO (
    del done.%%A
    del fail.%%A
    del build.%%A
+)
+
+erase /Q /S "include\"
+copy src\_include\*.* include\
+FOR %%A IN (utm monitor corefilters proxyserver dualserver) DO (
+  copy src\%%A\*.h include\
+  copy src\%%A\*.hpp include\
 )
 
 FOR %%A IN (Debug DebugU Release ReleaseU) DO (
