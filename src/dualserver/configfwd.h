@@ -14,8 +14,13 @@ namespace utm {
 class configfwd : public configfwd_base
 {
 public:
+	static const char this_class_name[];
+
+public:
 	configfwd(void);
 	~configfwd(void);
+
+	const char *get_this_class_name() const { return "configfwd"; };
 
 public:
 #ifdef UTM_WIN

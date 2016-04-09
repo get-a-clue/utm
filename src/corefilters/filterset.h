@@ -13,8 +13,13 @@ namespace utm {
 class filterset : public filterset_base
 {
 public:
+	static const char this_class_name[];
+
+public:
 	filterset(void);
 	virtual ~filterset(void);
+
+	const char *get_this_class_name() const { return "filterset"; };
 
 	filterset_data fdata;
 

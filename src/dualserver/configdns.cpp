@@ -14,6 +14,8 @@
 
 namespace utm {
 
+const char configdns::this_class_name[] = "configdns";
+
 configdns::configdns(void)
 {
 }

@@ -11,8 +11,13 @@ namespace utm {
 class monitor_range : public monitor_range_base
 {
 public:
+	static const char this_class_name[];
+
+public:
 	monitor_range(void);
 	~monitor_range(void);
+
+	const char *get_this_class_name() const { return this_class_name; };
 
 	ubase* xml_catch_subnode(const char *tag_name, const char *class_name);
 

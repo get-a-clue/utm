@@ -24,8 +24,13 @@ namespace utm {
 class configdns : public configdns_base
 {
 public:
+	static const char this_class_name[];
+
+public:
 	configdns(void);
 	~configdns(void);
+
+	const char *get_this_class_name() const { return this_class_name; };
 
     std::string create_allowedhosts_string() const;
     void parse_allowedhosts_string(const char *hosts);

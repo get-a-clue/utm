@@ -3,6 +3,8 @@
 
 namespace utm {
 
+const char filter::this_class_name[] = "filter";
+
 filter::filter(void)
 {
 	clear(true);

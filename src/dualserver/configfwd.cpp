@@ -7,6 +7,8 @@
 
 namespace utm {
 
+const char configfwd::this_class_name[] = "configfwd";
+
 configfwd::configfwd(void)
 {
 	clear();

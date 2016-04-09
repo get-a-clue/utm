@@ -10,6 +10,8 @@
 
 namespace utm {
 
+const char filterset::this_class_name[] = "filterset";
+
 filterset::filterset(void)
 {
 }

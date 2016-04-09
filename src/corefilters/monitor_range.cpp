@@ -3,6 +3,8 @@
 
 namespace utm {
 
+const char monitor_range::this_class_name[] = "monitor_range";
+
 monitor_range::monitor_range(void)
 {
 }

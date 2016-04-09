@@ -12,8 +12,13 @@ namespace utm {
 class filter : public filter_base
 {
 public:
+	static const char this_class_name[];
+
+public:
 	filter(void);
 	virtual ~filter(void);
+
+	const char *get_this_class_name() const { return "filter"; };
 
 	void clear(bool dont_clear_parent = false);
 
