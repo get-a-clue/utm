@@ -30,9 +30,9 @@ public:
 	void make_user_agentinfo_as_xml(const utime& cutime, const fsuser& user, std::ostringstream& res) const;
 
 public:
-	unsigned int get_kilobytes() const { return (m_bUseMiB == true) ? 1000 : 1024; };
-	unsigned int get_megabytes() const { return (m_bUseMiB == true) ? 1000000 : 1048576; };
-	unsigned int get_gigabytes() const { return (m_bUseMiB == true) ? 1000000000 : 1073741824; };
+	unsigned int get_kilobytes() const { return m_bUseMiB ? 1024 : 1000; };
+	unsigned int get_megabytes() const { return m_bUseMiB ? 1048576 : 1000000; };
+	unsigned int get_gigabytes() const { return m_bUseMiB ? 1073741824 : 1000000000; };
 
 	void prepare_proc_usage();
 	bool get_proc_usage() const { return is_proc_used; };
